@@ -44,7 +44,7 @@ export default function TopNav() {
                   href={it.href}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[13.5px] font-medium transition-colors ${
                     isActive
-                      ? "bg-[#f0fbf6] text-primary"
+                      ? "bg-[#eaf1fb] text-primary"
                       : "text-[#5b6270] hover:bg-[#f5f6f8]"
                   }`}
                 >

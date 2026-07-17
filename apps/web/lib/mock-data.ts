@@ -40,7 +40,7 @@ export const colunasCRM = [
   { id: "proposta", nome: "Proposta", cor: "#f0abfc" },
   { id: "negociacao", nome: "Negociação", cor: "#fbbf24" },
   { id: "contrato", nome: "Contrato", cor: "#34d399" },
-  { id: "ativo", nome: "Cliente Ativo", cor: "#0e9f6e" },
+  { id: "ativo", nome: "Cliente Ativo", cor: "#004AAD" },
 ];
 
 export const oportunidades = [

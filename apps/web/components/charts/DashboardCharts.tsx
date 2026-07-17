@@ -19,8 +19,8 @@ export function ReceitaChart() {
       <AreaChart data={receitaMensal} margin={{ left: -20, right: 4 }}>
         <defs>
           <linearGradient id="receitaGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#0e9f6e" stopOpacity={0.25} />
-            <stop offset="100%" stopColor="#0e9f6e" stopOpacity={0} />
+            <stop offset="0%" stopColor="#004AAD" stopOpacity={0.25} />
+            <stop offset="100%" stopColor="#004AAD" stopOpacity={0} />
           </linearGradient>
         </defs>
         <CartesianGrid vertical={false} stroke="#f0f1f3" />
@@ -30,7 +30,7 @@ export function ReceitaChart() {
           formatter={(v: number) => [`R$ ${v} mil`, "Receita"]}
           contentStyle={{ borderRadius: 10, border: "1px solid #eef0f2", fontSize: 12.5 }}
         />
-        <Area type="monotone" dataKey="valor" stroke="#0e9f6e" strokeWidth={2.4} fill="url(#receitaGrad)" />
+        <Area type="monotone" dataKey="valor" stroke="#004AAD" strokeWidth={2.4} fill="url(#receitaGrad)" />
       </AreaChart>
     </ResponsiveContainer>
   );
@@ -53,7 +53,7 @@ export function FunilChart() {
           formatter={(v: number) => [`${v} oportunidades`, ""]}
           contentStyle={{ borderRadius: 10, border: "1px solid #eef0f2", fontSize: 12.5 }}
         />
-        <Bar dataKey="qtd" fill="#0e9f6e" radius={[0, 6, 6, 0]} barSize={16} />
+        <Bar dataKey="qtd" fill="#004AAD" radius={[0, 6, 6, 0]} barSize={16} />
       </BarChart>
     </ResponsiveContainer>
   );

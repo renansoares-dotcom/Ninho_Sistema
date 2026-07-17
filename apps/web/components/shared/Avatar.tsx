@@ -1,4 +1,4 @@
-const palette = ["#0e9f6e", "#6366f1", "#f59e0b", "#ec4899", "#06b6d4"];
+const palette = ["#004AAD", "#6366f1", "#f59e0b", "#ec4899", "#06b6d4"];
 
 export function Avatar({
   initials,

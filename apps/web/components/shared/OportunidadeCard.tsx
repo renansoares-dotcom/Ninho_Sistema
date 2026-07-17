@@ -24,7 +24,7 @@ export default function OportunidadeCard({ op }: { op: Oportunidade }) {
           <Avatar initials={op.resp} size={22} />
           <span className="text-[11.5px] text-[#9aa0ac]">{op.dias}d na etapa</span>
         </div>
-        <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded-full bg-[#f0fbf6] text-primary">
+        <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded-full bg-[#eaf1fb] text-primary">
           {op.prob}%
         </span>
       </div>
