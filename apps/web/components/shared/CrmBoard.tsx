@@ -11,7 +11,7 @@ function diasDesde(dataISO: string) {
   return Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)));
 }
 
-export default function CrmBoard() {
+export default function CrmBoard({ refreshKey = 0 }: { refreshKey?: number }) {
   const [oportunidades, setOportunidades] = useState<Oportunidade[]>([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
@@ -42,7 +42,7 @@ export default function CrmBoard() {
       setCarregando(false);
     }
     carregar();
-  }, []);
+  }, [refreshKey]);
 
   return (
     <div className="max-w-[1360px] mx-auto px-7 pb-16 pt-4">

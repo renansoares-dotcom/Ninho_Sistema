@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useEffect, useState, useCallback } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { Phone, Mail, Tag, Clock, Loader2 } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
 import Card from "@/components/shared/Card";
 import { Avatar } from "@/components/shared/Avatar";
+import OportunidadeFormModal, { OportunidadeFormData } from "@/components/shared/OportunidadeFormModal";
 import { colunasCRM } from "@/lib/mock-data";
 import { supabase } from "@/lib/supabase";
 
@@ -32,26 +33,43 @@ type Atividade = {
 
 export default function OportunidadeDetalhePage() {
   const params = useParams<{ id: string }>();
+  const router = useRouter();
   const [op, setOp] = useState<Oportunidade | null>(null);
   const [atividades, setAtividades] = useState<Atividade[]>([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
+  const [modalAberto, setModalAberto] = useState(false);
+  const [excluindo, setExcluindo] = useState(false);
+
+  const carregar = useCallback(async () => {
+    setCarregando(true);
+    const [{ data: opData, error: opErro }, { data: atividadesData }] = await Promise.all([
+      supabase.from("leads_oportunidades").select("*").eq("id", params.id).single(),
+      supabase.from("oportunidade_atividades").select("*").eq("oportunidade_id", params.id).order("data", { ascending: true }),
+    ]);
+
+    if (opErro) setErro(opErro.message);
+    setOp(opData);
+    setAtividades(atividadesData ?? []);
+    setCarregando(false);
+  }, [params.id]);
 
   useEffect(() => {
-    async function carregar() {
-      setCarregando(true);
-      const [{ data: opData, error: opErro }, { data: atividadesData }] = await Promise.all([
-        supabase.from("leads_oportunidades").select("*").eq("id", params.id).single(),
-        supabase.from("oportunidade_atividades").select("*").eq("oportunidade_id", params.id).order("data", { ascending: true }),
-      ]);
-
-      if (opErro) setErro(opErro.message);
-      setOp(opData);
-      setAtividades(atividadesData ?? []);
-      setCarregando(false);
-    }
     if (params.id) carregar();
-  }, [params.id]);
+  }, [params.id, carregar]);
+
+  async function excluir() {
+    if (!op) return;
+    if (!confirm(`Tem certeza que deseja excluir "${op.empresa_nome}"? Essa ação não pode ser desfeita.`)) return;
+    setExcluindo(true);
+    const { error } = await supabase.from("leads_oportunidades").delete().eq("id", op.id);
+    setExcluindo(false);
+    if (error) {
+      alert(`Não foi possível excluir: ${error.message}`);
+      return;
+    }
+    router.push("/crm");
+  }
 
   if (carregando) {
     return (
@@ -74,9 +92,29 @@ export default function OportunidadeDetalhePage() {
   const etapa = colunasCRM.find((c) => c.id === etapaId);
   const dias = Math.max(0, Math.floor((Date.now() - new Date(op.updated_at).getTime()) / (1000 * 60 * 60 * 24)));
 
+  const formInicial: OportunidadeFormData = {
+    id: op.id,
+    empresa_nome: op.empresa_nome,
+    responsavel_nome: op.responsavel_nome ?? "",
+    telefone: op.telefone ?? "",
+    email: op.email ?? "",
+    origem: op.origem ?? "",
+    etapa: etapaId,
+    valor_estimado: op.valor_estimado ? String(op.valor_estimado) : "",
+    probabilidade: String(op.probabilidade ?? 0),
+    observacoes: op.observacoes ?? "",
+  };
+
   return (
     <>
-      <PageHeader crumb="CRM" title={op.empresa_nome} secondaryLabel="Editar" actionLabel="Mover etapa" />
+      <PageHeader
+        crumb="CRM"
+        title={op.empresa_nome}
+        secondaryLabel="Editar"
+        onSecondaryClick={() => setModalAberto(true)}
+        dangerLabel={excluindo ? "Excluindo..." : "Excluir"}
+        onDangerClick={excluir}
+      />
 
       <div className="max-w-[1360px] mx-auto px-7 pb-16 pt-4 grid grid-cols-[1.4fr_1fr] gap-3.5">
         <div className="flex flex-col gap-3.5">
@@ -147,6 +185,13 @@ export default function OportunidadeDetalhePage() {
           </Card>
         </div>
       </div>
+
+      <OportunidadeFormModal
+        open={modalAberto}
+        onClose={() => setModalAberto(false)}
+        onSaved={carregar}
+        oportunidadeInicial={formInicial}
+      />
     </>
   );
 }
