@@ -9,12 +9,16 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
-import { diagnosticoAreas } from "@/lib/mock-data";
+import { diagnosticoAreas as diagnosticoAreasMock } from "@/lib/mock-data";
 
-export default function DiagnosticoRadarChart() {
+type AreaNota = { area: string; nota: number };
+
+export default function DiagnosticoRadarChart({ data }: { data?: AreaNota[] }) {
+  const dados = data && data.length > 0 ? data : diagnosticoAreasMock;
+
   return (
     <ResponsiveContainer width="100%" height={320}>
-      <RadarChart data={diagnosticoAreas}>
+      <RadarChart data={dados}>
         <PolarGrid stroke="#eef0f2" />
         <PolarAngleAxis dataKey="area" tick={{ fontSize: 12, fill: "#5b6270" }} />
         <PolarRadiusAxis angle={90} domain={[0, 10]} tick={{ fontSize: 10, fill: "#c2c6cd" }} />
