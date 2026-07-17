@@ -1,12 +1,61 @@
 "use client";
 
-import { useState } from "react";
-import { Search, ChevronDown, X, List, Calendar as CalendarIcon } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Search, ChevronDown, X, List, Calendar as CalendarIcon, Loader2 } from "lucide-react";
 import AgendaList from "./AgendaList";
 import AgendaCalendar from "./AgendaCalendar";
+import { supabase } from "@/lib/supabase";
+
+export type EventoAgenda = {
+  id: string;
+  titulo: string;
+  tipo: string;
+  dataISO: string;
+  hora: string;
+  resp: string;
+};
+
+const tipoDisplay: Record<string, string> = {
+  reuniao: "Reunião",
+  visita_tecnica: "Visita técnica",
+  videoconferencia: "Videoconferência",
+};
 
 export default function AgendaView() {
   const [modo, setModo] = useState<"lista" | "calendario">("calendario");
+  const [eventos, setEventos] = useState<EventoAgenda[]>([]);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function carregar() {
+      setCarregando(true);
+      const { data, error } = await supabase
+        .from("eventos")
+        .select("id, titulo, tipo, data_inicio, responsavel_nome")
+        .order("data_inicio", { ascending: true });
+
+      if (error) {
+        setErro(error.message);
+      } else {
+        setEventos(
+          (data ?? []).map((e) => {
+            const dt = new Date(e.data_inicio);
+            return {
+              id: e.id,
+              titulo: e.titulo,
+              tipo: tipoDisplay[e.tipo] ?? e.tipo,
+              dataISO: e.data_inicio.slice(0, 10),
+              hora: dt.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
+              resp: e.responsavel_nome ?? "",
+            };
+          })
+        );
+      }
+      setCarregando(false);
+    }
+    carregar();
+  }, []);
 
   return (
     <div className="max-w-[1360px] mx-auto px-7 pb-16 pt-4">
@@ -51,7 +100,22 @@ export default function AgendaView() {
         </div>
       </div>
 
-      {modo === "lista" ? <AgendaList /> : <AgendaCalendar />}
+      {erro && (
+        <div className="mb-4 text-[13px] text-[#f04438] bg-[#fdecea] rounded-lg px-4 py-3">
+          Não foi possível carregar a agenda: {erro}
+        </div>
+      )}
+
+      {carregando ? (
+        <div className="flex items-center justify-center gap-2 py-14 text-[#9aa0ac] text-[13px]">
+          <Loader2 size={16} className="animate-spin" />
+          Carregando agenda do banco de dados...
+        </div>
+      ) : modo === "lista" ? (
+        <AgendaList eventos={eventos} />
+      ) : (
+        <AgendaCalendar eventos={eventos} />
+      )}
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { CalendarDays, Video, MapPin } from "lucide-react";
 import { Avatar } from "./Avatar";
-import { eventosAgenda } from "@/lib/mock-data";
+import type { EventoAgenda } from "./AgendaView";
 
 const tipoIcon: Record<string, any> = {
   "Reunião": CalendarDays,
@@ -8,20 +8,30 @@ const tipoIcon: Record<string, any> = {
   "Videoconferência": Video,
 };
 
-export default function AgendaList() {
-  const grupos = eventosAgenda.reduce<Record<string, typeof eventosAgenda>>((acc, ev) => {
-    acc[ev.data] = acc[ev.data] || [];
-    acc[ev.data].push(ev);
+function formatarGrupo(dataISO: string) {
+  const hoje = new Date("2026-07-17T12:00:00");
+  const d = new Date(dataISO + "T12:00:00");
+  const diffDias = Math.round((d.getTime() - hoje.getTime()) / (1000 * 60 * 60 * 24));
+  if (diffDias === 0) return "Hoje";
+  if (diffDias === 1) return "Amanhã";
+  return d.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
+}
+
+export default function AgendaList({ eventos }: { eventos: EventoAgenda[] }) {
+  const grupos = eventos.reduce<Record<string, EventoAgenda[]>>((acc, ev) => {
+    const label = formatarGrupo(ev.dataISO);
+    acc[label] = acc[label] || [];
+    acc[label].push(ev);
     return acc;
   }, {});
 
   return (
     <div className="flex flex-col gap-6">
-      {Object.entries(grupos).map(([data, eventos]) => (
+      {Object.entries(grupos).map(([data, evs]) => (
         <div key={data}>
           <div className="text-[13px] font-semibold text-[#9aa0ac] mb-3">{data}</div>
           <div className="flex flex-col gap-2.5">
-            {eventos.map((ev) => {
+            {evs.map((ev) => {
               const Icon = tipoIcon[ev.tipo] ?? CalendarDays;
               return (
                 <div
@@ -35,13 +45,16 @@ export default function AgendaList() {
                     <div className="text-[13.5px] font-semibold text-[#16181d]">{ev.titulo}</div>
                     <div className="text-[12px] text-[#9aa0ac] mt-0.5">{ev.tipo} · {ev.hora}</div>
                   </div>
-                  <Avatar initials={ev.resp} size={26} />
+                  <Avatar initials={ev.resp || "—"} size={26} />
                 </div>
               );
             })}
           </div>
         </div>
       ))}
+      {eventos.length === 0 && (
+        <p className="text-[13px] text-[#9aa0ac] text-center py-10">Nenhum evento cadastrado ainda.</p>
+      )}
     </div>
   );
 }

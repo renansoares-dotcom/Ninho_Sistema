@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { ChevronLeft, ChevronRight, MapPin, CalendarDays, Video } from "lucide-react";
-import { eventosAgenda } from "@/lib/mock-data";
+import type { EventoAgenda } from "./AgendaView";
 
 const diasSemana = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SÁB"];
 const meses = [
@@ -26,7 +26,7 @@ function toISO(y: number, m: number, d: number) {
   return `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
 }
 
-export default function AgendaCalendar() {
+export default function AgendaCalendar({ eventos: eventosAgenda }: { eventos: EventoAgenda[] }) {
   const hoje = new Date("2026-07-17T12:00:00");
   const [cursor, setCursor] = useState({ year: hoje.getFullYear(), month: hoje.getMonth() });
   const [selecionado, setSelecionado] = useState<string | null>(toISO(hoje.getFullYear(), hoje.getMonth(), hoje.getDate()));
@@ -60,7 +60,7 @@ export default function AgendaCalendar() {
         return d >= hoje && d <= limite;
       })
       .sort((a, b) => a.dataISO.localeCompare(b.dataISO));
-  }, []);
+  }, [eventosAgenda]);
 
   function mudarMes(delta: number) {
     let m = month + delta;
