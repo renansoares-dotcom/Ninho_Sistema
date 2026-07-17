@@ -92,6 +92,45 @@ export const diagnosticos = [
   { id: 4, cliente: "TechFlow Sistemas", data: "16/07/2026", indice: 0, status: "Em preenchimento" },
 ];
 
+export const eventosAgenda = [
+  { id: 1, titulo: "Reunião de diagnóstico — Nova Era Logística", tipo: "Reunião", data: "Hoje", hora: "10:00", resp: "RS" },
+  { id: 2, titulo: "Visita técnica — Padaria Trigo Dourado", tipo: "Visita técnica", data: "Hoje", hora: "14:30", resp: "JP" },
+  { id: 3, titulo: "Apresentação do plano de trabalho — Grupo Alvorada", tipo: "Videoconferência", data: "Amanhã", hora: "09:00", resp: "BA" },
+  { id: 4, titulo: "Alinhamento comercial — Construtora Horizonte", tipo: "Reunião", data: "Amanhã", hora: "16:00", resp: "MC" },
+  { id: 5, titulo: "Visita técnica — Metalúrgica Ferro Sul", tipo: "Visita técnica", data: "20/07", hora: "08:30", resp: "MC" },
+  { id: 6, titulo: "Follow-up comercial — Studio Criativo Nix", tipo: "Videoconferência", data: "21/07", hora: "11:00", resp: "MC" },
+];
+
+export const contratos = [
+  { id: 1, cliente: "Metalúrgica Ferro Sul", valor: "R$ 64.000", parcelas: "6x", status: "Em dia", proximoVenc: "25/07" },
+  { id: 2, cliente: "TechFlow Sistemas", valor: "R$ 45.000", parcelas: "4x", status: "Em dia", proximoVenc: "28/07" },
+  { id: 3, cliente: "Grupo Alvorada", valor: "R$ 38.000", parcelas: "8x", status: "Em dia", proximoVenc: "30/07" },
+  { id: 4, cliente: "Vale Verde Comércio", valor: "R$ 9.500", parcelas: "3x", status: "Inadimplente", proximoVenc: "12/07" },
+  { id: 5, cliente: "Padaria Trigo Dourado", valor: "R$ 12.000", parcelas: "4x", status: "Em dia", proximoVenc: "22/07" },
+];
+
+export const financeiroKpis = [
+  { label: "Recebido no mês", value: "R$ 168 mil" },
+  { label: "A receber", value: "R$ 79 mil" },
+  { label: "Inadimplência", value: "R$ 9,5 mil" },
+  { label: "Ticket médio", value: "R$ 33,7 mil" },
+];
+
+export const relatoriosGerados = [
+  { id: 1, nome: "Diagnóstico Empresarial — Grupo Alvorada", tipo: "Diagnóstico", data: "10/07/2026" },
+  { id: 2, nome: "Plano de Trabalho — Metalúrgica Ferro Sul", tipo: "Plano de Trabalho", data: "08/07/2026" },
+  { id: 3, nome: "Relatório de Visita — Padaria Trigo Dourado", tipo: "Visita", data: "15/07/2026" },
+  { id: 4, nome: "Resumo Executivo — Nova Era Logística", tipo: "Resumo Executivo", data: "14/07/2026" },
+  { id: 5, nome: "Indicadores Comparativos — TechFlow Sistemas", tipo: "Indicadores", data: "05/07/2026" },
+];
+
+export const automacoesRegras = [
+  { id: 1, nome: "Gerar tarefas após diagnóstico concluído", gatilho: "Diagnóstico concluído", ativa: true },
+  { id: 2, nome: "Lembrete de parcela a vencer (3 dias antes)", gatilho: "Vencimento de parcela", ativa: true },
+  { id: 3, nome: "Alertar consultor sobre pendências", gatilho: "Tarefa atrasada", ativa: true },
+  { id: 4, nome: "Notificar cliente sobre nova atividade", gatilho: "Nova tarefa no plano", ativa: false },
+  { id: 5, nome: "Avisar sobre contrato próximo do vencimento", gatilho: "30 dias antes do fim do contrato", ativa: true },
+];
 export const diagnosticoAreas = [
   { area: "Financeiro", nota: 7.5 },
   { area: "RH", nota: 6.0 },

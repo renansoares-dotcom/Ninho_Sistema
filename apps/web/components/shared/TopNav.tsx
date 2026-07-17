@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useState, useRef, useEffect } from "react";
 import {
   LayoutDashboard,
   Users2,
@@ -12,6 +13,11 @@ import {
   ChevronDown,
   Search,
   Bell,
+  CalendarDays,
+  Wallet,
+  FileText,
+  Zap,
+  Settings,
 } from "lucide-react";
 import { Avatar } from "./Avatar";
 
@@ -23,8 +29,30 @@ const items = [
   { href: "/diagnostico", label: "Diagnóstico", icon: Stethoscope },
 ];
 
+const maisItems = [
+  { href: "/agenda", label: "Agenda", icon: CalendarDays },
+  { href: "/financeiro", label: "Financeiro", icon: Wallet },
+  { href: "/relatorios", label: "Relatórios", icon: FileText },
+  { href: "/automacoes", label: "Automações", icon: Zap },
+  { href: "/configuracoes", label: "Configurações", icon: Settings },
+];
+
 export default function TopNav() {
   const pathname = usePathname();
+  const [maisOpen, setMaisOpen] = useState(false);
+  const maisRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function onClickOutside(e: MouseEvent) {
+      if (maisRef.current && !maisRef.current.contains(e.target as Node)) {
+        setMaisOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, []);
+
+  const maisAtivo = maisItems.some((it) => pathname?.startsWith(it.href));
 
   return (
     <div className="border-b border-[#eef0f2] bg-white sticky top-0 z-20">
@@ -53,9 +81,38 @@ export default function TopNav() {
                 </Link>
               );
             })}
-            <button className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[13.5px] font-medium text-[#5b6270]">
-              Mais <ChevronDown size={14} />
-            </button>
+            <div className="relative" ref={maisRef}>
+              <button
+                onClick={() => setMaisOpen((v) => !v)}
+                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[13.5px] font-medium ${
+                  maisAtivo ? "bg-[#eaf1fb] text-primary" : "text-[#5b6270] hover:bg-[#f5f6f8]"
+                }`}
+              >
+                Mais
+                <ChevronDown size={14} className={maisOpen ? "rotate-180 transition-transform" : "transition-transform"} />
+              </button>
+              {maisOpen && (
+                <div className="absolute top-[calc(100%+6px)] left-0 bg-white border border-[#eef0f2] rounded-xl shadow-lg py-1.5 min-w-[190px] z-30">
+                  {maisItems.map((it) => {
+                    const Icon = it.icon;
+                    const isActive = pathname?.startsWith(it.href);
+                    return (
+                      <Link
+                        key={it.href}
+                        href={it.href}
+                        onClick={() => setMaisOpen(false)}
+                        className={`flex items-center gap-2.5 px-3.5 py-2 text-[13px] font-medium ${
+                          isActive ? "text-primary bg-[#eaf1fb]" : "text-[#3f434d] hover:bg-[#f5f6f8]"
+                        }`}
+                      >
+                        <Icon size={15} strokeWidth={2} />
+                        {it.label}
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </nav>
         </div>
 
