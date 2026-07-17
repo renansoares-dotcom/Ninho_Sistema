@@ -3,14 +3,18 @@ import Link from "next/link";
 import { Avatar } from "./Avatar";
 
 export type Oportunidade = {
-  id: number;
+  id: string;
   empresa: string;
   etapa: string;
-  valor: string;
+  valor: number;
   prob: number;
   dias: number;
   resp: string;
 };
+
+function formatarValor(v: number) {
+  return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
+}
 
 export default function OportunidadeCard({ op }: { op: Oportunidade }) {
   return (
@@ -22,10 +26,10 @@ export default function OportunidadeCard({ op }: { op: Oportunidade }) {
         <span className="text-[13px] font-semibold text-[#16181d] leading-tight">{op.empresa}</span>
         <MoreHorizontal size={15} color="#c2c6cd" />
       </div>
-      <span className="text-sm font-bold text-primary">{op.valor}</span>
+      <span className="text-sm font-bold text-primary">{formatarValor(op.valor)}</span>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1.5">
-          <Avatar initials={op.resp} size={22} />
+          <Avatar initials={op.resp || "—"} size={22} />
           <span className="text-[11.5px] text-[#9aa0ac]">{op.dias}d na etapa</span>
         </div>
         <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded-full bg-[#eaf1fb] text-primary">
