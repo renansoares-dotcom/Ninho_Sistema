@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
@@ -11,7 +12,6 @@ import {
   ChevronDown,
   Search,
   Bell,
-  Leaf,
 } from "lucide-react";
 import { Avatar } from "./Avatar";
 
@@ -31,12 +31,7 @@ export default function TopNav() {
       <div className="max-w-[1360px] mx-auto px-7 h-[60px] flex items-center justify-between">
         <div className="flex items-center gap-8">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center">
-              <Leaf size={16} color="white" strokeWidth={2.4} />
-            </div>
-            <span className="font-semibold text-[15px] text-[#16181d] tracking-tight">
-              Ninho
-            </span>
+            <Image src="/logo.png" alt="Ninho Consultoria" width={110} height={45} className="h-8 w-auto" priority />
           </div>
 
           <nav className="flex items-center gap-1">

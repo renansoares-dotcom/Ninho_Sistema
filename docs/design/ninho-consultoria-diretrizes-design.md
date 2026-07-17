@@ -64,12 +64,16 @@ Esse mesmo padrão se aplica a **Cliente**, **Diagnóstico**, **Visita**, **Opor
 | **Ícones** | Lucide em 100% do sistema, tamanho e peso consistentes |
 | **Microinterações** | Hover, focus, loading, skeleton, badges, tooltips, dropdowns, transições suaves — nunca abruptas |
 
-### Paleta
+### Paleta oficial da marca (Ninho Consultoria)
 - Fundo: cinza muito claro (`#FAFAFA`–`#F5F5F7`)
 - Cards: branco
-- Primária: verde (a confirmar com a identidade visual oficial quando chegar — por enquanto uso um verde neutro tipo `#0E9F6E`)
+- **Primária: `#004AAD`** (azul institucional — extraído da identidade visual oficial)
+- Azul de marca/logo: `#0273BC`
+- Grafite escuro (textos de destaque, painéis escuros): `#232932`
 - Sucesso: verde discreto | Erro: vermelho elegante | Aviso: laranja
 - Regra dura: nunca mais de 2–3 cores simultâneas em uma mesma tela
+
+A logo oficial já está aplicada no menu superior (`apps/web/public/logo.png`), substituindo o placeholder provisório.
 
 ### Base de componentes
 shadcn/ui + Radix UI + Tailwind, seguindo exatamente a stack já definida na Fase 1.
