@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Search, ChevronDown } from "lucide-react";
 import { Avatar } from "./Avatar";
 import { clientes } from "@/lib/mock-data";
@@ -59,7 +60,11 @@ export default function ClientesTable() {
                 key={c.id}
                 className="border-b border-[#f2f3f5] last:border-b-0 hover:bg-[#fafbfc] cursor-pointer transition-colors"
               >
-                <td className="px-5 py-4 text-[13.5px] font-medium text-[#16181d]">{c.nome}</td>
+                <td className="px-5 py-4 text-[13.5px] font-medium text-[#16181d]">
+                  <Link href={`/clientes/${c.id}`} className="hover:underline">
+                    {c.nome}
+                  </Link>
+                </td>
                 <td className="px-5 py-4 text-[13px] text-[#5b6270]">{c.segmento}</td>
                 <td className="px-5 py-4">
                   <span

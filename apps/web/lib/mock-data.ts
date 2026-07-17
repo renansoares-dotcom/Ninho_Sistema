@@ -144,3 +144,168 @@ export const diagnosticoAreas = [
   { area: "Estoque", nota: 5.9 },
   { area: "Gestão", nota: 7.8 },
 ];
+
+export const areasDiagnostico = [
+  {
+    area: "Financeiro",
+    perguntas: [
+      "A empresa possui fluxo de caixa atualizado semanalmente?",
+      "Existe separação clara entre finanças pessoais e da empresa?",
+      "Há controle de custos fixos e variáveis por centro de custo?",
+    ],
+  },
+  {
+    area: "Recursos Humanos",
+    perguntas: [
+      "Existe um processo estruturado de contratação?",
+      "Há avaliação de desempenho periódica da equipe?",
+      "A empresa possui plano de cargos e salários definido?",
+    ],
+  },
+  {
+    area: "Marketing",
+    perguntas: [
+      "A empresa possui posicionamento de marca definido?",
+      "Existe um plano de marketing com metas mensuráveis?",
+      "Há acompanhamento de CAC e ROI das campanhas?",
+    ],
+  },
+  {
+    area: "Comercial",
+    perguntas: [
+      "Existe um funil de vendas estruturado e acompanhado?",
+      "A equipe comercial possui metas claras e comissionamento definido?",
+      "Há CRM ou ferramenta de gestão de oportunidades em uso?",
+    ],
+  },
+  {
+    area: "Produção",
+    perguntas: [
+      "A capacidade produtiva é monitorada e planejada?",
+      "Existe controle de qualidade formalizado?",
+      "Os processos produtivos estão documentados?",
+    ],
+  },
+  {
+    area: "Fiscal",
+    perguntas: [
+      "O regime tributário atual é revisado periodicamente?",
+      "A empresa está em dia com obrigações acessórias?",
+      "Há planejamento tributário ativo?",
+    ],
+  },
+  {
+    area: "Compras",
+    perguntas: [
+      "Existe processo de cotação com múltiplos fornecedores?",
+      "Há política de prazos e condições de pagamento definida?",
+      "O histórico de fornecedores é avaliado periodicamente?",
+    ],
+  },
+  {
+    area: "Estoque",
+    perguntas: [
+      "Existe controle de estoque em tempo real?",
+      "Há giro de estoque calculado e monitorado?",
+      "O ponto de reposição é definido por produto?",
+    ],
+  },
+  {
+    area: "Gestão",
+    perguntas: [
+      "A empresa possui planejamento estratégico formalizado?",
+      "Existem reuniões de acompanhamento de indicadores?",
+      "Há sucessão e governança definidas para o negócio?",
+    ],
+  },
+];
+
+export const diagnosticosDetalhe: Record<number, {
+  pontosFortes: string[];
+  oportunidadesMelhoria: string[];
+  resumoExecutivo: string;
+}> = {
+  1: {
+    pontosFortes: ["Área Comercial estruturada e com metas claras", "Gestão com boa governança"],
+    oportunidadesMelhoria: ["Marketing sem plano formalizado", "Estoque sem ponto de reposição definido"],
+    resumoExecutivo:
+      "O Grupo Alvorada apresenta maturidade acima da média em Comercial e Gestão, mas precisa estruturar Marketing e Estoque para sustentar o crescimento projetado nos próximos 12 meses.",
+  },
+  2: {
+    pontosFortes: ["Processos produtivos documentados", "Controle fiscal em dia"],
+    oportunidadesMelhoria: ["RH sem avaliação de desempenho", "Compras sem cotação estruturada"],
+    resumoExecutivo:
+      "A Metalúrgica Ferro Sul tem base operacional sólida, com oportunidade de ganho rápido ao formalizar RH e o processo de compras.",
+  },
+};
+
+export const clientesDetalhe: Record<number, {
+  razaoSocial: string;
+  cnpj: string;
+  porte: string;
+  funcionarios: number;
+  endereco: string;
+  contatos: { nome: string; cargo: string; telefone: string; email: string; principal: boolean }[];
+  atividades: { titulo: string; data: string }[];
+}> = {
+  1: {
+    razaoSocial: "Ferro Sul Metalúrgica Ltda.",
+    cnpj: "12.345.678/0001-90",
+    porte: "Médio porte",
+    funcionarios: 84,
+    endereco: "Av. das Indústrias, 1200 — Recife/PE",
+    contatos: [
+      { nome: "Marcelo Andrade", cargo: "Diretor Industrial", telefone: "(81) 99123-4567", email: "marcelo@ferrosul.com.br", principal: true },
+      { nome: "Fernanda Lima", cargo: "Gerente Financeira", telefone: "(81) 99876-5432", email: "fernanda@ferrosul.com.br", principal: false },
+    ],
+    atividades: [
+      { titulo: "Contrato assinado", data: "05/07/2026" },
+      { titulo: "Diagnóstico concluído", data: "05/07/2026" },
+      { titulo: "Visita técnica registrada", data: "12/07/2026" },
+    ],
+  },
+  2: {
+    razaoSocial: "TechFlow Sistemas de Gestão Ltda.",
+    cnpj: "23.456.789/0001-11",
+    porte: "Pequeno porte",
+    funcionarios: 22,
+    endereco: "Rua da Inovação, 450 — São Paulo/SP",
+    contatos: [
+      { nome: "Bruna Alencar", cargo: "CEO", telefone: "(11) 98888-1234", email: "bruna@techflow.com.br", principal: true },
+    ],
+    atividades: [
+      { titulo: "Contrato assinado", data: "10/07/2026" },
+      { titulo: "Diagnóstico em preenchimento", data: "16/07/2026" },
+    ],
+  },
+};
+
+export const oportunidadesDetalhe: Record<number, {
+  telefone: string;
+  email: string;
+  origem: string;
+  observacoes: string;
+  atividades: { tipo: string; descricao: string; data: string }[];
+}> = {
+  8: {
+    telefone: "(81) 99222-3344",
+    email: "contato@construtorahorizonte.com.br",
+    origem: "Indicação de cliente",
+    observacoes: "Empresa em fase de expansão para dois novos estados, buscando estruturar governança antes do crescimento.",
+    atividades: [
+      { tipo: "Ligação", descricao: "Primeiro contato, levantamento de dores", data: "08/07/2026" },
+      { tipo: "Reunião", descricao: "Apresentação institucional da Ninho", data: "12/07/2026" },
+      { tipo: "Proposta", descricao: "Envio da proposta comercial", data: "15/07/2026" },
+    ],
+  },
+  9: {
+    telefone: "(11) 98888-1234",
+    email: "bruna@techflow.com.br",
+    origem: "Site — formulário de contato",
+    observacoes: "Startup em crescimento acelerado, precisa de estrutura financeira antes da próxima rodada de investimento.",
+    atividades: [
+      { tipo: "Reunião", descricao: "Diagnóstico preliminar realizado", data: "01/07/2026" },
+      { tipo: "Contrato", descricao: "Contrato enviado para assinatura", data: "09/07/2026" },
+    ],
+  },
+};

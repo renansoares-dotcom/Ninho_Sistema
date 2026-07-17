@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { diagnosticos } from "@/lib/mock-data";
 
 const statusStyles: Record<string, string> = {
@@ -21,7 +22,11 @@ export default function DiagnosticosList() {
         <tbody>
           {diagnosticos.map((d) => (
             <tr key={d.id} className="border-b border-[#f2f3f5] last:border-b-0 hover:bg-[#fafbfc] cursor-pointer transition-colors">
-              <td className="px-5 py-4 text-[13.5px] font-medium text-[#16181d]">{d.cliente}</td>
+              <td className="px-5 py-4 text-[13.5px] font-medium text-[#16181d]">
+                <Link href={`/diagnostico/${d.id}`} className="hover:underline">
+                  {d.cliente}
+                </Link>
+              </td>
               <td className="px-5 py-4 text-[13px] text-[#5b6270]">{d.data}</td>
               <td className="px-5 py-4 text-[13px] font-semibold text-[#16181d]">
                 {d.indice > 0 ? `${d.indice.toFixed(1)} / 10` : "—"}
