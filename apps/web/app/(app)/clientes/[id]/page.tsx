@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useEffect, useState, useCallback } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { Phone, Mail, Star, Loader2 } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
 import Card from "@/components/shared/Card";
 import { Avatar } from "@/components/shared/Avatar";
+import ClienteFormModal, { ClienteFormData } from "@/components/shared/ClienteFormModal";
 import { supabase } from "@/lib/supabase";
 
 const statusStyles: Record<string, string> = {
@@ -38,26 +39,45 @@ type Contato = {
 
 export default function ClienteDetalhePage() {
   const params = useParams<{ id: string }>();
+  const router = useRouter();
   const [cliente, setCliente] = useState<Cliente | null>(null);
   const [contatos, setContatos] = useState<Contato[]>([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
+  const [modalAberto, setModalAberto] = useState(false);
+  const [excluindo, setExcluindo] = useState(false);
+
+  const carregar = useCallback(async () => {
+    setCarregando(true);
+    const [{ data: clienteData, error: clienteErro }, { data: contatosData }] = await Promise.all([
+      supabase.from("clientes").select("*").eq("id", params.id).single(),
+      supabase.from("clientes_contatos").select("*").eq("cliente_id", params.id),
+    ]);
+
+    if (clienteErro) setErro(clienteErro.message);
+    setCliente(clienteData);
+    setContatos(contatosData ?? []);
+    setCarregando(false);
+  }, [params.id]);
 
   useEffect(() => {
-    async function carregar() {
-      setCarregando(true);
-      const [{ data: clienteData, error: clienteErro }, { data: contatosData }] = await Promise.all([
-        supabase.from("clientes").select("*").eq("id", params.id).single(),
-        supabase.from("clientes_contatos").select("*").eq("cliente_id", params.id),
-      ]);
-
-      if (clienteErro) setErro(clienteErro.message);
-      setCliente(clienteData);
-      setContatos(contatosData ?? []);
-      setCarregando(false);
-    }
     if (params.id) carregar();
-  }, [params.id]);
+  }, [params.id, carregar]);
+
+  async function excluir() {
+    if (!cliente) return;
+    if (!confirm(`Tem certeza que deseja excluir "${cliente.nome_fantasia ?? cliente.razao_social}"? Essa ação não pode ser desfeita.`)) {
+      return;
+    }
+    setExcluindo(true);
+    const { error } = await supabase.from("clientes").delete().eq("id", cliente.id);
+    setExcluindo(false);
+    if (error) {
+      alert(`Não foi possível excluir: ${error.message}`);
+      return;
+    }
+    router.push("/clientes");
+  }
 
   if (carregando) {
     return (
@@ -80,13 +100,30 @@ export default function ClienteDetalhePage() {
     ? [cliente.endereco.logradouro, cliente.endereco.cidade, cliente.endereco.uf].filter(Boolean).join(" — ")
     : "—";
 
+  const formInicial: ClienteFormData = {
+    id: cliente.id,
+    razao_social: cliente.razao_social,
+    nome_fantasia: cliente.nome_fantasia ?? "",
+    cnpj: cliente.cnpj ?? "",
+    segmento: cliente.segmento ?? "",
+    porte: cliente.porte ?? "",
+    num_funcionarios: cliente.num_funcionarios ? String(cliente.num_funcionarios) : "",
+    faturamento: cliente.faturamento ? String(cliente.faturamento) : "",
+    status: cliente.status ?? "Ativo",
+    logradouro: cliente.endereco?.logradouro ?? "",
+    cidade: cliente.endereco?.cidade ?? "",
+    uf: cliente.endereco?.uf ?? "",
+  };
+
   return (
     <>
       <PageHeader
         crumb="Clientes"
         title={cliente.nome_fantasia ?? cliente.razao_social}
         secondaryLabel="Editar"
-        actionLabel="Registrar visita"
+        onSecondaryClick={() => setModalAberto(true)}
+        dangerLabel={excluindo ? "Excluindo..." : "Excluir"}
+        onDangerClick={excluir}
       />
 
       <div className="max-w-[1360px] mx-auto px-7 pb-16 pt-4 grid grid-cols-[1.4fr_1fr] gap-3.5">
@@ -140,6 +177,13 @@ export default function ClienteDetalhePage() {
           </Card>
         </div>
       </div>
+
+      <ClienteFormModal
+        open={modalAberto}
+        onClose={() => setModalAberto(false)}
+        onSaved={carregar}
+        clienteInicial={formInicial}
+      />
     </>
   );
 }

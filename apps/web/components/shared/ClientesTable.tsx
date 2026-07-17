@@ -38,7 +38,7 @@ function formatarFaturamento(valor: number | null) {
   return `R$ ${(valor / 1000).toFixed(0)} mil/ano`;
 }
 
-export default function ClientesTable() {
+export default function ClientesTable({ refreshKey = 0 }: { refreshKey?: number }) {
   const [query, setQuery] = useState("");
   const [clientes, setClientes] = useState<ClienteRow[]>([]);
   const [carregando, setCarregando] = useState(true);
@@ -60,7 +60,7 @@ export default function ClientesTable() {
       setCarregando(false);
     }
     carregar();
-  }, []);
+  }, [refreshKey]);
 
   const filtrados = clientes.filter((c) =>
     (c.nome_fantasia ?? c.razao_social).toLowerCase().includes(query.toLowerCase())

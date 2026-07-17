@@ -13,9 +13,9 @@ with novo_contrato as (
   returning id
 )
 insert into contrato_parcelas (contrato_id, numero, valor, vencimento, status, data_pagamento)
-select id, 1, 10666.67, '2026-06-25', 'Pago', '2026-06-24' from novo_contrato
+select id, 1, 10666.67, '2026-06-25'::date, 'Pago', '2026-06-24'::date from novo_contrato
 union all
-select id, 2, 10666.67, '2026-07-25', 'Pendente', null from novo_contrato;
+select id, 2, 10666.67, '2026-07-25'::date, 'Pendente', null::date from novo_contrato;
 
 -- ------------------------------------------------------------
 -- Contrato 2 — TechFlow Sistemas (em dia)
@@ -27,7 +27,7 @@ with novo_contrato as (
   returning id
 )
 insert into contrato_parcelas (contrato_id, numero, valor, vencimento, status, data_pagamento)
-select id, 1, 11250, '2026-07-28', 'Pendente', null from novo_contrato;
+select id, 1, 11250, '2026-07-28'::date, 'Pendente', null::date from novo_contrato;
 
 -- ------------------------------------------------------------
 -- Contrato 3 — Grupo Alvorada (em dia)
@@ -39,9 +39,9 @@ with novo_contrato as (
   returning id
 )
 insert into contrato_parcelas (contrato_id, numero, valor, vencimento, status, data_pagamento)
-select id, 1, 4750, '2026-06-30', 'Pago', '2026-06-29' from novo_contrato
+select id, 1, 4750, '2026-06-30'::date, 'Pago', '2026-06-29'::date from novo_contrato
 union all
-select id, 2, 4750, '2026-07-30', 'Pendente', null from novo_contrato;
+select id, 2, 4750, '2026-07-30'::date, 'Pendente', null::date from novo_contrato;
 
 -- ------------------------------------------------------------
 -- Contrato 4 — Vale Verde Comércio (inadimplente)
@@ -53,9 +53,9 @@ with novo_contrato as (
   returning id
 )
 insert into contrato_parcelas (contrato_id, numero, valor, vencimento, status, data_pagamento)
-select id, 1, 3166.67, '2026-06-12', 'Pago', '2026-06-11' from novo_contrato
+select id, 1, 3166.67, '2026-06-12'::date, 'Pago', '2026-06-11'::date from novo_contrato
 union all
-select id, 2, 3166.67, '2026-07-12', 'Atrasado', null from novo_contrato;
+select id, 2, 3166.67, '2026-07-12'::date, 'Atrasado', null::date from novo_contrato;
 
 -- ------------------------------------------------------------
 -- Contrato 5 — Padaria Trigo Dourado (em dia)
@@ -67,7 +67,7 @@ with novo_contrato as (
   returning id
 )
 insert into contrato_parcelas (contrato_id, numero, valor, vencimento, status, data_pagamento)
-select id, 1, 3000, '2026-07-22', 'Pendente', null from novo_contrato;
+select id, 1, 3000, '2026-07-22'::date, 'Pendente', null::date from novo_contrato;
 
 -- ============================================================
 -- Fim da migration 007

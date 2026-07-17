@@ -1,21 +1,32 @@
 import Link from "next/link";
-import { Plus, SlidersHorizontal } from "lucide-react";
+import { Plus, SlidersHorizontal, Trash2 } from "lucide-react";
 
 export default function PageHeader({
   crumb,
   title,
   actionLabel,
   actionHref,
+  onActionClick,
   secondaryLabel,
+  onSecondaryClick,
+  dangerLabel,
+  onDangerClick,
 }: {
   crumb: string;
   title: string;
   actionLabel?: string;
   actionHref?: string;
+  onActionClick?: () => void;
   secondaryLabel?: string;
+  onSecondaryClick?: () => void;
+  dangerLabel?: string;
+  onDangerClick?: () => void;
 }) {
   const actionButton = actionLabel && (
-    <button className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-[13.5px] font-semibold border-none bg-primary text-white shadow-sm">
+    <button
+      onClick={onActionClick}
+      className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-[13.5px] font-semibold border-none bg-primary text-white shadow-sm"
+    >
       <Plus size={15} />
       {actionLabel}
     </button>
@@ -30,8 +41,20 @@ export default function PageHeader({
         </h1>
       </div>
       <div className="flex gap-2">
+        {dangerLabel && (
+          <button
+            onClick={onDangerClick}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-[13.5px] font-medium border border-[#f5c2bd] bg-white text-[#f04438] hover:bg-[#fdecea]"
+          >
+            <Trash2 size={14} />
+            {dangerLabel}
+          </button>
+        )}
         {secondaryLabel && (
-          <button className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-[13.5px] font-medium border border-[#e4e6ea] bg-white text-[#3f434d]">
+          <button
+            onClick={onSecondaryClick}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-[13.5px] font-medium border border-[#e4e6ea] bg-white text-[#3f434d]"
+          >
             <SlidersHorizontal size={14} />
             {secondaryLabel}
           </button>
