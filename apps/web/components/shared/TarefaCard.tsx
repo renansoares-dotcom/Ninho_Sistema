@@ -2,7 +2,7 @@ import { MoreHorizontal } from "lucide-react";
 import { Avatar } from "./Avatar";
 
 export type Tarefa = {
-  id: number;
+  id: string;
   titulo: string;
   cliente: string;
   coluna: string;
