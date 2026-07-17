@@ -93,12 +93,14 @@ export const diagnosticos = [
 ];
 
 export const eventosAgenda = [
-  { id: 1, titulo: "Reunião de diagnóstico — Nova Era Logística", tipo: "Reunião", data: "Hoje", hora: "10:00", resp: "RS" },
-  { id: 2, titulo: "Visita técnica — Padaria Trigo Dourado", tipo: "Visita técnica", data: "Hoje", hora: "14:30", resp: "JP" },
-  { id: 3, titulo: "Apresentação do plano de trabalho — Grupo Alvorada", tipo: "Videoconferência", data: "Amanhã", hora: "09:00", resp: "BA" },
-  { id: 4, titulo: "Alinhamento comercial — Construtora Horizonte", tipo: "Reunião", data: "Amanhã", hora: "16:00", resp: "MC" },
-  { id: 5, titulo: "Visita técnica — Metalúrgica Ferro Sul", tipo: "Visita técnica", data: "20/07", hora: "08:30", resp: "MC" },
-  { id: 6, titulo: "Follow-up comercial — Studio Criativo Nix", tipo: "Videoconferência", data: "21/07", hora: "11:00", resp: "MC" },
+  { id: 1, titulo: "Reunião de diagnóstico — Nova Era Logística", tipo: "Reunião", data: "Hoje", dataISO: "2026-07-17", hora: "10:00", resp: "RS" },
+  { id: 2, titulo: "Visita técnica — Padaria Trigo Dourado", tipo: "Visita técnica", data: "Hoje", dataISO: "2026-07-17", hora: "14:30", resp: "JP" },
+  { id: 3, titulo: "Apresentação do plano de trabalho — Grupo Alvorada", tipo: "Videoconferência", data: "Amanhã", dataISO: "2026-07-18", hora: "09:00", resp: "BA" },
+  { id: 4, titulo: "Alinhamento comercial — Construtora Horizonte", tipo: "Reunião", data: "Amanhã", dataISO: "2026-07-18", hora: "16:00", resp: "MC" },
+  { id: 5, titulo: "Visita técnica — Metalúrgica Ferro Sul", tipo: "Visita técnica", data: "20/07", dataISO: "2026-07-20", hora: "08:30", resp: "MC" },
+  { id: 6, titulo: "Follow-up comercial — Studio Criativo Nix", tipo: "Videoconferência", data: "21/07", dataISO: "2026-07-21", hora: "11:00", resp: "MC" },
+  { id: 7, titulo: "Reunião de fechamento — Doce Sabor Alimentos", tipo: "Reunião", data: "24/07", dataISO: "2026-07-24", hora: "10:30", resp: "JP" },
+  { id: 8, titulo: "Visita técnica — TechFlow Sistemas", tipo: "Visita técnica", data: "28/07", dataISO: "2026-07-28", hora: "15:00", resp: "BA" },
 ];
 
 export const contratos = [

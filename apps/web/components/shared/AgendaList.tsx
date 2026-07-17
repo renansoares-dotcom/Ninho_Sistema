@@ -16,7 +16,7 @@ export default function AgendaList() {
   }, {});
 
   return (
-    <div className="max-w-[1360px] mx-auto px-7 pb-16 pt-4 flex flex-col gap-6">
+    <div className="flex flex-col gap-6">
       {Object.entries(grupos).map(([data, eventos]) => (
         <div key={data}>
           <div className="text-[13px] font-semibold text-[#9aa0ac] mb-3">{data}</div>
