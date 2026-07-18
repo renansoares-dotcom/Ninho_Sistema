@@ -32,6 +32,18 @@ type Cliente = {
   faturamento: number | null;
   endereco: { logradouro?: string; cidade?: string; uf?: string } | null;
   status: string | null;
+  inscricao_estadual: string | null;
+  inscricao_municipal: string | null;
+  cnae_principal: string | null;
+  natureza_juridica: string | null;
+  regime_tributario: string | null;
+  capital_social: number | null;
+  erp_utilizado: string | null;
+  banco_principal: string | null;
+  site: string | null;
+  instagram: string | null;
+  linkedin: string | null;
+  tags: string[] | null;
 };
 
 type Contato = {
@@ -121,6 +133,18 @@ export default function ClienteDetalhePage() {
     logradouro: cliente.endereco?.logradouro ?? "",
     cidade: cliente.endereco?.cidade ?? "",
     uf: cliente.endereco?.uf ?? "",
+    inscricao_estadual: cliente.inscricao_estadual ?? "",
+    inscricao_municipal: cliente.inscricao_municipal ?? "",
+    cnae_principal: cliente.cnae_principal ?? "",
+    natureza_juridica: cliente.natureza_juridica ?? "",
+    regime_tributario: cliente.regime_tributario ?? "",
+    capital_social: cliente.capital_social ? String(cliente.capital_social) : "",
+    erp_utilizado: cliente.erp_utilizado ?? "",
+    banco_principal: cliente.banco_principal ?? "",
+    site: cliente.site ?? "",
+    instagram: cliente.instagram ?? "",
+    linkedin: cliente.linkedin ?? "",
+    tags: (cliente.tags ?? []).join(", "),
   };
 
   return (
@@ -152,6 +176,36 @@ export default function ClienteDetalhePage() {
                     <Field label="Endereço" value={endereco} />
                   </div>
                 </div>
+              </Card>
+
+              <Card title="Dados societários e fiscais">
+                <div className="grid grid-cols-2 gap-4">
+                  <Field label="Inscrição estadual" value={cliente.inscricao_estadual ?? "—"} />
+                  <Field label="Inscrição municipal" value={cliente.inscricao_municipal ?? "—"} />
+                  <Field label="CNAE principal" value={cliente.cnae_principal ?? "—"} />
+                  <Field label="Natureza jurídica" value={cliente.natureza_juridica ?? "—"} />
+                  <Field label="Regime tributário" value={cliente.regime_tributario ?? "—"} />
+                  <Field label="Capital social" value={cliente.capital_social ? `R$ ${cliente.capital_social.toLocaleString("pt-BR")}` : "—"} />
+                </div>
+              </Card>
+
+              <Card title="Ferramentas e presença digital">
+                <div className="grid grid-cols-2 gap-4">
+                  <Field label="ERP utilizado" value={cliente.erp_utilizado ?? "—"} />
+                  <Field label="Banco principal" value={cliente.banco_principal ?? "—"} />
+                  <Field label="Site" value={cliente.site ?? "—"} />
+                  <Field label="Instagram" value={cliente.instagram ?? "—"} />
+                  <Field label="LinkedIn" value={cliente.linkedin ?? "—"} />
+                </div>
+                {(cliente.tags ?? []).length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 mt-4 pt-4 border-t border-[#f2f3f5]">
+                    {(cliente.tags ?? []).map((tag) => (
+                      <span key={tag} className="text-[11.5px] font-medium px-2 py-1 rounded-full bg-[#eaf1fb] text-primary">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </Card>
 
               <Card title="Contatos principais">

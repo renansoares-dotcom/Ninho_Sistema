@@ -19,6 +19,18 @@ export type ClienteFormData = {
   logradouro: string;
   cidade: string;
   uf: string;
+  inscricao_estadual: string;
+  inscricao_municipal: string;
+  cnae_principal: string;
+  natureza_juridica: string;
+  regime_tributario: string;
+  capital_social: string;
+  erp_utilizado: string;
+  banco_principal: string;
+  site: string;
+  instagram: string;
+  linkedin: string;
+  tags: string;
 };
 
 const vazio: ClienteFormData = {
@@ -33,6 +45,18 @@ const vazio: ClienteFormData = {
   logradouro: "",
   cidade: "",
   uf: "",
+  inscricao_estadual: "",
+  inscricao_municipal: "",
+  cnae_principal: "",
+  natureza_juridica: "",
+  regime_tributario: "",
+  capital_social: "",
+  erp_utilizado: "",
+  banco_principal: "",
+  site: "",
+  instagram: "",
+  linkedin: "",
+  tags: "",
 };
 
 function Campo({
@@ -58,6 +82,15 @@ function Campo({
         placeholder={placeholder}
         className="w-full border border-[#e4e6ea] rounded-lg px-3 py-2.5 text-[13.5px] text-[#16181d] outline-none focus:border-primary transition-colors"
       />
+    </div>
+  );
+}
+
+function Secao({ titulo, children }: { titulo: string; children: React.ReactNode }) {
+  return (
+    <div className="pt-2 border-t border-[#f2f3f5]">
+      <div className="text-[12.5px] font-semibold text-[#3f434d] mb-3 mt-3">{titulo}</div>
+      {children}
     </div>
   );
 }
@@ -104,6 +137,18 @@ export default function ClienteFormModal({
       faturamento: form.faturamento ? Number(form.faturamento) : null,
       status: form.status,
       endereco: { logradouro: form.logradouro, cidade: form.cidade, uf: form.uf },
+      inscricao_estadual: form.inscricao_estadual || null,
+      inscricao_municipal: form.inscricao_municipal || null,
+      cnae_principal: form.cnae_principal || null,
+      natureza_juridica: form.natureza_juridica || null,
+      regime_tributario: form.regime_tributario || null,
+      capital_social: form.capital_social ? Number(form.capital_social) : null,
+      erp_utilizado: form.erp_utilizado || null,
+      banco_principal: form.banco_principal || null,
+      site: form.site || null,
+      instagram: form.instagram || null,
+      linkedin: form.linkedin || null,
+      tags: form.tags ? form.tags.split(",").map((t) => t.trim()).filter(Boolean) : [],
     };
 
     const resultado = form.id
@@ -162,8 +207,7 @@ export default function ClienteFormModal({
             </div>
           </div>
 
-          <div className="pt-2 border-t border-[#f2f3f5]">
-            <div className="text-[12.5px] font-semibold text-[#3f434d] mb-3 mt-3">Endereço</div>
+          <Secao titulo="Endereço">
             <div className="grid grid-cols-3 gap-4">
               <div className="col-span-2">
                 <Campo label="Logradouro" value={form.logradouro} onChange={set("logradouro")} />
@@ -173,7 +217,47 @@ export default function ClienteFormModal({
                 <Campo label="Cidade" value={form.cidade} onChange={set("cidade")} />
               </div>
             </div>
-          </div>
+          </Secao>
+
+          <Secao titulo="Dados societários e fiscais">
+            <div className="grid grid-cols-2 gap-4">
+              <Campo label="Inscrição estadual" value={form.inscricao_estadual} onChange={set("inscricao_estadual")} />
+              <Campo label="Inscrição municipal" value={form.inscricao_municipal} onChange={set("inscricao_municipal")} />
+              <Campo label="CNAE principal" value={form.cnae_principal} onChange={set("cnae_principal")} placeholder="Ex: 25.11-0-00" />
+              <Campo label="Natureza jurídica" value={form.natureza_juridica} onChange={set("natureza_juridica")} placeholder="Ex: Sociedade Limitada" />
+              <div>
+                <label className="text-[12px] text-[#9aa0ac] mb-1 block">Regime tributário</label>
+                <select
+                  value={form.regime_tributario}
+                  onChange={(e) => set("regime_tributario")(e.target.value)}
+                  className="w-full border border-[#e4e6ea] rounded-lg px-3 py-2.5 text-[13.5px] text-[#16181d] outline-none focus:border-primary"
+                >
+                  <option value="">Selecione...</option>
+                  <option>MEI</option>
+                  <option>Simples Nacional</option>
+                  <option>Lucro Presumido</option>
+                  <option>Lucro Real</option>
+                </select>
+              </div>
+              <Campo label="Capital social (R$)" value={form.capital_social} onChange={set("capital_social")} type="number" />
+            </div>
+          </Secao>
+
+          <Secao titulo="Ferramentas e presença digital">
+            <div className="grid grid-cols-2 gap-4">
+              <Campo label="ERP utilizado" value={form.erp_utilizado} onChange={set("erp_utilizado")} placeholder="Ex: SAP, TOTVS, Bling" />
+              <Campo label="Banco principal" value={form.banco_principal} onChange={set("banco_principal")} />
+              <div className="col-span-2">
+                <Campo label="Site" value={form.site} onChange={set("site")} placeholder="https://" />
+              </div>
+              <Campo label="Instagram" value={form.instagram} onChange={set("instagram")} placeholder="@empresa" />
+              <Campo label="LinkedIn" value={form.linkedin} onChange={set("linkedin")} placeholder="linkedin.com/company/..." />
+            </div>
+          </Secao>
+
+          <Secao titulo="Tags">
+            <Campo label="Separadas por vírgula" value={form.tags} onChange={set("tags")} placeholder="Ex: varejo, familiar, alto-potencial" />
+          </Secao>
         </div>
 
         <div className="flex items-center justify-end gap-2 px-6 py-4 border-t border-[#eef0f2] sticky bottom-0 bg-white">
