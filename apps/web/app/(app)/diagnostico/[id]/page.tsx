@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { CheckCircle2, AlertTriangle, Loader2 } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
 import Card from "@/components/shared/Card";
@@ -22,10 +22,12 @@ type Area = { area: string; nota: number };
 
 export default function DiagnosticoDetalhePage() {
   const params = useParams<{ id: string }>();
+  const router = useRouter();
   const [diag, setDiag] = useState<Diagnostico | null>(null);
   const [areas, setAreas] = useState<Area[]>([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
+  const [excluindo, setExcluindo] = useState(false);
 
   useEffect(() => {
     async function carregar() {
@@ -46,6 +48,18 @@ export default function DiagnosticoDetalhePage() {
     }
     if (params.id) carregar();
   }, [params.id]);
+
+  async function excluir() {
+    if (!confirm("Tem certeza que deseja excluir este diagnóstico? Essa ação não pode ser desfeita.")) return;
+    setExcluindo(true);
+    const { error } = await supabase.from("diagnosticos").delete().eq("id", params.id);
+    setExcluindo(false);
+    if (error) {
+      alert(`Não foi possível excluir: ${error.message}`);
+      return;
+    }
+    router.push("/diagnostico");
+  }
 
   if (carregando) {
     return (
@@ -68,7 +82,13 @@ export default function DiagnosticoDetalhePage() {
 
   return (
     <>
-      <PageHeader crumb="Diagnóstico" title={`Diagnóstico — ${nomeCliente}`} secondaryLabel="Gerar PDF" />
+      <PageHeader
+        crumb="Diagnóstico"
+        title={`Diagnóstico — ${nomeCliente}`}
+        secondaryLabel="Gerar PDF"
+        dangerLabel={excluindo ? "Excluindo..." : "Excluir"}
+        onDangerClick={excluir}
+      />
 
       <div className="max-w-[1360px] mx-auto px-7 pb-16 pt-4 flex flex-col gap-3.5">
         <div className="grid grid-cols-[1fr_1.1fr] gap-3.5">
