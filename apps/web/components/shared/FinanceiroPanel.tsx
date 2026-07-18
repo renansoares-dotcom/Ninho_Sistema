@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Wallet, TrendingUp, AlertCircle, Receipt, Loader2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import ContratoDetalheModal, { ContratoDetalhe } from "./ContratoDetalheModal";
 
 const statusStyles: Record<string, string> = {
   "Em dia": "bg-[#eafaf1] text-[#0e9f6e]",
@@ -18,27 +19,41 @@ type ContratoRow = {
   valor_total: number;
   num_parcelas: number;
   clientes: { nome_fantasia: string | null; razao_social: string } | null;
-  contrato_parcelas: { valor: number; vencimento: string; status: string; data_pagamento: string | null }[];
+  contrato_parcelas: { id: string; numero: number; valor: number; vencimento: string; status: string; data_pagamento: string | null }[];
 };
 
-export default function FinanceiroPanel() {
+export default function FinanceiroPanel({ refreshKey = 0 }: { refreshKey?: number }) {
   const [contratos, setContratos] = useState<ContratoRow[]>([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
+  const [internalRefresh, setInternalRefresh] = useState(0);
+  const [modalAberto, setModalAberto] = useState(false);
+  const [contratoSelecionado, setContratoSelecionado] = useState<ContratoDetalhe | undefined>(undefined);
 
   useEffect(() => {
     async function carregar() {
       setCarregando(true);
       const { data, error } = await supabase
         .from("contratos")
-        .select("id, valor_total, num_parcelas, clientes(nome_fantasia, razao_social), contrato_parcelas(valor, vencimento, status, data_pagamento)");
+        .select("id, valor_total, num_parcelas, clientes(nome_fantasia, razao_social), contrato_parcelas(id, numero, valor, vencimento, status, data_pagamento)");
 
       if (error) setErro(error.message);
       setContratos((data as any) ?? []);
       setCarregando(false);
     }
     carregar();
-  }, []);
+  }, [refreshKey, internalRefresh]);
+
+  function abrirDetalhe(c: ContratoRow) {
+    setContratoSelecionado({
+      id: c.id,
+      clienteNome: c.clientes?.nome_fantasia ?? c.clientes?.razao_social ?? "—",
+      valor_total: c.valor_total,
+      num_parcelas: c.num_parcelas,
+      parcelas: c.contrato_parcelas,
+    });
+    setModalAberto(true);
+  }
 
   const todasParcelas = contratos.flatMap((c) => c.contrato_parcelas);
   const recebido = todasParcelas.filter((p) => p.status === "Pago").reduce((acc, p) => acc + p.valor, 0);
@@ -109,7 +124,11 @@ export default function FinanceiroPanel() {
                 .sort((a, b) => a.vencimento.localeCompare(b.vencimento));
               const proximoVenc = pendentes[0]?.vencimento;
               return (
-                <tr key={c.id} className="border-b border-[#f2f3f5] last:border-b-0 hover:bg-[#fafbfc] cursor-pointer transition-colors">
+                <tr
+                  key={c.id}
+                  onClick={() => abrirDetalhe(c)}
+                  className="border-b border-[#f2f3f5] last:border-b-0 hover:bg-[#fafbfc] cursor-pointer transition-colors"
+                >
                   <td className="px-5 py-4 text-[13.5px] font-medium text-[#16181d]">
                     {c.clientes?.nome_fantasia ?? c.clientes?.razao_social ?? "—"}
                   </td>
@@ -136,6 +155,13 @@ export default function FinanceiroPanel() {
           </tbody>
         </table>
       </div>
+
+      <ContratoDetalheModal
+        open={modalAberto}
+        onClose={() => setModalAberto(false)}
+        onChanged={() => setInternalRefresh((k) => k + 1)}
+        contrato={contratoSelecionado}
+      />
     </div>
   );
 }

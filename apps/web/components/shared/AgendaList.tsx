@@ -17,7 +17,7 @@ function formatarGrupo(dataISO: string) {
   return d.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
 }
 
-export default function AgendaList({ eventos }: { eventos: EventoAgenda[] }) {
+export default function AgendaList({ eventos, onEventClick }: { eventos: EventoAgenda[]; onEventClick?: (ev: EventoAgenda) => void }) {
   const grupos = eventos.reduce<Record<string, EventoAgenda[]>>((acc, ev) => {
     const label = formatarGrupo(ev.dataISO);
     acc[label] = acc[label] || [];
@@ -36,7 +36,8 @@ export default function AgendaList({ eventos }: { eventos: EventoAgenda[] }) {
               return (
                 <div
                   key={ev.id}
-                  className="bg-white border border-[#eef0f2] rounded-2xl p-4 flex items-center gap-4 shadow-[0_1px_2px_rgba(16,24,40,0.03)]"
+                  onClick={() => onEventClick?.(ev)}
+                  className="bg-white border border-[#eef0f2] rounded-2xl p-4 flex items-center gap-4 shadow-[0_1px_2px_rgba(16,24,40,0.03)] cursor-pointer hover:border-[#d8dce2] transition-colors"
                 >
                   <div className="w-11 h-11 rounded-xl bg-[#eaf1fb] flex items-center justify-center shrink-0">
                     <Icon size={18} color="#004AAD" strokeWidth={1.8} />

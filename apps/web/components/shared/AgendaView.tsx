@@ -4,14 +4,18 @@ import { useState, useEffect } from "react";
 import { Search, ChevronDown, X, List, Calendar as CalendarIcon, Loader2 } from "lucide-react";
 import AgendaList from "./AgendaList";
 import AgendaCalendar from "./AgendaCalendar";
+import EventoFormModal, { EventoFormData } from "./EventoFormModal";
 import { supabase } from "@/lib/supabase";
 
 export type EventoAgenda = {
   id: string;
   titulo: string;
   tipo: string;
+  tipoRaw: string;
+  cliente_id: string | null;
   dataISO: string;
   hora: string;
+  horaRaw: string;
   resp: string;
 };
 
@@ -21,18 +25,21 @@ const tipoDisplay: Record<string, string> = {
   videoconferencia: "Videoconferência",
 };
 
-export default function AgendaView() {
+export default function AgendaView({ refreshKey = 0 }: { refreshKey?: number }) {
   const [modo, setModo] = useState<"lista" | "calendario">("calendario");
   const [eventos, setEventos] = useState<EventoAgenda[]>([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
+  const [internalRefresh, setInternalRefresh] = useState(0);
+  const [modalAberto, setModalAberto] = useState(false);
+  const [eventoSelecionado, setEventoSelecionado] = useState<EventoFormData | undefined>(undefined);
 
   useEffect(() => {
     async function carregar() {
       setCarregando(true);
       const { data, error } = await supabase
         .from("eventos")
-        .select("id, titulo, tipo, data_inicio, responsavel_nome")
+        .select("id, titulo, tipo, data_inicio, responsavel_nome, cliente_id")
         .order("data_inicio", { ascending: true });
 
       if (error) {
@@ -45,8 +52,11 @@ export default function AgendaView() {
               id: e.id,
               titulo: e.titulo,
               tipo: tipoDisplay[e.tipo] ?? e.tipo,
+              tipoRaw: e.tipo,
+              cliente_id: e.cliente_id,
               dataISO: e.data_inicio.slice(0, 10),
               hora: dt.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
+              horaRaw: e.data_inicio.slice(11, 16),
               resp: e.responsavel_nome ?? "",
             };
           })
@@ -55,7 +65,20 @@ export default function AgendaView() {
       setCarregando(false);
     }
     carregar();
-  }, []);
+  }, [refreshKey, internalRefresh]);
+
+  function abrirEdicao(ev: EventoAgenda) {
+    setEventoSelecionado({
+      id: ev.id,
+      titulo: ev.titulo,
+      tipo: ev.tipoRaw,
+      cliente_id: ev.cliente_id ?? "",
+      data: ev.dataISO,
+      hora: ev.horaRaw,
+      responsavel_nome: ev.resp,
+    });
+    setModalAberto(true);
+  }
 
   return (
     <div className="max-w-[1360px] mx-auto px-7 pb-16 pt-4">
@@ -112,10 +135,18 @@ export default function AgendaView() {
           Carregando agenda do banco de dados...
         </div>
       ) : modo === "lista" ? (
-        <AgendaList eventos={eventos} />
+        <AgendaList eventos={eventos} onEventClick={abrirEdicao} />
       ) : (
-        <AgendaCalendar eventos={eventos} />
+        <AgendaCalendar eventos={eventos} onEventClick={abrirEdicao} />
       )}
+
+      <EventoFormModal
+        open={modalAberto}
+        onClose={() => setModalAberto(false)}
+        onSaved={() => setInternalRefresh((k) => k + 1)}
+        onDeleted={() => setInternalRefresh((k) => k + 1)}
+        eventoInicial={eventoSelecionado}
+      />
     </div>
   );
 }

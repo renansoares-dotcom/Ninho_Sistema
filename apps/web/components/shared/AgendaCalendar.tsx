@@ -26,7 +26,7 @@ function toISO(y: number, m: number, d: number) {
   return `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
 }
 
-export default function AgendaCalendar({ eventos: eventosAgenda }: { eventos: EventoAgenda[] }) {
+export default function AgendaCalendar({ eventos: eventosAgenda, onEventClick }: { eventos: EventoAgenda[]; onEventClick?: (ev: EventoAgenda) => void }) {
   const hoje = new Date("2026-07-17T12:00:00");
   const [cursor, setCursor] = useState({ year: hoje.getFullYear(), month: hoje.getMonth() });
   const [selecionado, setSelecionado] = useState<string | null>(toISO(hoje.getFullYear(), hoje.getMonth(), hoje.getDate()));
@@ -168,7 +168,11 @@ export default function AgendaCalendar({ eventos: eventosAgenda }: { eventos: Ev
             {eventosDoDiaSelecionado.map((e) => {
               const Icon = tipoIcon[e.tipo] ?? CalendarDays;
               return (
-                <div key={e.id} className="flex items-start gap-2.5 p-2.5 rounded-lg bg-[#fafbfc]">
+                <div
+                  key={e.id}
+                  onClick={() => onEventClick?.(e)}
+                  className="flex items-start gap-2.5 p-2.5 rounded-lg bg-[#fafbfc] cursor-pointer hover:bg-[#f0f1f3] transition-colors"
+                >
                   <Icon size={14} color="#004AAD" className="mt-0.5 shrink-0" />
                   <div>
                     <div className="text-[12.5px] font-medium text-[#16181d] leading-snug">{e.titulo}</div>
