@@ -7,6 +7,12 @@ import PageHeader from "@/components/shared/PageHeader";
 import Card from "@/components/shared/Card";
 import { Avatar } from "@/components/shared/Avatar";
 import ClienteFormModal, { ClienteFormData } from "@/components/shared/ClienteFormModal";
+import WorkspaceTabs, { AbaWorkspace } from "@/components/workspace/WorkspaceTabs";
+import ClienteTimelineTab from "@/components/workspace/ClienteTimelineTab";
+import ClienteKanbanTab from "@/components/workspace/ClienteKanbanTab";
+import ClienteAgendaTab from "@/components/workspace/ClienteAgendaTab";
+import ClienteDiagnosticoTab from "@/components/workspace/ClienteDiagnosticoTab";
+import ClienteFinanceiroTab from "@/components/workspace/ClienteFinanceiroTab";
 import { supabase } from "@/lib/supabase";
 
 const statusStyles: Record<string, string> = {
@@ -46,6 +52,7 @@ export default function ClienteDetalhePage() {
   const [erro, setErro] = useState<string | null>(null);
   const [modalAberto, setModalAberto] = useState(false);
   const [excluindo, setExcluindo] = useState(false);
+  const [aba, setAba] = useState<AbaWorkspace>("visao-geral");
 
   const carregar = useCallback(async () => {
     setCarregando(true);
@@ -96,6 +103,7 @@ export default function ClienteDetalhePage() {
     );
   }
 
+  const nomeCliente = cliente.nome_fantasia ?? cliente.razao_social;
   const endereco = cliente.endereco
     ? [cliente.endereco.logradouro, cliente.endereco.cidade, cliente.endereco.uf].filter(Boolean).join(" — ")
     : "—";
@@ -119,63 +127,75 @@ export default function ClienteDetalhePage() {
     <>
       <PageHeader
         crumb="Clientes"
-        title={cliente.nome_fantasia ?? cliente.razao_social}
+        title={nomeCliente}
         secondaryLabel="Editar"
         onSecondaryClick={() => setModalAberto(true)}
         dangerLabel={excluindo ? "Excluindo..." : "Excluir"}
         onDangerClick={excluir}
       />
 
-      <div className="max-w-[1360px] mx-auto px-7 pb-16 pt-4 grid grid-cols-[1.4fr_1fr] gap-3.5">
-        <div className="flex flex-col gap-3.5">
-          <Card title="Identificação">
-            <div className="grid grid-cols-2 gap-4">
-              <Field label="Razão social" value={cliente.razao_social} />
-              <Field label="CNPJ" value={cliente.cnpj ?? "—"} />
-              <Field label="Segmento" value={cliente.segmento ?? "—"} />
-              <Field label="Porte" value={cliente.porte ?? "—"} />
-              <Field label="Funcionários" value={cliente.num_funcionarios ? String(cliente.num_funcionarios) : "—"} />
-              <Field label="Faturamento" value={cliente.faturamento ? `R$ ${cliente.faturamento.toLocaleString("pt-BR")}` : "—"} />
-              <div className="col-span-2">
-                <Field label="Endereço" value={endereco} />
-              </div>
-            </div>
-          </Card>
+      <WorkspaceTabs ativa={aba} onChange={setAba} />
 
-          <Card title="Contatos principais">
-            <div className="flex flex-col divide-y divide-[#f2f3f5]">
-              {contatos.map((c) => (
-                <div key={c.id} className="py-3 flex items-center gap-3">
-                  <Avatar initials={c.nome.split(" ").map((n) => n[0]).slice(0, 2).join("")} size={32} />
-                  <div className="flex-1">
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-[13.5px] font-semibold text-[#16181d]">{c.nome}</span>
-                      {c.principal && <Star size={12} className="fill-[#f59e0b] text-[#f59e0b]" />}
-                    </div>
-                    <div className="text-[12px] text-[#9aa0ac]">{c.cargo}</div>
-                  </div>
-                  <div className="flex flex-col items-end gap-0.5 text-[12px] text-[#5b6270]">
-                    {c.telefone && <span className="flex items-center gap-1.5"><Phone size={12} />{c.telefone}</span>}
-                    {c.email && <span className="flex items-center gap-1.5"><Mail size={12} />{c.email}</span>}
+      <div className="max-w-[1360px] mx-auto px-7 pb-16 pt-5">
+        {aba === "visao-geral" && (
+          <div className="grid grid-cols-[1.4fr_1fr] gap-3.5">
+            <div className="flex flex-col gap-3.5">
+              <Card title="Identificação">
+                <div className="grid grid-cols-2 gap-4">
+                  <Field label="Razão social" value={cliente.razao_social} />
+                  <Field label="CNPJ" value={cliente.cnpj ?? "—"} />
+                  <Field label="Segmento" value={cliente.segmento ?? "—"} />
+                  <Field label="Porte" value={cliente.porte ?? "—"} />
+                  <Field label="Funcionários" value={cliente.num_funcionarios ? String(cliente.num_funcionarios) : "—"} />
+                  <Field label="Faturamento" value={cliente.faturamento ? `R$ ${cliente.faturamento.toLocaleString("pt-BR")}` : "—"} />
+                  <div className="col-span-2">
+                    <Field label="Endereço" value={endereco} />
                   </div>
                 </div>
-              ))}
-              {contatos.length === 0 && (
-                <p className="text-[12.5px] text-[#9aa0ac] py-2">
-                  Nenhum contato cadastrado ainda — use o botão &quot;Editar&quot; para adicionar.
-                </p>
-              )}
-            </div>
-          </Card>
-        </div>
+              </Card>
 
-        <div className="flex flex-col gap-3.5">
-          <Card title="Status">
-            <span className={`text-[12px] font-semibold px-2.5 py-1 rounded-full ${statusStyles[cliente.status ?? "Ativo"]}`}>
-              {cliente.status ?? "Ativo"}
-            </span>
-          </Card>
-        </div>
+              <Card title="Contatos principais">
+                <div className="flex flex-col divide-y divide-[#f2f3f5]">
+                  {contatos.map((c) => (
+                    <div key={c.id} className="py-3 flex items-center gap-3">
+                      <Avatar initials={c.nome.split(" ").map((n) => n[0]).slice(0, 2).join("")} size={32} />
+                      <div className="flex-1">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-[13.5px] font-semibold text-[#16181d]">{c.nome}</span>
+                          {c.principal && <Star size={12} className="fill-[#f59e0b] text-[#f59e0b]" />}
+                        </div>
+                        <div className="text-[12px] text-[#9aa0ac]">{c.cargo}</div>
+                      </div>
+                      <div className="flex flex-col items-end gap-0.5 text-[12px] text-[#5b6270]">
+                        {c.telefone && <span className="flex items-center gap-1.5"><Phone size={12} />{c.telefone}</span>}
+                        {c.email && <span className="flex items-center gap-1.5"><Mail size={12} />{c.email}</span>}
+                      </div>
+                    </div>
+                  ))}
+                  {contatos.length === 0 && (
+                    <p className="text-[12.5px] text-[#9aa0ac] py-2">
+                      Nenhum contato cadastrado ainda — use o botão &quot;Editar&quot; para adicionar.
+                    </p>
+                  )}
+                </div>
+              </Card>
+            </div>
+
+            <div className="flex flex-col gap-3.5">
+              <Card title="Status">
+                <span className={`text-[12px] font-semibold px-2.5 py-1 rounded-full ${statusStyles[cliente.status ?? "Ativo"]}`}>
+                  {cliente.status ?? "Ativo"}
+                </span>
+              </Card>
+            </div>
+          </div>
+        )}
+
+        {aba === "timeline" && <ClienteTimelineTab clienteId={cliente.id} />}
+        {aba === "kanban" && <ClienteKanbanTab clienteId={cliente.id} clienteNome={nomeCliente} />}
+        {aba === "agenda" && <ClienteAgendaTab clienteId={cliente.id} />}
+        {aba === "diagnostico" && <ClienteDiagnosticoTab clienteId={cliente.id} />}
+        {aba === "financeiro" && <ClienteFinanceiroTab clienteId={cliente.id} clienteNome={nomeCliente} />}
       </div>
 
       <ClienteFormModal

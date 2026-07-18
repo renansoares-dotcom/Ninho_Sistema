@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import Card from "@/components/shared/Card";
 import { areasDiagnostico } from "@/lib/mock-data";
@@ -19,7 +19,8 @@ const TENANT_ID = "00000000-0000-0000-0000-000000000001";
 
 export default function DiagnosticoForm() {
   const router = useRouter();
-  const [clienteId, setClienteId] = useState("");
+  const searchParams = useSearchParams();
+  const [clienteId, setClienteId] = useState(searchParams.get("cliente") ?? "");
   const [clientes, setClientes] = useState<{ id: string; nome: string }[]>([]);
   const [resumoExecutivo, setResumoExecutivo] = useState("");
   const [pontosFortes, setPontosFortes] = useState("");

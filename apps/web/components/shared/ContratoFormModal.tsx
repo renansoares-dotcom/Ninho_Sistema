@@ -10,10 +10,12 @@ export default function ContratoFormModal({
   open,
   onClose,
   onSaved,
+  clienteIdFixo,
 }: {
   open: boolean;
   onClose: () => void;
   onSaved: () => void;
+  clienteIdFixo?: string;
 }) {
   const [clienteId, setClienteId] = useState("");
   const [clientes, setClientes] = useState<{ id: string; nome: string }[]>([]);
@@ -25,7 +27,7 @@ export default function ContratoFormModal({
 
   useEffect(() => {
     if (!open) return;
-    setClienteId("");
+    setClienteId(clienteIdFixo ?? "");
     setValorTotal("");
     setNumParcelas("1");
     setDataInicio("");
@@ -117,7 +119,8 @@ export default function ContratoFormModal({
             <select
               value={clienteId}
               onChange={(e) => setClienteId(e.target.value)}
-              className="w-full border border-[#e4e6ea] rounded-lg px-3 py-2.5 text-[13.5px] text-[#16181d] outline-none focus:border-primary"
+              disabled={!!clienteIdFixo}
+              className="w-full border border-[#e4e6ea] rounded-lg px-3 py-2.5 text-[13.5px] text-[#16181d] outline-none focus:border-primary disabled:bg-[#f5f6f8] disabled:text-[#9aa0ac]"
             >
               <option value="">Selecione...</option>
               {clientes.map((c) => (
