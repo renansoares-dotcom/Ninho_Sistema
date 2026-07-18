@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { ChevronDown, Search, Loader2 } from "lucide-react";
 import TarefaCard, { Tarefa } from "./TarefaCard";
+import TarefaFormModal, { TarefaFormData } from "./TarefaFormModal";
 import { colunasKanban } from "@/lib/mock-data";
 import { supabase } from "@/lib/supabase";
 
@@ -12,17 +13,20 @@ function formatarPrazo(data: string | null) {
   return d.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
 }
 
-export default function KanbanBoard() {
+export default function KanbanBoard({ refreshKey = 0 }: { refreshKey?: number }) {
   const [tarefas, setTarefas] = useState<Tarefa[]>([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
+  const [internalRefresh, setInternalRefresh] = useState(0);
+  const [modalAberto, setModalAberto] = useState(false);
+  const [tarefaSelecionada, setTarefaSelecionada] = useState<TarefaFormData | undefined>(undefined);
 
   useEffect(() => {
     async function carregar() {
       setCarregando(true);
       const { data, error } = await supabase
         .from("tarefas")
-        .select("id, titulo, coluna, prioridade, data_conclusao, responsavel_nome, clientes(nome_fantasia, razao_social)")
+        .select("id, titulo, coluna, prioridade, data_conclusao, responsavel_nome, cliente_id, clientes(nome_fantasia, razao_social)")
         .order("created_at", { ascending: false });
 
       if (error) {
@@ -33,9 +37,11 @@ export default function KanbanBoard() {
             id: t.id,
             titulo: t.titulo,
             cliente: t.clientes?.nome_fantasia ?? t.clientes?.razao_social ?? "—",
+            cliente_id: t.cliente_id,
             coluna: t.coluna ?? "afazer",
             prioridade: t.prioridade ?? "Média",
             prazo: formatarPrazo(t.data_conclusao),
+            prazoRaw: t.data_conclusao,
             resp: t.responsavel_nome ?? "",
           }))
         );
@@ -43,7 +49,20 @@ export default function KanbanBoard() {
       setCarregando(false);
     }
     carregar();
-  }, []);
+  }, [refreshKey, internalRefresh]);
+
+  function abrirEdicao(t: Tarefa) {
+    setTarefaSelecionada({
+      id: t.id,
+      titulo: t.titulo,
+      cliente_id: t.cliente_id ?? "",
+      coluna: t.coluna,
+      prioridade: t.prioridade,
+      data_conclusao: t.prazoRaw ?? "",
+      responsavel_nome: t.resp,
+    });
+    setModalAberto(true);
+  }
 
   return (
     <div className="max-w-[1360px] mx-auto px-7 pb-16 pt-4">
@@ -87,7 +106,7 @@ export default function KanbanBoard() {
                 </div>
                 <div className="flex flex-col gap-2">
                   {items.map((t) => (
-                    <TarefaCard key={t.id} t={t} />
+                    <TarefaCard key={t.id} t={t} onClick={() => abrirEdicao(t)} />
                   ))}
                   {items.length === 0 && (
                     <div className="border-[1.5px] border-dashed border-[#e4e6ea] rounded-xl py-4.5 px-2.5 text-center text-xs text-[#c2c6cd]">
@@ -100,6 +119,14 @@ export default function KanbanBoard() {
           })}
         </div>
       )}
+
+      <TarefaFormModal
+        open={modalAberto}
+        onClose={() => setModalAberto(false)}
+        onSaved={() => setInternalRefresh((k) => k + 1)}
+        onDeleted={() => setInternalRefresh((k) => k + 1)}
+        tarefaInicial={tarefaSelecionada}
+      />
     </div>
   );
 }

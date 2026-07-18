@@ -5,9 +5,11 @@ export type Tarefa = {
   id: string;
   titulo: string;
   cliente: string;
+  cliente_id: string | null;
   coluna: string;
   prioridade: string;
   prazo: string;
+  prazoRaw: string | null;
   resp: string;
 };
 
@@ -17,9 +19,12 @@ const prioridadeStyles: Record<string, string> = {
   Baixa: "bg-[#f5f6f8] text-[#767c88]",
 };
 
-export default function TarefaCard({ t }: { t: Tarefa }) {
+export default function TarefaCard({ t, onClick }: { t: Tarefa; onClick?: () => void }) {
   return (
-    <div className="bg-white border border-[#eef0f2] rounded-xl p-3.5 flex flex-col gap-2.5 shadow-[0_1px_2px_rgba(16,24,40,0.03)] cursor-pointer">
+    <div
+      onClick={onClick}
+      className="bg-white border border-[#eef0f2] rounded-xl p-3.5 flex flex-col gap-2.5 shadow-[0_1px_2px_rgba(16,24,40,0.03)] cursor-pointer hover:border-[#d8dce2] transition-colors"
+    >
       <div className="flex items-start justify-between">
         <span className="text-[13px] font-semibold text-[#16181d] leading-tight">{t.titulo}</span>
         <MoreHorizontal size={15} color="#c2c6cd" />
