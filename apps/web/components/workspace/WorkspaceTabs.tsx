@@ -1,16 +1,17 @@
 "use client";
 
-import { LayoutGrid, Clock, KanbanSquare, CalendarDays, Stethoscope, Wallet, Folder, MapPin } from "lucide-react";
+import { LayoutGrid, Clock, KanbanSquare, CalendarDays, Stethoscope, Wallet, Folder, MapPin, ClipboardList } from "lucide-react";
 
-export type AbaWorkspace = "visao-geral" | "timeline" | "kanban" | "agenda" | "diagnostico" | "financeiro" | "arquivos" | "visitas";
+export type AbaWorkspace = "visao-geral" | "timeline" | "kanban" | "agenda" | "diagnostico" | "financeiro" | "arquivos" | "visitas" | "plano-trabalho";
 
 const abas: { id: AbaWorkspace; label: string; icon: any }[] = [
   { id: "visao-geral", label: "Visão Geral", icon: LayoutGrid },
   { id: "timeline", label: "Timeline", icon: Clock },
+  { id: "diagnostico", label: "Diagnóstico", icon: Stethoscope },
+  { id: "plano-trabalho", label: "Plano de Trabalho", icon: ClipboardList },
   { id: "kanban", label: "Kanban", icon: KanbanSquare },
   { id: "agenda", label: "Agenda", icon: CalendarDays },
   { id: "visitas", label: "Visitas", icon: MapPin },
-  { id: "diagnostico", label: "Diagnóstico", icon: Stethoscope },
   { id: "financeiro", label: "Financeiro", icon: Wallet },
   { id: "arquivos", label: "Arquivos", icon: Folder },
 ];

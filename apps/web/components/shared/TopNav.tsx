@@ -20,6 +20,7 @@ import {
   Folder,
   Receipt,
   MapPin,
+  ClipboardList,
 } from "lucide-react";
 import { Avatar } from "./Avatar";
 import GlobalSearch from "./GlobalSearch";
@@ -36,6 +37,7 @@ const items = [
 const maisItems = [
   { href: "/agenda", label: "Agenda", icon: CalendarDays },
   { href: "/visitas", label: "Visitas", icon: MapPin },
+  { href: "/plano-trabalho", label: "Plano de Trabalho", icon: ClipboardList },
   { href: "/arquivos", label: "Arquivos", icon: Folder },
   { href: "/financeiro", label: "Financeiro", icon: Wallet },
   { href: "/faturamento", label: "Faturamento", icon: Receipt },

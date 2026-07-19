@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { CheckCircle2, AlertTriangle, AlertOctagon, Loader2, Pencil } from "lucide-react";
+import { CheckCircle2, AlertTriangle, AlertOctagon, Loader2, Pencil, ClipboardList } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
 import Card from "@/components/shared/Card";
 import DiagnosticoRadarChart from "@/components/charts/DiagnosticoRadarChart";
@@ -13,6 +13,7 @@ import { supabase } from "@/lib/supabase";
 
 type Diagnostico = {
   id: string;
+  cliente_id: string;
   status: string;
   indice_maturidade_geral: number | null;
   resumo_executivo: string | null;
@@ -32,6 +33,8 @@ export default function DiagnosticoDetalhePage() {
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
   const [excluindo, setExcluindo] = useState(false);
+  const [planoExistenteId, setPlanoExistenteId] = useState<string | null>(null);
+  const [gerandoPlano, setGerandoPlano] = useState(false);
 
   useEffect(() => {
     async function carregar() {
@@ -39,7 +42,7 @@ export default function DiagnosticoDetalhePage() {
       const [{ data: diagData, error: diagErro }, { data: areasData }] = await Promise.all([
         supabase
           .from("diagnosticos")
-          .select("id, status, indice_maturidade_geral, resumo_executivo, pontos_fortes, oportunidades_melhoria, riscos, clientes(nome_fantasia, razao_social)")
+          .select("id, cliente_id, status, indice_maturidade_geral, resumo_executivo, pontos_fortes, oportunidades_melhoria, riscos, clientes(nome_fantasia, razao_social)")
           .eq("id", params.id)
           .single(),
         supabase.from("diagnostico_areas").select("area, nota").eq("diagnostico_id", params.id),
@@ -48,10 +51,49 @@ export default function DiagnosticoDetalhePage() {
       if (diagErro) setErro(diagErro.message);
       setDiag(diagData as any);
       setAreas(areasData ?? []);
+
+      const { data: planoData } = await supabase
+        .from("planos_trabalho")
+        .select("id")
+        .eq("diagnostico_id", params.id)
+        .maybeSingle();
+      setPlanoExistenteId(planoData?.id ?? null);
+
       setCarregando(false);
     }
     if (params.id) carregar();
   }, [params.id]);
+
+  async function gerarPlanoDeTrabalho() {
+    if (!diag) return;
+    setGerandoPlano(true);
+
+    const { data: novoPlano, error } = await supabase
+      .from("planos_trabalho")
+      .insert({ cliente_id: diag.cliente_id, diagnostico_id: diag.id, status: "Ativo" })
+      .select("id")
+      .single();
+
+    if (error || !novoPlano) {
+      setGerandoPlano(false);
+      alert(`Não foi possível gerar o plano de trabalho: ${error?.message}`);
+      return;
+    }
+
+    const acoes = (diag.oportunidades_melhoria ?? []).map((op) => ({
+      plano_id: novoPlano.id,
+      titulo: op,
+      prioridade: "Média",
+      status: "Pendente",
+    }));
+
+    if (acoes.length > 0) {
+      await supabase.from("plano_acoes").insert(acoes);
+    }
+
+    setGerandoPlano(false);
+    router.push(`/plano-trabalho/${novoPlano.id}`);
+  }
 
   async function excluir() {
     if (!confirm("Tem certeza que deseja excluir este diagnóstico? Essa ação não pode ser desfeita.")) return;
@@ -107,9 +149,27 @@ export default function DiagnosticoDetalhePage() {
               </div>
               <div className="text-[12.5px] text-[#9aa0ac]">Índice geral de maturidade (0–10)</div>
             </div>
-            <p className="text-[13px] text-[#3f434d] leading-relaxed">
+            <p className="text-[13px] text-[#3f434d] leading-relaxed mb-4">
               {diag.resumo_executivo ?? "Resumo executivo disponível após a conclusão do diagnóstico."}
             </p>
+            {planoExistenteId ? (
+              <button
+                onClick={() => router.push(`/plano-trabalho/${planoExistenteId}`)}
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-[12.5px] font-semibold border border-[#e4e6ea] text-[#3f434d] hover:bg-[#f5f6f8]"
+              >
+                <ClipboardList size={14} />
+                Ver plano de trabalho
+              </button>
+            ) : (
+              <button
+                onClick={gerarPlanoDeTrabalho}
+                disabled={gerandoPlano}
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-[12.5px] font-semibold bg-primary text-white shadow-sm disabled:opacity-60"
+              >
+                {gerandoPlano ? <Loader2 size={14} className="animate-spin" /> : <ClipboardList size={14} />}
+                Gerar plano de trabalho
+              </button>
+            )}
           </Card>
 
           <Card title="Radar por área">
