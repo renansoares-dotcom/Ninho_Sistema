@@ -25,6 +25,7 @@ export default function DiagnosticoForm() {
   const [resumoExecutivo, setResumoExecutivo] = useState("");
   const [pontosFortes, setPontosFortes] = useState("");
   const [oportunidadesMelhoria, setOportunidadesMelhoria] = useState("");
+  const [riscos, setRiscos] = useState("");
   const [notas, setNotas] = useState<Record<string, number>>(
     Object.fromEntries(areasDiagnostico.map((a) => [a.area, 5]))
   );
@@ -70,6 +71,7 @@ export default function DiagnosticoForm() {
         resumo_executivo: resumoExecutivo || null,
         pontos_fortes: pontosFortes.split("\n").map((s) => s.trim()).filter(Boolean),
         oportunidades_melhoria: oportunidadesMelhoria.split("\n").map((s) => s.trim()).filter(Boolean),
+        riscos: riscos.split("\n").map((s) => s.trim()).filter(Boolean),
       })
       .select("id")
       .single();
@@ -169,6 +171,16 @@ export default function DiagnosticoForm() {
             onChange={(e) => setOportunidadesMelhoria(e.target.value)}
             rows={3}
             placeholder={"Ex: Marketing sem plano formalizado"}
+            className="w-full border border-[#e4e6ea] rounded-lg px-3 py-2.5 text-[13.5px] text-[#16181d] outline-none focus:border-primary resize-none"
+          />
+        </Card>
+
+        <Card title="Riscos identificados (um por linha, opcional)">
+          <textarea
+            value={riscos}
+            onChange={(e) => setRiscos(e.target.value)}
+            rows={3}
+            placeholder={"Ex: Dependência de poucos fornecedores\nAlta rotatividade na equipe comercial"}
             className="w-full border border-[#e4e6ea] rounded-lg px-3 py-2.5 text-[13.5px] text-[#16181d] outline-none focus:border-primary resize-none"
           />
         </Card>

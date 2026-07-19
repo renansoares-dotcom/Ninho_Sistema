@@ -2,10 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { CheckCircle2, AlertTriangle, Loader2 } from "lucide-react";
+import { CheckCircle2, AlertTriangle, AlertOctagon, Loader2 } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
 import Card from "@/components/shared/Card";
 import DiagnosticoRadarChart from "@/components/charts/DiagnosticoRadarChart";
+import DiagnosticoHeatmap from "@/components/charts/DiagnosticoHeatmap";
+import DiagnosticoPrioridades from "@/components/shared/DiagnosticoPrioridades";
+import DiagnosticoRecomendacoes from "@/components/shared/DiagnosticoRecomendacoes";
 import { supabase } from "@/lib/supabase";
 
 type Diagnostico = {
@@ -15,6 +18,7 @@ type Diagnostico = {
   resumo_executivo: string | null;
   pontos_fortes: string[] | null;
   oportunidades_melhoria: string[] | null;
+  riscos: string[] | null;
   clientes: { nome_fantasia: string | null; razao_social: string } | null;
 };
 
@@ -35,7 +39,7 @@ export default function DiagnosticoDetalhePage() {
       const [{ data: diagData, error: diagErro }, { data: areasData }] = await Promise.all([
         supabase
           .from("diagnosticos")
-          .select("id, status, indice_maturidade_geral, resumo_executivo, pontos_fortes, oportunidades_melhoria, clientes(nome_fantasia, razao_social)")
+          .select("id, status, indice_maturidade_geral, resumo_executivo, pontos_fortes, oportunidades_melhoria, riscos, clientes(nome_fantasia, razao_social)")
           .eq("id", params.id)
           .single(),
         supabase.from("diagnostico_areas").select("area, nota").eq("diagnostico_id", params.id),
@@ -79,6 +83,7 @@ export default function DiagnosticoDetalhePage() {
   }
 
   const nomeCliente = diag.clientes?.nome_fantasia ?? diag.clientes?.razao_social ?? "Cliente";
+  const temAreas = areas.length > 0;
 
   return (
     <>
@@ -109,6 +114,17 @@ export default function DiagnosticoDetalhePage() {
           </Card>
         </div>
 
+        {temAreas && (
+          <div className="grid grid-cols-2 gap-3.5">
+            <Card title="Heatmap por área">
+              <DiagnosticoHeatmap areas={areas} />
+            </Card>
+            <Card title="Matriz de prioridades">
+              <DiagnosticoPrioridades areas={areas} />
+            </Card>
+          </div>
+        )}
+
         <div className="grid grid-cols-2 gap-3.5">
           <Card title="Pontos fortes">
             <div className="flex flex-col gap-2.5">
@@ -136,6 +152,28 @@ export default function DiagnosticoDetalhePage() {
               )}
             </div>
           </Card>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3.5">
+          <Card title="Riscos identificados">
+            <div className="flex flex-col gap-2.5">
+              {(diag.riscos ?? []).map((r, i) => (
+                <div key={i} className="flex items-start gap-2.5">
+                  <AlertOctagon size={16} className="text-[#f04438] mt-0.5 shrink-0" />
+                  <span className="text-[13px] text-[#3f434d]">{r}</span>
+                </div>
+              ))}
+              {!diag.riscos?.length && (
+                <p className="text-[12.5px] text-[#9aa0ac]">Nenhum risco registrado.</p>
+              )}
+            </div>
+          </Card>
+
+          {temAreas && (
+            <Card title="Recomendações automáticas">
+              <DiagnosticoRecomendacoes areas={areas} />
+            </Card>
+          )}
         </div>
       </div>
     </>
