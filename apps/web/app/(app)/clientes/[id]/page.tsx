@@ -13,6 +13,7 @@ import ClienteKanbanTab from "@/components/workspace/ClienteKanbanTab";
 import ClienteAgendaTab from "@/components/workspace/ClienteAgendaTab";
 import ClienteDiagnosticoTab from "@/components/workspace/ClienteDiagnosticoTab";
 import ClienteFinanceiroTab from "@/components/workspace/ClienteFinanceiroTab";
+import ArquivosPanel from "@/components/shared/ArquivosPanel";
 import { supabase } from "@/lib/supabase";
 
 const statusStyles: Record<string, string> = {
@@ -250,6 +251,7 @@ export default function ClienteDetalhePage() {
         {aba === "agenda" && <ClienteAgendaTab clienteId={cliente.id} />}
         {aba === "diagnostico" && <ClienteDiagnosticoTab clienteId={cliente.id} />}
         {aba === "financeiro" && <ClienteFinanceiroTab clienteId={cliente.id} clienteNome={nomeCliente} />}
+        {aba === "arquivos" && <ArquivosPanel clienteId={cliente.id} />}
       </div>
 
       <ClienteFormModal

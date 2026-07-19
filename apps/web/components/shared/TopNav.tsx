@@ -18,6 +18,7 @@ import {
   FileText,
   Zap,
   Settings,
+  Folder,
 } from "lucide-react";
 import { Avatar } from "./Avatar";
 
@@ -31,6 +32,7 @@ const items = [
 
 const maisItems = [
   { href: "/agenda", label: "Agenda", icon: CalendarDays },
+  { href: "/arquivos", label: "Arquivos", icon: Folder },
   { href: "/financeiro", label: "Financeiro", icon: Wallet },
   { href: "/relatorios", label: "Relatórios", icon: FileText },
   { href: "/automacoes", label: "Automações", icon: Zap },
