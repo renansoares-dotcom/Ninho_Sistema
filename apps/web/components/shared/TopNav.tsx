@@ -19,6 +19,7 @@ import {
   Zap,
   Settings,
   Folder,
+  Receipt,
 } from "lucide-react";
 import { Avatar } from "./Avatar";
 import GlobalSearch from "./GlobalSearch";
@@ -35,6 +36,7 @@ const maisItems = [
   { href: "/agenda", label: "Agenda", icon: CalendarDays },
   { href: "/arquivos", label: "Arquivos", icon: Folder },
   { href: "/financeiro", label: "Financeiro", icon: Wallet },
+  { href: "/faturamento", label: "Faturamento", icon: Receipt },
   { href: "/relatorios", label: "Relatórios", icon: FileText },
   { href: "/automacoes", label: "Automações", icon: Zap },
   { href: "/configuracoes", label: "Configurações", icon: Settings },
