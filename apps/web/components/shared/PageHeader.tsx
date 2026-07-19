@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { Plus, SlidersHorizontal, Trash2 } from "lucide-react";
+import { Plus, SlidersHorizontal, Trash2, LucideIcon } from "lucide-react";
 
 export default function PageHeader({
   crumb,
   title,
   actionLabel,
   actionHref,
+  actionIcon: ActionIcon = Plus,
   onActionClick,
   secondaryLabel,
   onSecondaryClick,
@@ -16,6 +17,7 @@ export default function PageHeader({
   title: string;
   actionLabel?: string;
   actionHref?: string;
+  actionIcon?: LucideIcon;
   onActionClick?: () => void;
   secondaryLabel?: string;
   onSecondaryClick?: () => void;
@@ -27,7 +29,7 @@ export default function PageHeader({
       onClick={onActionClick}
       className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-[13.5px] font-semibold border-none bg-primary text-white shadow-sm"
     >
-      <Plus size={15} />
+      <ActionIcon size={15} />
       {actionLabel}
     </button>
   );
