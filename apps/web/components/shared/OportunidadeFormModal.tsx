@@ -18,6 +18,10 @@ export type OportunidadeFormData = {
   valor_estimado: string;
   probabilidade: string;
   observacoes: string;
+  score: string;
+  temperatura: string;
+  perdida: boolean;
+  motivo_perda: string;
 };
 
 const vazio: OportunidadeFormData = {
@@ -30,6 +34,10 @@ const vazio: OportunidadeFormData = {
   valor_estimado: "",
   probabilidade: "20",
   observacoes: "",
+  score: "50",
+  temperatura: "Morno",
+  perdida: false,
+  motivo_perda: "",
 };
 
 function Campo({
@@ -103,6 +111,10 @@ export default function OportunidadeFormModal({
       valor_estimado: form.valor_estimado ? Number(form.valor_estimado) : null,
       probabilidade: form.probabilidade ? Number(form.probabilidade) : 0,
       observacoes: form.observacoes || null,
+      score: form.score ? Number(form.score) : 50,
+      temperatura: form.temperatura,
+      perdida: form.perdida,
+      motivo_perda: form.perdida ? form.motivo_perda || null : null,
     };
 
     const resultado = form.id
@@ -171,6 +183,52 @@ export default function OportunidadeFormModal({
               />
               <span className="text-[12.5px] text-[#5b6270]">{form.probabilidade}%</span>
             </div>
+          </div>
+
+          <div className="pt-2 border-t border-[#f2f3f5]">
+            <div className="text-[12.5px] font-semibold text-[#3f434d] mb-3 mt-3">Qualificação do lead</div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-[12px] text-[#9aa0ac] mb-1 block">Score (0–100)</label>
+                <input
+                  type="range"
+                  min={0}
+                  max={100}
+                  step={5}
+                  value={form.score}
+                  onChange={(e) => set("score")(e.target.value)}
+                  className="w-full accent-[#004AAD]"
+                />
+                <span className="text-[12.5px] text-[#5b6270]">{form.score}</span>
+              </div>
+              <div>
+                <label className="text-[12px] text-[#9aa0ac] mb-1 block">Temperatura</label>
+                <select
+                  value={form.temperatura}
+                  onChange={(e) => set("temperatura")(e.target.value)}
+                  className="w-full border border-[#e4e6ea] rounded-lg px-3 py-2.5 text-[13.5px] text-[#16181d] outline-none focus:border-primary"
+                >
+                  <option>Quente</option>
+                  <option>Morno</option>
+                  <option>Frio</option>
+                </select>
+              </div>
+            </div>
+
+            <label className="flex items-center gap-2 mt-4 text-[12.5px] text-[#3f434d]">
+              <input
+                type="checkbox"
+                checked={form.perdida}
+                onChange={(e) => setForm((f) => ({ ...f, perdida: e.target.checked }))}
+                className="accent-[#f04438] w-3.5 h-3.5"
+              />
+              Marcar oportunidade como perdida
+            </label>
+            {form.perdida && (
+              <div className="mt-2">
+                <Campo label="Motivo da perda" value={form.motivo_perda} onChange={set("motivo_perda")} placeholder="Ex: Optou por concorrente" />
+              </div>
+            )}
           </div>
 
           <div>

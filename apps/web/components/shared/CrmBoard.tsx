@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { ChevronDown, Search, Loader2 } from "lucide-react";
 import OportunidadeCard, { Oportunidade } from "./OportunidadeCard";
+import CrmDashboard from "./CrmDashboard";
 import { colunasCRM } from "@/lib/mock-data";
 import { supabase } from "@/lib/supabase";
 
@@ -21,7 +22,7 @@ export default function CrmBoard({ refreshKey = 0 }: { refreshKey?: number }) {
       setCarregando(true);
       const { data, error } = await supabase
         .from("leads_oportunidades")
-        .select("id, empresa_nome, etapa, valor_estimado, probabilidade, responsavel_nome, updated_at")
+        .select("id, empresa_nome, etapa, valor_estimado, probabilidade, responsavel_nome, updated_at, temperatura, perdida")
         .order("updated_at", { ascending: false });
 
       if (error) {
@@ -36,6 +37,8 @@ export default function CrmBoard({ refreshKey = 0 }: { refreshKey?: number }) {
             prob: o.probabilidade ?? 0,
             dias: diasDesde(o.updated_at),
             resp: o.responsavel_nome ?? "",
+            temperatura: o.temperatura ?? "Morno",
+            perdida: o.perdida ?? false,
           }))
         );
       }
@@ -46,6 +49,8 @@ export default function CrmBoard({ refreshKey = 0 }: { refreshKey?: number }) {
 
   return (
     <div className="max-w-[1360px] mx-auto px-7 pb-16 pt-4">
+      {!carregando && <CrmDashboard oportunidades={oportunidades} />}
+
       <div className="flex items-center gap-2.5 mb-4">
         <div className="flex items-center gap-1.5 bg-[#f5f6f8] rounded-lg px-3 py-2 w-[260px]">
           <Search size={14} color="#9aa0ac" />
