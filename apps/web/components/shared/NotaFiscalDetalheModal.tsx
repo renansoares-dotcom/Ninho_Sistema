@@ -62,7 +62,7 @@ export default function NotaFiscalDetalheModal({
           </button>
         </div>
 
-        <div className="p-6 flex flex-col gap-4" id="nota-para-impressao">
+        <div className="p-6 flex flex-col gap-4 print-area">
           <div className="flex items-center justify-between border-b border-[#eef0f2] pb-4">
             <div>
               <div className="text-[16px] font-bold text-[#16181d]">{nota.empresaNome || "Ninho Consultoria"}</div>

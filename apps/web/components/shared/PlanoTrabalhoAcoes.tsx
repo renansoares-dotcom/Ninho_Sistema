@@ -100,7 +100,7 @@ export default function PlanoTrabalhoAcoes({ planoId }: { planoId: string }) {
         </div>
       )}
 
-      <div className="flex justify-end mb-3">
+      <div className="flex justify-end mb-3 print:hidden">
         <button
           onClick={abrirNova}
           className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-[12.5px] font-semibold bg-primary text-white shadow-sm"

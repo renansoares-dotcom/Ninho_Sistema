@@ -14,11 +14,11 @@ body {
   body * {
     visibility: hidden;
   }
-  #nota-para-impressao,
-  #nota-para-impressao * {
+  .print-area,
+  .print-area * {
     visibility: visible;
   }
-  #nota-para-impressao {
+  .print-area {
     position: absolute;
     left: 0;
     top: 0;

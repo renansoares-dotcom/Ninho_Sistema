@@ -136,11 +136,16 @@ export default function DiagnosticoDetalhePage() {
         actionHref={`/diagnostico/novo?editar=${diag.id}`}
         actionIcon={Pencil}
         secondaryLabel="Gerar PDF"
+        onSecondaryClick={() => window.print()}
         dangerLabel={excluindo ? "Excluindo..." : "Excluir"}
         onDangerClick={excluir}
       />
 
-      <div className="max-w-[1360px] mx-auto px-7 pb-16 pt-4 flex flex-col gap-3.5">
+      <div className="max-w-[1360px] mx-auto px-7 pb-16 pt-4 flex flex-col gap-3.5 print-area">
+        <div className="hidden print:block mb-2">
+          <div className="text-[18px] font-bold text-[#16181d]">Diagnóstico Empresarial — {nomeCliente}</div>
+          <div className="text-[12px] text-[#767c88]">Gerado em {new Date().toLocaleDateString("pt-BR")}</div>
+        </div>
         <div className="grid grid-cols-[1fr_1.1fr] gap-3.5">
           <Card title="Resumo executivo">
             <div className="flex items-center gap-3 mb-4">
@@ -155,7 +160,7 @@ export default function DiagnosticoDetalhePage() {
             {planoExistenteId ? (
               <button
                 onClick={() => router.push(`/plano-trabalho/${planoExistenteId}`)}
-                className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-[12.5px] font-semibold border border-[#e4e6ea] text-[#3f434d] hover:bg-[#f5f6f8]"
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-[12.5px] font-semibold border border-[#e4e6ea] text-[#3f434d] hover:bg-[#f5f6f8] print:hidden"
               >
                 <ClipboardList size={14} />
                 Ver plano de trabalho
@@ -164,7 +169,7 @@ export default function DiagnosticoDetalhePage() {
               <button
                 onClick={gerarPlanoDeTrabalho}
                 disabled={gerandoPlano}
-                className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-[12.5px] font-semibold bg-primary text-white shadow-sm disabled:opacity-60"
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-[12.5px] font-semibold bg-primary text-white shadow-sm disabled:opacity-60 print:hidden"
               >
                 {gerandoPlano ? <Loader2 size={14} className="animate-spin" /> : <ClipboardList size={14} />}
                 Gerar plano de trabalho

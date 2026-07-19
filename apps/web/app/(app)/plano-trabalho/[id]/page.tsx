@@ -53,8 +53,17 @@ export default function PlanoTrabalhoDetalhePage() {
 
   return (
     <>
-      <PageHeader crumb="Plano de Trabalho" title={`Plano de Trabalho — ${nomeCliente}`} />
-      <div className="max-w-[1360px] mx-auto px-7 pb-16 pt-4">
+      <PageHeader
+        crumb="Plano de Trabalho"
+        title={`Plano de Trabalho — ${nomeCliente}`}
+        secondaryLabel="Gerar PDF"
+        onSecondaryClick={() => window.print()}
+      />
+      <div className="max-w-[1360px] mx-auto px-7 pb-16 pt-4 print-area">
+        <div className="hidden print:block mb-4">
+          <div className="text-[18px] font-bold text-[#16181d]">Plano de Trabalho — {nomeCliente}</div>
+          <div className="text-[12px] text-[#767c88]">Gerado em {new Date().toLocaleDateString("pt-BR")}</div>
+        </div>
         <PlanoTrabalhoAcoes planoId={plano.id} />
       </div>
     </>
