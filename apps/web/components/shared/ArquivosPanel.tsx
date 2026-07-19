@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import {
   Search,
-  Upload,
   Star,
   Trash2,
   Download,
@@ -14,6 +13,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import Dropzone from "./Dropzone";
 
 const TENANT_ID = "00000000-0000-0000-0000-000000000001";
 const BUCKET = "arquivos";
@@ -53,7 +53,6 @@ export default function ArquivosPanel({ clienteId }: { clienteId?: string }) {
   const [erro, setErro] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [categoriaFiltro, setCategoriaFiltro] = useState<string | null>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     carregar();
@@ -74,45 +73,36 @@ export default function ArquivosPanel({ clienteId }: { clienteId?: string }) {
     setCarregando(false);
   }
 
-  async function enviarArquivo(file: File) {
+  async function enviarArquivos(files: FileList) {
     setEnviando(true);
     setErro(null);
 
-    const caminho = `${clienteId ?? "geral"}/${Date.now()}-${file.name}`;
-    const { error: erroUpload } = await supabase.storage.from(BUCKET).upload(caminho, file);
+    for (const file of Array.from(files)) {
+      const caminho = `${clienteId ?? "geral"}/${Date.now()}-${file.name}`;
+      const { error: erroUpload } = await supabase.storage.from(BUCKET).upload(caminho, file);
 
-    if (erroUpload) {
-      setErro(erroUpload.message);
-      setEnviando(false);
-      return;
+      if (erroUpload) {
+        setErro(erroUpload.message);
+        continue;
+      }
+
+      const { data: urlData } = supabase.storage.from(BUCKET).getPublicUrl(caminho);
+
+      const { error: erroInsert } = await supabase.from("arquivos").insert({
+        tenant_id: TENANT_ID,
+        nome: file.name,
+        url: urlData.publicUrl,
+        categoria: "Geral",
+        cliente_id: clienteId ?? null,
+        tamanho: file.size,
+        tipo_arquivo: file.type,
+      });
+
+      if (erroInsert) setErro(erroInsert.message);
     }
-
-    const { data: urlData } = supabase.storage.from(BUCKET).getPublicUrl(caminho);
-
-    const { error: erroInsert } = await supabase.from("arquivos").insert({
-      tenant_id: TENANT_ID,
-      nome: file.name,
-      url: urlData.publicUrl,
-      categoria: "Geral",
-      cliente_id: clienteId ?? null,
-      tamanho: file.size,
-      tipo_arquivo: file.type,
-    });
 
     setEnviando(false);
-
-    if (erroInsert) {
-      setErro(erroInsert.message);
-      return;
-    }
-
     carregar();
-  }
-
-  function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (file) enviarArquivo(file);
-    if (inputRef.current) inputRef.current.value = "";
   }
 
   async function alternarFavorito(a: Arquivo) {
@@ -164,20 +154,15 @@ export default function ArquivosPanel({ clienteId }: { clienteId?: string }) {
           <ChevronDown size={13} className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#9aa0ac]" />
         </div>
 
-        <button
-          onClick={() => inputRef.current?.click()}
-          disabled={enviando}
-          className="ml-auto flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-[12.5px] font-semibold bg-primary text-white shadow-sm disabled:opacity-60"
-        >
-          {enviando ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />}
-          Enviar arquivo
-        </button>
-        <input ref={inputRef} type="file" onChange={onFileChange} className="hidden" />
       </div>
 
       {erro && (
         <div className="mb-4 text-[13px] text-[#f04438] bg-[#fdecea] rounded-lg px-4 py-3">{erro}</div>
       )}
+
+      <div className="mb-4">
+        <Dropzone onFiles={enviarArquivos} disabled={enviando} label={enviando ? "Enviando..." : "PDF, imagens, planilhas ou qualquer outro tipo"} />
+      </div>
 
       {carregando ? (
         <div className="flex items-center justify-center gap-2 py-14 text-[#9aa0ac] text-[13px]">

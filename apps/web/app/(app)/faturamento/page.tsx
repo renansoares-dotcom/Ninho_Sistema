@@ -4,6 +4,7 @@ import { useState } from "react";
 import { FileText, Settings2 } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
 import FaturamentoConfigPanel from "@/components/shared/FaturamentoConfigPanel";
+import NotasFiscaisList from "@/components/shared/NotasFiscaisList";
 
 type Aba = "notas" | "configuracao";
 
@@ -41,11 +42,7 @@ export default function FaturamentoPage() {
       </div>
 
       <div className="max-w-[1360px] mx-auto px-7 pb-16 pt-5">
-        {aba === "notas" && (
-          <div className="py-16 text-center text-[13.5px] text-[#9aa0ac]">
-            A emissão de notas fiscais entra na próxima etapa deste módulo.
-          </div>
-        )}
+        {aba === "notas" && <NotasFiscaisList />}
         {aba === "configuracao" && <FaturamentoConfigPanel />}
       </div>
     </>

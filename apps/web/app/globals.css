@@ -9,3 +9,19 @@ body {
   color: #16181d;
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #nota-para-impressao,
+  #nota-para-impressao * {
+    visibility: visible;
+  }
+  #nota-para-impressao {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+}
