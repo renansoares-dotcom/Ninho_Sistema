@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Loader2, Save, Info } from "lucide-react";
+import { Loader2, Save, Info, Settings2, Receipt } from "lucide-react";
 import Card from "./Card";
 import { supabase } from "@/lib/supabase";
 
@@ -85,7 +85,10 @@ function Campo({
   );
 }
 
+type Aba = "geral" | "faturamento";
+
 export default function ConfiguracoesPanel() {
+  const [aba, setAba] = useState<Aba>("geral");
   const [form, setForm] = useState<Config>(vazio);
   const [carregando, setCarregando] = useState(true);
   const [salvando, setSalvando] = useState(false);
@@ -183,111 +186,142 @@ export default function ConfiguracoesPanel() {
   }
 
   return (
-    <div className="max-w-[1360px] mx-auto px-7 pb-16 pt-4 flex flex-col gap-4">
-      {erro && (
-        <div className="text-[13px] text-[#f04438] bg-[#fdecea] rounded-lg px-4 py-3">{erro}</div>
-      )}
-      {salvo && (
-        <div className="text-[13px] text-[#0e9f6e] bg-[#eafaf1] rounded-lg px-4 py-3">
-          Configurações salvas com sucesso.
+    <>
+      <div className="max-w-[1360px] mx-auto px-7 border-b border-[#eef0f2] mb-5">
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => setAba("geral")}
+            className={`flex items-center gap-1.5 px-3.5 py-2.5 text-[13px] font-medium border-b-2 -mb-px transition-colors ${
+              aba === "geral" ? "border-primary text-primary" : "border-transparent text-[#767c88] hover:text-[#3f434d]"
+            }`}
+          >
+            <Settings2 size={14} />
+            Geral
+          </button>
+          <button
+            onClick={() => setAba("faturamento")}
+            className={`flex items-center gap-1.5 px-3.5 py-2.5 text-[13px] font-medium border-b-2 -mb-px transition-colors ${
+              aba === "faturamento" ? "border-primary text-primary" : "border-transparent text-[#767c88] hover:text-[#3f434d]"
+            }`}
+          >
+            <Receipt size={14} />
+            Faturamento
+          </button>
         </div>
-      )}
-
-      <Card title="Identificação da consultoria">
-        <div className="grid grid-cols-2 gap-4">
-          <div className="col-span-2">
-            <Campo label="Razão social" value={form.razao_social} onChange={set("razao_social")} placeholder="Ninho Consultoria Ltda." />
-          </div>
-          <Campo label="Nome fantasia" value={form.nome_fantasia} onChange={set("nome_fantasia")} placeholder="Ninho Consultoria" />
-          <Campo label="CNPJ" value={form.cnpj} onChange={set("cnpj")} placeholder="00.000.000/0000-00" />
-          <Campo label="Inscrição municipal" value={form.inscricao_municipal} onChange={set("inscricao_municipal")} />
-          <Campo label="Inscrição estadual" value={form.inscricao_estadual} onChange={set("inscricao_estadual")} />
-          <div>
-            <label className="text-[12px] text-[#9aa0ac] mb-1 block">Regime tributário</label>
-            <select
-              value={form.regime_tributario}
-              onChange={(e) => set("regime_tributario")(e.target.value)}
-              className="w-full border border-[#e4e6ea] rounded-lg px-3 py-2.5 text-[13.5px] text-[#16181d] outline-none focus:border-primary"
-            >
-              <option value="">Selecione...</option>
-              <option>MEI</option>
-              <option>Simples Nacional</option>
-              <option>Lucro Presumido</option>
-              <option>Lucro Real</option>
-            </select>
-          </div>
-        </div>
-      </Card>
-
-      <Card title="Endereço">
-        <div className="grid grid-cols-3 gap-4">
-          <div className="col-span-2">
-            <Campo label="Logradouro" value={form.logradouro} onChange={set("logradouro")} />
-          </div>
-          <Campo label="CEP" value={form.cep} onChange={set("cep")} />
-          <Campo label="Cidade" value={form.cidade} onChange={set("cidade")} />
-          <Campo label="UF" value={form.uf} onChange={set("uf")} placeholder="PE" />
-        </div>
-      </Card>
-
-      <Card title="Contato">
-        <div className="grid grid-cols-2 gap-4">
-          <Campo label="Telefone" value={form.telefone} onChange={set("telefone")} />
-          <Campo label="E-mail para envio de notas fiscais" value={form.email_envio_notas} onChange={set("email_envio_notas")} type="email" />
-        </div>
-      </Card>
-
-      <Card title="Emissão de notas fiscais (Focus NFe)">
-        <div className="flex items-start gap-2 mb-4 bg-[#eaf1fb] text-primary rounded-lg px-3 py-2.5 text-[12.5px]">
-          <Info size={14} className="mt-0.5 shrink-0" />
-          <span>
-            A integração com o Focus NFe ainda não foi contratada — o módulo de Faturamento vai <strong>simular</strong> a emissão
-            usando esses dados, até a chave de API real ser configurada aqui.
-          </span>
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          <Campo label="Código de serviço padrão" value={form.codigo_servico_padrao} onChange={set("codigo_servico_padrao")} placeholder="Ex: 17.01 - Consultoria" />
-          <Campo label="Alíquota de ISS (%)" value={form.aliquota_iss} onChange={set("aliquota_iss")} type="number" />
-          <Campo label="Série da NFe" value={form.serie_nfe} onChange={set("serie_nfe")} />
-          <Campo label="Próximo número de NFe" value={form.proximo_numero_nfe} onChange={set("proximo_numero_nfe")} type="number" />
-          <div>
-            <label className="text-[12px] text-[#9aa0ac] mb-1 block">Ambiente</label>
-            <select
-              value={form.ambiente_nfe}
-              onChange={(e) => set("ambiente_nfe")(e.target.value)}
-              className="w-full border border-[#e4e6ea] rounded-lg px-3 py-2.5 text-[13.5px] text-[#16181d] outline-none focus:border-primary"
-            >
-              <option>Homologação</option>
-              <option>Produção</option>
-            </select>
-          </div>
-          <Campo label="Token Focus NFe (quando contratado)" value={form.focus_nfe_token} onChange={set("focus_nfe_token")} placeholder="Ainda não configurado" />
-        </div>
-      </Card>
-
-      <Card title="Perfis de acesso">
-        <div className="flex flex-col divide-y divide-[#f2f3f5]">
-          {perfis.map((p) => (
-            <div key={p.nome} className="py-3 flex items-start justify-between gap-4">
-              <div>
-                <div className="text-[13.5px] font-semibold text-[#16181d]">{p.nome}</div>
-                <div className="text-[12.5px] text-[#767c88] mt-0.5">{p.descricao}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </Card>
-
-      <div className="flex justify-end">
-        <button
-          onClick={salvar}
-          disabled={salvando}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-[13.5px] font-semibold bg-primary text-white shadow-sm disabled:opacity-60"
-        >
-          {salvando ? <Loader2 size={15} className="animate-spin" /> : <Save size={15} />}
-          Salvar configurações
-        </button>
       </div>
-    </div>
+
+      <div className="max-w-[1360px] mx-auto px-7 pb-16 flex flex-col gap-4">
+        {erro && (
+          <div className="text-[13px] text-[#f04438] bg-[#fdecea] rounded-lg px-4 py-3">{erro}</div>
+        )}
+        {salvo && (
+          <div className="text-[13px] text-[#0e9f6e] bg-[#eafaf1] rounded-lg px-4 py-3">
+            Configurações salvas com sucesso.
+          </div>
+        )}
+
+        {aba === "geral" && (
+          <>
+            <Card title="Identificação da consultoria">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="col-span-2">
+                  <Campo label="Razão social" value={form.razao_social} onChange={set("razao_social")} placeholder="Ninho Consultoria Ltda." />
+                </div>
+                <Campo label="Nome fantasia" value={form.nome_fantasia} onChange={set("nome_fantasia")} placeholder="Ninho Consultoria" />
+                <Campo label="CNPJ" value={form.cnpj} onChange={set("cnpj")} placeholder="00.000.000/0000-00" />
+                <Campo label="Inscrição municipal" value={form.inscricao_municipal} onChange={set("inscricao_municipal")} />
+                <Campo label="Inscrição estadual" value={form.inscricao_estadual} onChange={set("inscricao_estadual")} />
+                <div>
+                  <label className="text-[12px] text-[#9aa0ac] mb-1 block">Regime tributário</label>
+                  <select
+                    value={form.regime_tributario}
+                    onChange={(e) => set("regime_tributario")(e.target.value)}
+                    className="w-full border border-[#e4e6ea] rounded-lg px-3 py-2.5 text-[13.5px] text-[#16181d] outline-none focus:border-primary"
+                  >
+                    <option value="">Selecione...</option>
+                    <option>MEI</option>
+                    <option>Simples Nacional</option>
+                    <option>Lucro Presumido</option>
+                    <option>Lucro Real</option>
+                  </select>
+                </div>
+              </div>
+            </Card>
+
+            <Card title="Endereço">
+              <div className="grid grid-cols-3 gap-4">
+                <div className="col-span-2">
+                  <Campo label="Logradouro" value={form.logradouro} onChange={set("logradouro")} />
+                </div>
+                <Campo label="CEP" value={form.cep} onChange={set("cep")} />
+                <Campo label="Cidade" value={form.cidade} onChange={set("cidade")} />
+                <Campo label="UF" value={form.uf} onChange={set("uf")} placeholder="PE" />
+              </div>
+            </Card>
+
+            <Card title="Contato">
+              <div className="grid grid-cols-2 gap-4">
+                <Campo label="Telefone" value={form.telefone} onChange={set("telefone")} />
+                <Campo label="E-mail para envio de notas fiscais" value={form.email_envio_notas} onChange={set("email_envio_notas")} type="email" />
+              </div>
+            </Card>
+
+            <Card title="Perfis de acesso">
+              <div className="flex flex-col divide-y divide-[#f2f3f5]">
+                {perfis.map((p) => (
+                  <div key={p.nome} className="py-3 flex items-start justify-between gap-4">
+                    <div>
+                      <div className="text-[13.5px] font-semibold text-[#16181d]">{p.nome}</div>
+                      <div className="text-[12.5px] text-[#767c88] mt-0.5">{p.descricao}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </>
+        )}
+
+        {aba === "faturamento" && (
+          <Card title="Emissão de notas fiscais (Focus NFe)">
+            <div className="flex items-start gap-2 mb-4 bg-[#eaf1fb] text-primary rounded-lg px-3 py-2.5 text-[12.5px]">
+              <Info size={14} className="mt-0.5 shrink-0" />
+              <span>
+                A integração com o Focus NFe ainda não foi contratada — o módulo de Faturamento vai <strong>simular</strong> a emissão
+                usando esses dados, até a chave de API real ser configurada aqui.
+              </span>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <Campo label="Código de serviço padrão" value={form.codigo_servico_padrao} onChange={set("codigo_servico_padrao")} placeholder="Ex: 17.01 - Consultoria" />
+              <Campo label="Alíquota de ISS (%)" value={form.aliquota_iss} onChange={set("aliquota_iss")} type="number" />
+              <Campo label="Série da NFe" value={form.serie_nfe} onChange={set("serie_nfe")} />
+              <Campo label="Próximo número de NFe" value={form.proximo_numero_nfe} onChange={set("proximo_numero_nfe")} type="number" />
+              <div>
+                <label className="text-[12px] text-[#9aa0ac] mb-1 block">Ambiente</label>
+                <select
+                  value={form.ambiente_nfe}
+                  onChange={(e) => set("ambiente_nfe")(e.target.value)}
+                  className="w-full border border-[#e4e6ea] rounded-lg px-3 py-2.5 text-[13.5px] text-[#16181d] outline-none focus:border-primary"
+                >
+                  <option>Homologação</option>
+                  <option>Produção</option>
+                </select>
+              </div>
+              <Campo label="Token Focus NFe (quando contratado)" value={form.focus_nfe_token} onChange={set("focus_nfe_token")} placeholder="Ainda não configurado" />
+            </div>
+          </Card>
+        )}
+
+        <div className="flex justify-end">
+          <button
+            onClick={salvar}
+            disabled={salvando}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-[13.5px] font-semibold bg-primary text-white shadow-sm disabled:opacity-60"
+          >
+            {salvando ? <Loader2 size={15} className="animate-spin" /> : <Save size={15} />}
+            Salvar configurações
+          </button>
+        </div>
+      </div>
+    </>
   );
 }

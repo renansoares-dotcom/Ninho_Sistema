@@ -161,34 +161,34 @@ select id, 1, 6000, '2026-08-18'::date, 'Pendente', null from novo_contrato;
 -- ARQUIVOS — 10 exemplos (metadados; sem arquivo real anexado, apenas para teste de listagem)
 -- ------------------------------------------------------------
 insert into arquivos (tenant_id, nome, url, categoria, cliente_id, favorito, tipo_arquivo)
-select '00000000-0000-0000-0000-000000000001', 'Contrato assinado.pdf', 'https://example.com/placeholder.pdf', 'Contrato', c.id, true, 'application/pdf'
+select '00000000-0000-0000-0000-000000000001'::uuid, 'Contrato assinado.pdf', 'https://example.com/placeholder.pdf', 'Contrato', c.id, true, 'application/pdf'
 from clientes c where c.nome_fantasia ilike '%ferro sul%'
 union all
-select '00000000-0000-0000-0000-000000000001', 'Relatório de diagnóstico.pdf', 'https://example.com/placeholder.pdf', 'Diagnóstico', c.id, false, 'application/pdf'
+select '00000000-0000-0000-0000-000000000001'::uuid, 'Relatório de diagnóstico.pdf', 'https://example.com/placeholder.pdf', 'Diagnóstico', c.id, false, 'application/pdf'
 from clientes c where c.nome_fantasia ilike '%ferro sul%'
 union all
-select '00000000-0000-0000-0000-000000000001', 'Ata de reunião.pdf', 'https://example.com/placeholder.pdf', 'Geral', c.id, false, 'application/pdf'
+select '00000000-0000-0000-0000-000000000001'::uuid, 'Ata de reunião.pdf', 'https://example.com/placeholder.pdf', 'Geral', c.id, false, 'application/pdf'
 from clientes c where c.nome_fantasia ilike '%techflow%'
 union all
-select '00000000-0000-0000-0000-000000000001', 'Foto da visita técnica.jpg', 'https://example.com/placeholder.jpg', 'Visita', c.id, false, 'image/jpeg'
+select '00000000-0000-0000-0000-000000000001'::uuid, 'Foto da visita técnica.jpg', 'https://example.com/placeholder.jpg', 'Visita', c.id, false, 'image/jpeg'
 from clientes c where c.nome_fantasia ilike '%trigo dourado%'
 union all
-select '00000000-0000-0000-0000-000000000001', 'Planilha financeira.xlsx', 'https://example.com/placeholder.xlsx', 'Financeiro', c.id, true, 'application/vnd.ms-excel'
+select '00000000-0000-0000-0000-000000000001'::uuid, 'Planilha financeira.xlsx', 'https://example.com/placeholder.xlsx', 'Financeiro', c.id, true, 'application/vnd.ms-excel'
 from clientes c where c.nome_fantasia ilike '%horizonte%'
 union all
-select '00000000-0000-0000-0000-000000000001', 'Relatório executivo.pdf', 'https://example.com/placeholder.pdf', 'Relatório', c.id, false, 'application/pdf'
+select '00000000-0000-0000-0000-000000000001'::uuid, 'Relatório executivo.pdf', 'https://example.com/placeholder.pdf', 'Relatório', c.id, false, 'application/pdf'
 from clientes c where c.nome_fantasia ilike '%doce sabor%'
 union all
-select '00000000-0000-0000-0000-000000000001', 'Proposta comercial.pdf', 'https://example.com/placeholder.pdf', 'Geral', c.id, false, 'application/pdf'
+select '00000000-0000-0000-0000-000000000001'::uuid, 'Proposta comercial.pdf', 'https://example.com/placeholder.pdf', 'Geral', c.id, false, 'application/pdf'
 from clientes c where c.nome_fantasia ilike '%nova era%'
 union all
-select '00000000-0000-0000-0000-000000000001', 'Plano de trabalho.pdf', 'https://example.com/placeholder.pdf', 'Diagnóstico', c.id, true, 'application/pdf'
+select '00000000-0000-0000-0000-000000000001'::uuid, 'Plano de trabalho.pdf', 'https://example.com/placeholder.pdf', 'Diagnóstico', c.id, true, 'application/pdf'
 from clientes c where c.nome_fantasia ilike '%alvorada%'
 union all
-select '00000000-0000-0000-0000-000000000001', 'Contrato — Vale Verde.pdf', 'https://example.com/placeholder.pdf', 'Contrato', c.id, false, 'application/pdf'
+select '00000000-0000-0000-0000-000000000001'::uuid, 'Contrato — Vale Verde.pdf', 'https://example.com/placeholder.pdf', 'Contrato', c.id, false, 'application/pdf'
 from clientes c where c.nome_fantasia ilike '%vale verde%'
 union all
-select '00000000-0000-0000-0000-000000000001', 'Apresentação institucional.pdf', 'https://example.com/placeholder.pdf', 'Geral', c.id, false, 'application/pdf'
+select '00000000-0000-0000-0000-000000000001'::uuid, 'Apresentação institucional.pdf', 'https://example.com/placeholder.pdf', 'Geral', c.id, false, 'application/pdf'
 from clientes c where c.nome_fantasia ilike '%boa vista%';
 
 -- ============================================================
