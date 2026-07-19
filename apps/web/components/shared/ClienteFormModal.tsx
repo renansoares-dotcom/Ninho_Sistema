@@ -31,6 +31,7 @@ export type ClienteFormData = {
   instagram: string;
   linkedin: string;
   tags: string;
+  email_nfe: string;
 };
 
 const vazio: ClienteFormData = {
@@ -57,6 +58,7 @@ const vazio: ClienteFormData = {
   instagram: "",
   linkedin: "",
   tags: "",
+  email_nfe: "",
 };
 
 function Campo({
@@ -149,6 +151,7 @@ export default function ClienteFormModal({
       instagram: form.instagram || null,
       linkedin: form.linkedin || null,
       tags: form.tags ? form.tags.split(",").map((t) => t.trim()).filter(Boolean) : [],
+      email_nfe: form.email_nfe || null,
     };
 
     const resultado = form.id
@@ -253,6 +256,10 @@ export default function ClienteFormModal({
               <Campo label="Instagram" value={form.instagram} onChange={set("instagram")} placeholder="@empresa" />
               <Campo label="LinkedIn" value={form.linkedin} onChange={set("linkedin")} placeholder="linkedin.com/company/..." />
             </div>
+          </Secao>
+
+          <Secao titulo="Faturamento">
+            <Campo label="E-mail para envio de notas fiscais" value={form.email_nfe} onChange={set("email_nfe")} placeholder="financeiro@cliente.com.br" type="email" />
           </Secao>
 
           <Secao titulo="Tags">

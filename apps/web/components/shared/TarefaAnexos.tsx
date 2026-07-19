@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Paperclip, X, Plus, ExternalLink, Loader2 } from "lucide-react";
+import { useEffect, useState, useRef } from "react";
+import { Paperclip, X, Upload, ExternalLink, Loader2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+
+const BUCKET = "arquivos";
 
 type Anexo = {
   id: string;
@@ -12,10 +14,10 @@ type Anexo = {
 
 export default function TarefaAnexos({ tarefaId }: { tarefaId: string }) {
   const [anexos, setAnexos] = useState<Anexo[]>([]);
-  const [nome, setNome] = useState("");
-  const [url, setUrl] = useState("");
   const [carregando, setCarregando] = useState(true);
-  const [adicionando, setAdicionando] = useState(false);
+  const [enviando, setEnviando] = useState(false);
+  const [erro, setErro] = useState<string | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     carregar();
@@ -32,14 +34,41 @@ export default function TarefaAnexos({ tarefaId }: { tarefaId: string }) {
     setCarregando(false);
   }
 
-  async function adicionar() {
-    if (!nome.trim() || !url.trim()) return;
-    setAdicionando(true);
-    await supabase.from("tarefa_anexos").insert({ tarefa_id: tarefaId, nome, url });
-    setNome("");
-    setUrl("");
-    setAdicionando(false);
+  async function enviarArquivo(file: File) {
+    setEnviando(true);
+    setErro(null);
+
+    const caminho = `tarefas/${tarefaId}/${Date.now()}-${file.name}`;
+    const { error: erroUpload } = await supabase.storage.from(BUCKET).upload(caminho, file);
+
+    if (erroUpload) {
+      setErro(erroUpload.message);
+      setEnviando(false);
+      return;
+    }
+
+    const { data: urlData } = supabase.storage.from(BUCKET).getPublicUrl(caminho);
+
+    const { error: erroInsert } = await supabase.from("tarefa_anexos").insert({
+      tarefa_id: tarefaId,
+      nome: file.name,
+      url: urlData.publicUrl,
+    });
+
+    setEnviando(false);
+
+    if (erroInsert) {
+      setErro(erroInsert.message);
+      return;
+    }
+
     carregar();
+  }
+
+  function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) enviarArquivo(file);
+    if (inputRef.current) inputRef.current.value = "";
   }
 
   async function remover(id: string) {
@@ -49,6 +78,10 @@ export default function TarefaAnexos({ tarefaId }: { tarefaId: string }) {
 
   return (
     <div>
+      {erro && (
+        <div className="text-[11.5px] text-[#f04438] bg-[#fdecea] rounded-lg px-2.5 py-1.5 mb-2">{erro}</div>
+      )}
+
       {carregando ? (
         <div className="flex items-center gap-2 py-3 text-[#9aa0ac] text-[12.5px]">
           <Loader2 size={13} className="animate-spin" /> Carregando...
@@ -78,27 +111,15 @@ export default function TarefaAnexos({ tarefaId }: { tarefaId: string }) {
         </div>
       )}
 
-      <div className="flex items-center gap-1.5 mt-2">
-        <input
-          value={nome}
-          onChange={(e) => setNome(e.target.value)}
-          placeholder="Nome do anexo"
-          className="w-[38%] border border-[#e4e6ea] rounded-lg px-2.5 py-1.5 text-[12.5px] text-[#16181d] outline-none focus:border-primary"
-        />
-        <input
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-          placeholder="URL (link do arquivo)"
-          className="flex-1 border border-[#e4e6ea] rounded-lg px-2.5 py-1.5 text-[12.5px] text-[#16181d] outline-none focus:border-primary"
-        />
-        <button
-          onClick={adicionar}
-          disabled={adicionando}
-          className="w-7 h-7 rounded-lg bg-[#f5f6f8] flex items-center justify-center text-[#5b6270] hover:bg-[#eef0f2] disabled:opacity-60 shrink-0"
-        >
-          <Plus size={14} />
-        </button>
-      </div>
+      <button
+        onClick={() => inputRef.current?.click()}
+        disabled={enviando}
+        className="flex items-center gap-1.5 mt-2 px-2.5 py-1.5 rounded-lg text-[12px] font-medium bg-[#f5f6f8] text-[#5b6270] hover:bg-[#eef0f2] disabled:opacity-60"
+      >
+        {enviando ? <Loader2 size={12} className="animate-spin" /> : <Upload size={12} />}
+        Enviar arquivo
+      </button>
+      <input ref={inputRef} type="file" onChange={onFileChange} className="hidden" />
     </div>
   );
 }

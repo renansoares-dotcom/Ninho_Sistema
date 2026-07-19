@@ -20,6 +20,8 @@ const TENANT_ID = "00000000-0000-0000-0000-000000000001";
 export default function DiagnosticoForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const editarId = searchParams.get("editar");
+
   const [clienteId, setClienteId] = useState(searchParams.get("cliente") ?? "");
   const [clientes, setClientes] = useState<{ id: string; nome: string }[]>([]);
   const [resumoExecutivo, setResumoExecutivo] = useState("");
@@ -29,6 +31,7 @@ export default function DiagnosticoForm() {
   const [notas, setNotas] = useState<Record<string, number>>(
     Object.fromEntries(areasDiagnostico.map((a) => [a.area, 5]))
   );
+  const [carregandoExistente, setCarregandoExistente] = useState(!!editarId);
   const [salvando, setSalvando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
 
@@ -42,6 +45,32 @@ export default function DiagnosticoForm() {
       });
   }, []);
 
+  useEffect(() => {
+    if (!editarId) return;
+    async function carregarExistente() {
+      setCarregandoExistente(true);
+      const [{ data: diag }, { data: areas }] = await Promise.all([
+        supabase.from("diagnosticos").select("*").eq("id", editarId).single(),
+        supabase.from("diagnostico_areas").select("area, nota").eq("diagnostico_id", editarId),
+      ]);
+
+      if (diag) {
+        setClienteId(diag.cliente_id ?? "");
+        setResumoExecutivo(diag.resumo_executivo ?? "");
+        setPontosFortes((diag.pontos_fortes ?? []).join("\n"));
+        setOportunidadesMelhoria((diag.oportunidades_melhoria ?? []).join("\n"));
+        setRiscos((diag.riscos ?? []).join("\n"));
+      }
+      if (areas && areas.length > 0) {
+        const notasCarregadas: Record<string, number> = {};
+        areas.forEach((a) => { notasCarregadas[a.area] = a.nota; });
+        setNotas((prev) => ({ ...prev, ...notasCarregadas }));
+      }
+      setCarregandoExistente(false);
+    }
+    carregarExistente();
+  }, [editarId]);
+
   const dadosRadar = useMemo(
     () => areasDiagnostico.map((a) => ({ area: a.area, nota: notas[a.area] })),
     [notas]
@@ -52,39 +81,53 @@ export default function DiagnosticoForm() {
     return valores.reduce((a, b) => a + b, 0) / valores.length;
   }, [notas]);
 
-  async function concluir() {
+  async function salvar() {
     if (!clienteId) {
-      setErro("Selecione o cliente antes de concluir o diagnóstico.");
+      setErro("Selecione o cliente antes de salvar o diagnóstico.");
       return;
     }
     setSalvando(true);
     setErro(null);
 
-    const { data: diag, error: erroDiag } = await supabase
-      .from("diagnosticos")
-      .insert({
-        tenant_id: TENANT_ID,
-        cliente_id: clienteId,
-        data: new Date().toISOString().slice(0, 10),
-        status: "Concluído",
-        indice_maturidade_geral: indiceGeral,
-        resumo_executivo: resumoExecutivo || null,
-        pontos_fortes: pontosFortes.split("\n").map((s) => s.trim()).filter(Boolean),
-        oportunidades_melhoria: oportunidadesMelhoria.split("\n").map((s) => s.trim()).filter(Boolean),
-        riscos: riscos.split("\n").map((s) => s.trim()).filter(Boolean),
-      })
-      .select("id")
-      .single();
+    const camposComuns = {
+      cliente_id: clienteId,
+      status: "Concluído",
+      indice_maturidade_geral: indiceGeral,
+      resumo_executivo: resumoExecutivo || null,
+      pontos_fortes: pontosFortes.split("\n").map((s) => s.trim()).filter(Boolean),
+      oportunidades_melhoria: oportunidadesMelhoria.split("\n").map((s) => s.trim()).filter(Boolean),
+      riscos: riscos.split("\n").map((s) => s.trim()).filter(Boolean),
+    };
 
-    if (erroDiag || !diag) {
-      setErro(erroDiag?.message ?? "Erro ao salvar diagnóstico.");
-      setSalvando(false);
-      return;
+    let diagnosticoId = editarId;
+
+    if (editarId) {
+      const { error } = await supabase.from("diagnosticos").update(camposComuns).eq("id", editarId);
+      if (error) {
+        setErro(error.message);
+        setSalvando(false);
+        return;
+      }
+      // Substitui as áreas: remove as antigas e insere as atuais
+      await supabase.from("diagnostico_areas").delete().eq("diagnostico_id", editarId);
+    } else {
+      const { data: diag, error } = await supabase
+        .from("diagnosticos")
+        .insert({ tenant_id: TENANT_ID, data: new Date().toISOString().slice(0, 10), ...camposComuns })
+        .select("id")
+        .single();
+
+      if (error || !diag) {
+        setErro(error?.message ?? "Erro ao salvar diagnóstico.");
+        setSalvando(false);
+        return;
+      }
+      diagnosticoId = diag.id;
     }
 
     const { error: erroAreas } = await supabase.from("diagnostico_areas").insert(
       areasDiagnostico.map((a) => ({
-        diagnostico_id: diag.id,
+        diagnostico_id: diagnosticoId,
         area: a.area,
         nota: notas[a.area],
       }))
@@ -97,7 +140,16 @@ export default function DiagnosticoForm() {
       return;
     }
 
-    router.push(`/diagnostico/${diag.id}`);
+    router.push(`/diagnostico/${diagnosticoId}`);
+  }
+
+  if (carregandoExistente) {
+    return (
+      <div className="flex items-center justify-center gap-2 py-24 text-[#9aa0ac] text-[13px]">
+        <Loader2 size={16} className="animate-spin" />
+        Carregando diagnóstico...
+      </div>
+    );
   }
 
   return (
@@ -107,7 +159,8 @@ export default function DiagnosticoForm() {
           <select
             value={clienteId}
             onChange={(e) => setClienteId(e.target.value)}
-            className="w-full border border-[#e4e6ea] rounded-lg px-3 py-2.5 text-[13.5px] text-[#16181d] outline-none focus:border-primary"
+            disabled={!!editarId}
+            className="w-full border border-[#e4e6ea] rounded-lg px-3 py-2.5 text-[13.5px] text-[#16181d] outline-none focus:border-primary disabled:bg-[#f5f6f8] disabled:text-[#9aa0ac]"
           >
             <option value="">Selecione o cliente...</option>
             {clientes.map((c) => (
@@ -210,12 +263,12 @@ export default function DiagnosticoForm() {
         )}
 
         <button
-          onClick={concluir}
+          onClick={salvar}
           disabled={salvando}
           className="w-full py-3 rounded-lg bg-primary text-white text-[13.5px] font-semibold shadow-sm flex items-center justify-center gap-2 disabled:opacity-60"
         >
           {salvando && <Loader2 size={16} className="animate-spin" />}
-          Concluir diagnóstico
+          {editarId ? "Salvar alterações" : "Concluir diagnóstico"}
         </button>
       </div>
     </div>

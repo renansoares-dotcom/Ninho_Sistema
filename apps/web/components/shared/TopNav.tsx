@@ -12,7 +12,6 @@ import {
   Stethoscope,
   ChevronDown,
   Search,
-  Bell,
   CalendarDays,
   Wallet,
   FileText,
@@ -20,9 +19,11 @@ import {
   Settings,
   Folder,
   Receipt,
+  MapPin,
 } from "lucide-react";
 import { Avatar } from "./Avatar";
 import GlobalSearch from "./GlobalSearch";
+import NotificationsBell from "./NotificationsBell";
 
 const items = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -34,6 +35,7 @@ const items = [
 
 const maisItems = [
   { href: "/agenda", label: "Agenda", icon: CalendarDays },
+  { href: "/visitas", label: "Visitas", icon: MapPin },
   { href: "/arquivos", label: "Arquivos", icon: Folder },
   { href: "/financeiro", label: "Financeiro", icon: Wallet },
   { href: "/faturamento", label: "Faturamento", icon: Receipt },
@@ -123,10 +125,7 @@ export default function TopNav() {
 
         <div className="flex items-center gap-3.5">
           <GlobalSearch />
-          <div className="relative">
-            <Bell size={17} color="#5b6270" strokeWidth={1.8} />
-            <div className="absolute -top-0.5 -right-0.5 w-[7px] h-[7px] rounded-full bg-[#f04438] border-[1.5px] border-white" />
-          </div>
+          <NotificationsBell />
           <Avatar initials="VC" size={30} />
         </div>
       </div>

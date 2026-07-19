@@ -14,6 +14,7 @@ import ClienteAgendaTab from "@/components/workspace/ClienteAgendaTab";
 import ClienteDiagnosticoTab from "@/components/workspace/ClienteDiagnosticoTab";
 import ClienteFinanceiroTab from "@/components/workspace/ClienteFinanceiroTab";
 import ArquivosPanel from "@/components/shared/ArquivosPanel";
+import VisitasPanel from "@/components/shared/VisitasPanel";
 import { supabase } from "@/lib/supabase";
 
 const statusStyles: Record<string, string> = {
@@ -45,6 +46,7 @@ type Cliente = {
   instagram: string | null;
   linkedin: string | null;
   tags: string[] | null;
+  email_nfe: string | null;
 };
 
 type Contato = {
@@ -146,6 +148,7 @@ export default function ClienteDetalhePage() {
     instagram: cliente.instagram ?? "",
     linkedin: cliente.linkedin ?? "",
     tags: (cliente.tags ?? []).join(", "),
+    email_nfe: cliente.email_nfe ?? "",
   };
 
   return (
@@ -209,6 +212,10 @@ export default function ClienteDetalhePage() {
                 )}
               </Card>
 
+              <Card title="Faturamento">
+                <Field label="E-mail para envio de notas fiscais" value={cliente.email_nfe ?? "—"} />
+              </Card>
+
               <Card title="Contatos principais">
                 <div className="flex flex-col divide-y divide-[#f2f3f5]">
                   {contatos.map((c) => (
@@ -252,6 +259,7 @@ export default function ClienteDetalhePage() {
         {aba === "diagnostico" && <ClienteDiagnosticoTab clienteId={cliente.id} />}
         {aba === "financeiro" && <ClienteFinanceiroTab clienteId={cliente.id} clienteNome={nomeCliente} />}
         {aba === "arquivos" && <ArquivosPanel clienteId={cliente.id} />}
+        {aba === "visitas" && <VisitasPanel clienteId={cliente.id} />}
       </div>
 
       <ClienteFormModal

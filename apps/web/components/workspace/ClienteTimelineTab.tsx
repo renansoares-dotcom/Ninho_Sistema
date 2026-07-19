@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CalendarDays, KanbanSquare, Stethoscope, Wallet, Loader2 } from "lucide-react";
+import { CalendarDays, KanbanSquare, Stethoscope, Wallet, Loader2, MapPin } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
 type EventoTimeline = {
   id: string;
-  tipo: "evento" | "tarefa" | "diagnostico" | "contrato";
+  tipo: "evento" | "tarefa" | "diagnostico" | "contrato" | "visita";
   titulo: string;
   descricao: string;
   data: string;
@@ -17,6 +17,7 @@ const iconePorTipo: Record<string, any> = {
   tarefa: KanbanSquare,
   diagnostico: Stethoscope,
   contrato: Wallet,
+  visita: MapPin,
 };
 
 const corPorTipo: Record<string, string> = {
@@ -24,6 +25,7 @@ const corPorTipo: Record<string, string> = {
   tarefa: "bg-[#f3e8fd] text-[#9333ea]",
   diagnostico: "bg-[#fff6e6] text-[#b45309]",
   contrato: "bg-[#eafaf1] text-[#0e9f6e]",
+  visita: "bg-[#eaf1fb] text-primary",
 };
 
 export default function ClienteTimelineTab({ clienteId }: { clienteId: string }) {
@@ -33,11 +35,12 @@ export default function ClienteTimelineTab({ clienteId }: { clienteId: string })
   useEffect(() => {
     async function carregar() {
       setCarregando(true);
-      const [eventos, tarefas, diagnosticos, contratos] = await Promise.all([
+      const [eventos, tarefas, diagnosticos, contratos, visitas] = await Promise.all([
         supabase.from("eventos").select("id, titulo, tipo, data_inicio").eq("cliente_id", clienteId),
         supabase.from("tarefas").select("id, titulo, coluna, created_at").eq("cliente_id", clienteId),
         supabase.from("diagnosticos").select("id, data, status").eq("cliente_id", clienteId),
         supabase.from("contratos").select("id, valor_total, data_inicio").eq("cliente_id", clienteId),
+        supabase.from("visitas").select("id, data, objetivo").eq("cliente_id", clienteId),
       ]);
 
       const lista: EventoTimeline[] = [
@@ -68,6 +71,13 @@ export default function ClienteTimelineTab({ clienteId }: { clienteId: string })
           titulo: `Contrato assinado — R$ ${c.valor_total.toLocaleString("pt-BR")}`,
           descricao: "Financeiro",
           data: c.data_inicio,
+        })),
+        ...(visitas.data ?? []).map((v) => ({
+          id: v.id,
+          tipo: "visita" as const,
+          titulo: v.objetivo ?? "Visita técnica registrada",
+          descricao: "Registro de visita",
+          data: v.data,
         })),
       ].sort((a, b) => new Date(b.data).getTime() - new Date(a.data).getTime());
 

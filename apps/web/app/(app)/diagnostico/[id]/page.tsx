@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { CheckCircle2, AlertTriangle, AlertOctagon, Loader2 } from "lucide-react";
+import { CheckCircle2, AlertTriangle, AlertOctagon, Loader2, Pencil } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
 import Card from "@/components/shared/Card";
 import DiagnosticoRadarChart from "@/components/charts/DiagnosticoRadarChart";
@@ -90,6 +90,9 @@ export default function DiagnosticoDetalhePage() {
       <PageHeader
         crumb="Diagnóstico"
         title={`Diagnóstico — ${nomeCliente}`}
+        actionLabel="Editar"
+        actionHref={`/diagnostico/novo?editar=${diag.id}`}
+        actionIcon={Pencil}
         secondaryLabel="Gerar PDF"
         dangerLabel={excluindo ? "Excluindo..." : "Excluir"}
         onDangerClick={excluir}
