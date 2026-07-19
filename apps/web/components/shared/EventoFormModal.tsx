@@ -14,6 +14,10 @@ export type EventoFormData = {
   data: string;
   hora: string;
   responsavel_nome: string;
+  local?: string;
+  participantes?: string;
+  recorrencia?: string;
+  recorrenciaAte?: string;
 };
 
 const vazio: EventoFormData = {
@@ -23,6 +27,10 @@ const vazio: EventoFormData = {
   data: "",
   hora: "09:00",
   responsavel_nome: "",
+  local: "",
+  participantes: "",
+  recorrencia: "nenhuma",
+  recorrenciaAte: "",
 };
 
 const tipos = [
@@ -30,6 +38,20 @@ const tipos = [
   { value: "visita_tecnica", label: "Visita técnica" },
   { value: "videoconferencia", label: "Videoconferência" },
 ];
+
+function gerarDatasRecorrencia(dataInicial: string, tipo: string, ate: string): string[] {
+  if (tipo === "nenhuma" || !ate) return [dataInicial];
+  const datas: string[] = [];
+  let cursor = new Date(dataInicial + "T12:00:00");
+  const limite = new Date(ate + "T12:00:00");
+  while (cursor <= limite) {
+    datas.push(cursor.toISOString().slice(0, 10));
+    if (tipo === "semanal") cursor.setDate(cursor.getDate() + 7);
+    else if (tipo === "mensal") cursor.setMonth(cursor.getMonth() + 1);
+    else break;
+  }
+  return datas.length > 0 ? datas : [dataInicial];
+}
 
 export default function EventoFormModal({
   open,
@@ -78,22 +100,51 @@ export default function EventoFormModal({
     setSalvando(true);
     setErro(null);
 
-    const payload = {
+    const participantesArray = (form.participantes ?? "")
+      .split(",")
+      .map((p) => p.trim())
+      .filter(Boolean);
+
+    const basePayload = {
       titulo: form.titulo,
       tipo: form.tipo,
       cliente_id: form.cliente_id || null,
-      data_inicio: `${form.data}T${form.hora}:00`,
       responsavel_nome: form.responsavel_nome || null,
+      local: form.local || null,
+      participantes: participantesArray,
     };
 
-    const resultado = form.id
-      ? await supabase.from("eventos").update(payload).eq("id", form.id)
-      : await supabase.from("eventos").insert({ ...payload, tenant_id: TENANT_ID });
+    if (form.id) {
+      const { error } = await supabase
+        .from("eventos")
+        .update({ ...basePayload, data_inicio: `${form.data}T${form.hora}:00` })
+        .eq("id", form.id);
+      setSalvando(false);
+      if (error) {
+        setErro(error.message);
+        return;
+      }
+      onSaved();
+      onClose();
+      return;
+    }
 
+    // Criação: se houver recorrência, gera vários eventos com o mesmo grupo
+    const datas = gerarDatasRecorrencia(form.data, form.recorrencia ?? "nenhuma", form.recorrenciaAte ?? "");
+    const grupoId = datas.length > 1 ? crypto.randomUUID() : null;
+
+    const linhas = datas.map((d) => ({
+      ...basePayload,
+      tenant_id: TENANT_ID,
+      data_inicio: `${d}T${form.hora}:00`,
+      recorrencia_grupo_id: grupoId,
+    }));
+
+    const { error } = await supabase.from("eventos").insert(linhas);
     setSalvando(false);
 
-    if (resultado.error) {
-      setErro(resultado.error.message);
+    if (error) {
+      setErro(error.message);
       return;
     }
 
@@ -117,7 +168,7 @@ export default function EventoFormModal({
 
   return (
     <div className="fixed inset-0 bg-black/30 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl w-full max-w-[500px] max-h-[85vh] overflow-y-auto shadow-xl">
+      <div className="bg-white rounded-2xl w-full max-w-[520px] max-h-[85vh] overflow-y-auto shadow-xl">
         <div className="flex items-center justify-between px-6 py-4 border-b border-[#eef0f2] sticky top-0 bg-white">
           <span className="text-[15px] font-semibold text-[#16181d]">
             {form.id ? "Editar evento" : "Novo evento"}
@@ -197,6 +248,57 @@ export default function EventoFormModal({
               />
             </div>
           </div>
+
+          <div>
+            <label className="text-[12px] text-[#9aa0ac] mb-1 block">Local</label>
+            <input
+              value={form.local}
+              onChange={(e) => set("local")(e.target.value)}
+              placeholder="Ex: Sede do cliente, Recife/PE ou link da chamada"
+              className="w-full border border-[#e4e6ea] rounded-lg px-3 py-2.5 text-[13.5px] text-[#16181d] outline-none focus:border-primary"
+            />
+          </div>
+
+          <div>
+            <label className="text-[12px] text-[#9aa0ac] mb-1 block">Participantes (separados por vírgula)</label>
+            <input
+              value={form.participantes}
+              onChange={(e) => set("participantes")(e.target.value)}
+              placeholder="Ex: Marcelo Andrade, Fernanda Lima"
+              className="w-full border border-[#e4e6ea] rounded-lg px-3 py-2.5 text-[13.5px] text-[#16181d] outline-none focus:border-primary"
+            />
+          </div>
+
+          {!form.id && (
+            <div className="pt-2 border-t border-[#f2f3f5]">
+              <div className="text-[12.5px] font-semibold text-[#3f434d] mb-3 mt-3">Recorrência</div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-[12px] text-[#9aa0ac] mb-1 block">Repetir</label>
+                  <select
+                    value={form.recorrencia}
+                    onChange={(e) => set("recorrencia")(e.target.value)}
+                    className="w-full border border-[#e4e6ea] rounded-lg px-3 py-2.5 text-[13.5px] text-[#16181d] outline-none focus:border-primary"
+                  >
+                    <option value="nenhuma">Não repetir</option>
+                    <option value="semanal">Semanalmente</option>
+                    <option value="mensal">Mensalmente</option>
+                  </select>
+                </div>
+                {form.recorrencia !== "nenhuma" && (
+                  <div>
+                    <label className="text-[12px] text-[#9aa0ac] mb-1 block">Repetir até</label>
+                    <input
+                      type="date"
+                      value={form.recorrenciaAte}
+                      onChange={(e) => set("recorrenciaAte")(e.target.value)}
+                      className="w-full border border-[#e4e6ea] rounded-lg px-3 py-2.5 text-[13.5px] text-[#16181d] outline-none focus:border-primary"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="flex items-center justify-between gap-2 px-6 py-4 border-t border-[#eef0f2] sticky bottom-0 bg-white">

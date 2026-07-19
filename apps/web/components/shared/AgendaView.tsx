@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Search, ChevronDown, X, List, Calendar as CalendarIcon, Loader2 } from "lucide-react";
+import { Search, ChevronDown, X, List, Calendar as CalendarIcon, Loader2, CalendarRange, Sun } from "lucide-react";
 import AgendaList from "./AgendaList";
 import AgendaCalendar from "./AgendaCalendar";
+import AgendaSemana from "./AgendaSemana";
+import AgendaDia from "./AgendaDia";
 import EventoFormModal, { EventoFormData } from "./EventoFormModal";
 import { supabase } from "@/lib/supabase";
 
@@ -26,7 +28,7 @@ const tipoDisplay: Record<string, string> = {
 };
 
 export default function AgendaView({ refreshKey = 0 }: { refreshKey?: number }) {
-  const [modo, setModo] = useState<"lista" | "calendario">("calendario");
+  const [modo, setModo] = useState<"lista" | "calendario" | "semana" | "dia">("calendario");
   const [eventos, setEventos] = useState<EventoAgenda[]>([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
@@ -112,13 +114,31 @@ export default function AgendaView({ refreshKey = 0 }: { refreshKey?: number }) 
             Lista
           </button>
           <button
+            onClick={() => setModo("dia")}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[12.5px] font-medium transition-colors ${
+              modo === "dia" ? "bg-white text-primary shadow-sm" : "text-[#767c88]"
+            }`}
+          >
+            <Sun size={13} />
+            Dia
+          </button>
+          <button
+            onClick={() => setModo("semana")}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[12.5px] font-medium transition-colors ${
+              modo === "semana" ? "bg-white text-primary shadow-sm" : "text-[#767c88]"
+            }`}
+          >
+            <CalendarRange size={13} />
+            Semana
+          </button>
+          <button
             onClick={() => setModo("calendario")}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[12.5px] font-medium transition-colors ${
               modo === "calendario" ? "bg-white text-primary shadow-sm" : "text-[#767c88]"
             }`}
           >
             <CalendarIcon size={13} />
-            Calendário
+            Mês
           </button>
         </div>
       </div>
@@ -136,6 +156,10 @@ export default function AgendaView({ refreshKey = 0 }: { refreshKey?: number }) 
         </div>
       ) : modo === "lista" ? (
         <AgendaList eventos={eventos} onEventClick={abrirEdicao} />
+      ) : modo === "dia" ? (
+        <AgendaDia eventos={eventos} onEventClick={abrirEdicao} />
+      ) : modo === "semana" ? (
+        <AgendaSemana eventos={eventos} onEventClick={abrirEdicao} />
       ) : (
         <AgendaCalendar eventos={eventos} onEventClick={abrirEdicao} />
       )}
