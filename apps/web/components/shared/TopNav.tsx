@@ -21,6 +21,7 @@ import {
   Folder,
 } from "lucide-react";
 import { Avatar } from "./Avatar";
+import GlobalSearch from "./GlobalSearch";
 
 const items = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -119,10 +120,7 @@ export default function TopNav() {
         </div>
 
         <div className="flex items-center gap-3.5">
-          <div className="flex items-center gap-1.5 bg-[#f5f6f8] rounded-lg px-2.5 py-1.5 w-[200px]">
-            <Search size={14} color="#9aa0ac" />
-            <span className="text-[12.5px] text-[#9aa0ac]">Pesquisar...</span>
-          </div>
+          <GlobalSearch />
           <div className="relative">
             <Bell size={17} color="#5b6270" strokeWidth={1.8} />
             <div className="absolute -top-0.5 -right-0.5 w-[7px] h-[7px] rounded-full bg-[#f04438] border-[1.5px] border-white" />
