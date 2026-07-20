@@ -25,6 +25,7 @@ import {
 import { Avatar } from "./Avatar";
 import GlobalSearch from "./GlobalSearch";
 import NotificationsBell from "./NotificationsBell";
+import CommandPalette from "./CommandPalette";
 
 const items = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -131,6 +132,7 @@ export default function TopNav() {
           <Avatar initials="VC" size={30} />
         </div>
       </div>
+      <CommandPalette />
     </div>
   );
 }

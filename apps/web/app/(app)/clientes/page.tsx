@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PageHeader from "@/components/shared/PageHeader";
 import ClientesTable from "@/components/shared/ClientesTable";
 import ClienteFormModal from "@/components/shared/ClienteFormModal";
@@ -8,6 +8,12 @@ import ClienteFormModal from "@/components/shared/ClienteFormModal";
 export default function ClientesPage() {
   const [modalAberto, setModalAberto] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("novo") === "1") {
+      setModalAberto(true);
+    }
+  }, []);
 
   return (
     <>

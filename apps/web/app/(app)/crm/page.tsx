@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PageHeader from "@/components/shared/PageHeader";
 import CrmBoard from "@/components/shared/CrmBoard";
 import OportunidadeFormModal from "@/components/shared/OportunidadeFormModal";
@@ -8,6 +8,12 @@ import OportunidadeFormModal from "@/components/shared/OportunidadeFormModal";
 export default function CrmPage() {
   const [modalAberto, setModalAberto] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("novo") === "1") {
+      setModalAberto(true);
+    }
+  }, []);
 
   return (
     <>

@@ -42,6 +42,12 @@ export default function NotasFiscaisList() {
   const [empresa, setEmpresa] = useState<{ razao_social: string | null; cnpj: string | null } | null>(null);
 
   useEffect(() => {
+    if (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("novo") === "1") {
+      setModalEmissaoAberto(true);
+    }
+  }, []);
+
+  useEffect(() => {
     async function carregar() {
       setCarregando(true);
       const [{ data: notasData }, { data: empresaData }] = await Promise.all([

@@ -113,6 +113,7 @@ export default function GlobalSearch() {
           placeholder="Pesquisar..."
           className="bg-transparent outline-none text-[12.5px] text-[#3f434d] placeholder:text-[#9aa0ac] w-full"
         />
+        <kbd className="text-[10px] text-[#b0b4bb] bg-white border border-[#e4e6ea] rounded px-1 shrink-0">⌘K</kbd>
       </div>
 
       {aberto && query.trim().length >= 2 && (

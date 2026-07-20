@@ -25,6 +25,12 @@ export default function VisitasPanel({ clienteId }: { clienteId?: string }) {
   const [visitaSelecionada, setVisitaSelecionada] = useState<VisitaFormData | undefined>(undefined);
 
   useEffect(() => {
+    if (!clienteId && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("novo") === "1") {
+      setModalAberto(true);
+    }
+  }, [clienteId]);
+
+  useEffect(() => {
     async function carregar() {
       setCarregando(true);
       let sel = supabase
