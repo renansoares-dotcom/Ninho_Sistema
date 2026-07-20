@@ -20,6 +20,7 @@ import { ReceitaChart, FunilChart } from "@/components/charts/DashboardCharts";
 import { atividadesRecentes, produtividade } from "@/lib/mock-data";
 import { catalogoWidgets, WidgetId } from "@/lib/dashboard-widgets";
 import DashboardPreferencesModal, { Preferencia } from "@/components/shared/DashboardPreferencesModal";
+import { rodarVerificacoesAutomaticas } from "@/lib/automacoes";
 import { supabase } from "@/lib/supabase";
 
 const TENANT_ID = "00000000-0000-0000-0000-000000000001";
@@ -44,6 +45,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     carregarPreferencias();
+    rodarVerificacoesAutomaticas();
   }, []);
 
   async function carregarPreferencias() {

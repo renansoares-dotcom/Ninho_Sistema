@@ -19,6 +19,8 @@ export type ClienteFormData = {
   logradouro: string;
   cidade: string;
   uf: string;
+  latitude: string;
+  longitude: string;
   inscricao_estadual: string;
   inscricao_municipal: string;
   cnae_principal: string;
@@ -46,6 +48,8 @@ const vazio: ClienteFormData = {
   logradouro: "",
   cidade: "",
   uf: "",
+  latitude: "",
+  longitude: "",
   inscricao_estadual: "",
   inscricao_municipal: "",
   cnae_principal: "",
@@ -139,6 +143,8 @@ export default function ClienteFormModal({
       faturamento: form.faturamento ? Number(form.faturamento) : null,
       status: form.status,
       endereco: { logradouro: form.logradouro, cidade: form.cidade, uf: form.uf },
+      latitude: form.latitude ? Number(form.latitude) : null,
+      longitude: form.longitude ? Number(form.longitude) : null,
       inscricao_estadual: form.inscricao_estadual || null,
       inscricao_municipal: form.inscricao_municipal || null,
       cnae_principal: form.cnae_principal || null,
@@ -220,6 +226,13 @@ export default function ClienteFormModal({
                 <Campo label="Cidade" value={form.cidade} onChange={set("cidade")} />
               </div>
             </div>
+            <div className="grid grid-cols-2 gap-4 mt-4">
+              <Campo label="Latitude" value={form.latitude} onChange={set("latitude")} placeholder="-8.0476" />
+              <Campo label="Longitude" value={form.longitude} onChange={set("longitude")} placeholder="-34.8770" />
+            </div>
+            <p className="text-[11px] text-[#9aa0ac] mt-1.5">
+              Opcional — preenche o mapa na Visão Geral. Busque o endereço no Google Maps, clique com o botão direito no ponto exato e copie as coordenadas.
+            </p>
           </Secao>
 
           <Secao titulo="Dados societários e fiscais">

@@ -14,6 +14,8 @@ import ClienteAgendaTab from "@/components/workspace/ClienteAgendaTab";
 import ClienteDiagnosticoTab from "@/components/workspace/ClienteDiagnosticoTab";
 import ClienteFinanceiroTab from "@/components/workspace/ClienteFinanceiroTab";
 import ArquivosPanel from "@/components/shared/ArquivosPanel";
+import ClienteMapa from "@/components/shared/ClienteMapa";
+import ClienteOrganograma from "@/components/shared/ClienteOrganograma";
 import VisitasPanel from "@/components/shared/VisitasPanel";
 import ClientePlanoTrabalhoTab from "@/components/workspace/ClientePlanoTrabalhoTab";
 import ClienteKpisTab from "@/components/workspace/ClienteKpisTab";
@@ -48,6 +50,8 @@ type Cliente = {
   instagram: string | null;
   linkedin: string | null;
   tags: string[] | null;
+  latitude: number | null;
+  longitude: number | null;
   email_nfe: string | null;
 };
 
@@ -151,6 +155,8 @@ export default function ClienteDetalhePage() {
     linkedin: cliente.linkedin ?? "",
     tags: (cliente.tags ?? []).join(", "),
     email_nfe: cliente.email_nfe ?? "",
+    latitude: cliente.latitude ? String(cliente.latitude) : "",
+    longitude: cliente.longitude ? String(cliente.longitude) : "",
   };
 
   return (
@@ -251,6 +257,8 @@ export default function ClienteDetalhePage() {
                   {cliente.status ?? "Ativo"}
                 </span>
               </Card>
+              <ClienteMapa latitude={cliente.latitude} longitude={cliente.longitude} />
+              <ClienteOrganograma clienteId={cliente.id} />
             </div>
           </div>
         )}

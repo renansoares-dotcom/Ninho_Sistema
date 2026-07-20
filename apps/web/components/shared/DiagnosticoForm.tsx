@@ -6,6 +6,7 @@ import { Loader2 } from "lucide-react";
 import Card from "@/components/shared/Card";
 import { areasDiagnostico } from "@/lib/mock-data";
 import { supabase } from "@/lib/supabase";
+import { gerarTarefaAposDiagnostico } from "@/lib/automacoes";
 import {
   Radar,
   RadarChart,
@@ -138,6 +139,11 @@ export default function DiagnosticoForm() {
     if (erroAreas) {
       setErro(erroAreas.message);
       return;
+    }
+
+    if (!editarId) {
+      const nomeCliente = clientes.find((c) => c.id === clienteId)?.nome ?? "Cliente";
+      gerarTarefaAposDiagnostico(clienteId, nomeCliente);
     }
 
     router.push(`/diagnostico/${diagnosticoId}`);
