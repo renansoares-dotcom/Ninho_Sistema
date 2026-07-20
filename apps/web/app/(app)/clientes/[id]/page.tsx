@@ -16,6 +16,7 @@ import ClienteFinanceiroTab from "@/components/workspace/ClienteFinanceiroTab";
 import ArquivosPanel from "@/components/shared/ArquivosPanel";
 import ClienteMapa from "@/components/shared/ClienteMapa";
 import ClienteOrganograma from "@/components/shared/ClienteOrganograma";
+import ClienteScores from "@/components/shared/ClienteScores";
 import VisitasPanel from "@/components/shared/VisitasPanel";
 import ClientePlanoTrabalhoTab from "@/components/workspace/ClientePlanoTrabalhoTab";
 import ClienteKpisTab from "@/components/workspace/ClienteKpisTab";
@@ -174,7 +175,9 @@ export default function ClienteDetalhePage() {
 
       <div className="max-w-[1360px] mx-auto px-7 pb-16 pt-5">
         {aba === "visao-geral" && (
-          <div className="grid grid-cols-[1.4fr_1fr] gap-3.5">
+          <div className="flex flex-col gap-3.5">
+            <ClienteScores clienteId={cliente.id} />
+            <div className="grid grid-cols-[1.4fr_1fr] gap-3.5">
             <div className="flex flex-col gap-3.5">
               <Card title="Identificação">
                 <div className="grid grid-cols-2 gap-4">
@@ -259,6 +262,7 @@ export default function ClienteDetalhePage() {
               </Card>
               <ClienteMapa latitude={cliente.latitude} longitude={cliente.longitude} />
               <ClienteOrganograma clienteId={cliente.id} />
+            </div>
             </div>
           </div>
         )}
