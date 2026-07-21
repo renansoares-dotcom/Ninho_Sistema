@@ -21,6 +21,10 @@
 
 **Login real (Supabase Auth) + RLS por perfil** — feito. Sessão via cookies (`@supabase/ssr`), middleware protegendo rotas, menu contextual por perfil, "esqueci minha senha", gestão de usuários em Configurações, e políticas de RLS reais (substituindo o "allow all" temporário) nas 29 tabelas do banco. Guia de ativação em `docs/arquitetura/guia-login-auth.md`.
 
+## ✅ Concluído (adicional)
+
+**Diagnóstico Público + Campanhas de Acompanhamento** — link público de captação de leads (`/diagnostico-publico`, com quiz de pesos editáveis somando 10, resultado teaser na hora, fila de revisão em Diagnóstico → Recebidos) + campanhas sazonais controladas pelo escritório pra clientes já ativos preencherem o diagnóstico de 9 áreas pelo Portal (uma vez por campanha, com liberação manual de reenvio pelo admin). Guia completo em `docs/arquitetura/guia-diagnostico-publico-e-campanhas.md` — inclui um passo extra de configuração (Service Role Key) que não existia antes.
+
 ## 🔴 Alta complexidade (o que resta)
 
 13. ~~Portal do Cliente~~ — **concluído.** Meu Painel, Plano de Trabalho, Indicadores, Arquivos e Mensagens (chat com a equipe), tudo com RLS escopado por `cliente_id`. Guia de ativação em `docs/arquitetura/guia-portal-cliente.md`. Pendência conhecida: o bucket de Arquivos ainda é público no Storage (ver guia).

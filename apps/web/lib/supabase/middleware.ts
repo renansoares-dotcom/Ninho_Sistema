@@ -4,7 +4,14 @@ import { NextResponse, type NextRequest } from "next/server";
 type CookieToSet = { name: string; value: string; options: CookieOptions };
 
 // Rotas que não exigem login.
-const ROTAS_PUBLICAS = ["/login", "/esqueci-senha", "/redefinir-senha", "/auth/confirm"];
+const ROTAS_PUBLICAS = [
+  "/login",
+  "/esqueci-senha",
+  "/redefinir-senha",
+  "/auth/confirm",
+  "/diagnostico-publico",
+  "/api/diagnostico-publico",
+];
 
 function isRotaPublica(pathname: string) {
   return ROTAS_PUBLICAS.some((r) => pathname === r || pathname.startsWith(r + "/"));

@@ -20,6 +20,10 @@ Login real (Supabase Auth) + RLS por perfil: implementado. Sessao via cookies (@
 
 Portal do Cliente: implementado. Meu Painel (progresso do projeto, proxima reuniao, atalhos), Plano de Trabalho, Indicadores, Arquivos e Mensagens (chat em tempo real com a equipe interna — aba nova no Workspace do cliente), tudo com RLS escopado por `profiles.cliente_id`. Gestao de usuarios em Configuracoes ganhou o campo "Empresa vinculada" pra ligar um perfil Cliente a um registro em Clientes. Ver `packages/db/migrations/026_portal_cliente_rls.sql` e `docs/arquitetura/guia-portal-cliente.md`.
 
+Notificacao de mensagem nova: implementado (migration 027) — gatilho no banco notifica consultor responsavel + Admin/Diretor quando um cliente manda mensagem pelo Portal; sino atualiza sozinho a cada ~25s.
+
+Diagnostico Publico + Campanhas de Acompanhamento: implementado (migration 028). Link publico `/diagnostico-publico` com quiz de perguntas editaveis (pesos somando 10, gerenciado em Configuracoes), resultado teaser na hora, fila de revisao em Diagnostico > Recebidos (importar vira Cliente Prospect + Lead no CRM, ou descartar). Campanhas de acompanhamento sazonais (Configuracoes > Diagnostico de Acompanhamento) liberam o formulario de 9 areas (o mesmo do diagnostico interno) no Portal do Cliente, uma resposta por campanha, com liberacao manual de reenvio pelo admin. Usa rota de servidor dedicada com Service Role Key (nao abre RLS pra trafego anonimo). Ver `docs/arquitetura/guia-diagnostico-publico-e-campanhas.md`.
+
 ## Ainda restam (media complexidade)
 
 1. Automacoes reais - hoje os toggles de /automacoes nao disparam nada de verdade

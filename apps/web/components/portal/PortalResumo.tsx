@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { CalendarDays, ClipboardList, LineChart, Folder, ArrowRight, Info } from "lucide-react";
+import { CalendarDays, ClipboardList, LineChart, Folder, ArrowRight, Info, Megaphone } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { usePortal } from "./PortalContext";
 
@@ -43,6 +43,43 @@ type Resumo = {
 export default function PortalResumo() {
   const { clienteId, clienteNome, userNome } = usePortal();
   const [dados, setDados] = useState<Resumo | null>(null);
+  const [campanhaAberta, setCampanhaAberta] = useState<{ titulo: string } | null>(null);
+
+  useEffect(() => {
+    async function carregarCampanha() {
+      const { data: campanha } = await supabase
+        .from("diagnostico_campanhas")
+        .select("id, titulo")
+        .eq("ativa", true)
+        .maybeSingle();
+      if (!campanha) return;
+
+      const [{ data: ultimoEnvio }, { data: ultimaLiberacao }] = await Promise.all([
+        supabase
+          .from("diagnosticos")
+          .select("created_at")
+          .eq("campanha_id", campanha.id)
+          .eq("cliente_id", clienteId)
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle(),
+        supabase
+          .from("diagnostico_campanha_liberacoes")
+          .select("liberado_em")
+          .eq("campanha_id", campanha.id)
+          .eq("cliente_id", clienteId)
+          .order("liberado_em", { ascending: false })
+          .limit(1)
+          .maybeSingle(),
+      ]);
+
+      const podeResponder =
+        !ultimoEnvio || (ultimaLiberacao && new Date(ultimaLiberacao.liberado_em) > new Date(ultimoEnvio.created_at));
+
+      if (podeResponder) setCampanhaAberta({ titulo: campanha.titulo });
+    }
+    carregarCampanha();
+  }, [clienteId]);
 
   useEffect(() => {
     async function carregar() {
@@ -102,6 +139,24 @@ export default function PortalResumo() {
         <div className="text-[12.5px] text-[#9aa0ac] mb-1">Bem-vindo(a), {userNome.split(" ")[0]}</div>
         <h1 className="text-[22px] font-semibold text-[#16181d] tracking-tight">{clienteNome}</h1>
       </div>
+
+      {campanhaAberta && (
+        <Link
+          href="/portal/diagnostico"
+          className="flex items-center justify-between gap-3 bg-[#eaf1fb] border border-[#cfe0f5] rounded-2xl px-5 py-4 hover:brightness-[0.98] transition"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-white flex items-center justify-center shrink-0">
+              <Megaphone size={16} className="text-primary" />
+            </div>
+            <div>
+              <div className="text-[13.5px] font-semibold text-[#16181d]">Diagnóstico de acompanhamento disponível</div>
+              <div className="text-[12px] text-[#3f434d]">{campanhaAberta.titulo} — leva menos de 5 minutos</div>
+            </div>
+          </div>
+          <ArrowRight size={16} className="text-primary shrink-0" />
+        </Link>
+      )}
 
       {!dados ? (
         <div className="bg-white border border-[#eef0f2] rounded-2xl h-[150px] animate-pulse" />

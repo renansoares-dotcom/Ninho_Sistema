@@ -20,7 +20,7 @@ export default async function PortalClienteLayout({
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("id, nome, role, cliente_id")
+    .select("id, nome, role, cliente_id, tenant_id")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -72,7 +72,7 @@ export default async function PortalClienteLayout({
         </div>
       ) : (
         <PortalProvider
-          valor={{ userId: profile.id, userNome: profile.nome, clienteId: profile.cliente_id, clienteNome }}
+          valor={{ userId: profile.id, userNome: profile.nome, clienteId: profile.cliente_id, clienteNome, tenantId: profile.tenant_id }}
         >
           {children}
         </PortalProvider>
