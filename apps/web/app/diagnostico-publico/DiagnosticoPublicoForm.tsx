@@ -1,35 +1,31 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import { Loader2, ArrowRight, CheckCircle2 } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowRight, ArrowLeft, Loader2 } from "lucide-react";
 
 type Pergunta = { id: string; texto: string; peso: number };
+type Etapa = "contato" | "pergunta" | "enviando" | "resultado" | "erro";
 
-function corPorFaixa(v: number) {
-  if (v >= 8) return "#0e9f6e";
-  if (v >= 5) return "#f59e0b";
-  return "#f04438";
-}
-function labelPorFaixa(v: number) {
-  if (v >= 8) return "Maturidade avançada";
-  if (v >= 5) return "Em desenvolvimento";
-  return "Estágio inicial";
+function faixa(nota: number) {
+  if (nota >= 8) return { cor: "#1FAE7A", label: "Maturidade avançada", texto: "Sua empresa já opera com processos estruturados na maior parte das frentes avaliadas." };
+  if (nota >= 5) return { cor: "#E0A100", label: "Em desenvolvimento", texto: "Existem bases importantes construídas, mas ainda há espaço real para estruturar melhor a operação." };
+  return { cor: "#E0554F", label: "Estágio inicial", texto: "A empresa ainda depende muito de esforço individual — é exatamente o momento em que estruturar traz mais retorno." };
 }
 
 export default function DiagnosticoPublicoForm() {
-  const [carregando, setCarregando] = useState(true);
+  const [etapa, setEtapa] = useState<Etapa>("contato");
   const [empresa, setEmpresa] = useState("");
   const [perguntas, setPerguntas] = useState<Pergunta[]>([]);
-  const [etapa, setEtapa] = useState<"contato" | "perguntas" | "resultado" | "erro">("contato");
-  const [enviando, setEnviando] = useState(false);
-  const [erro, setErro] = useState<string | null>(null);
+  const [indice, setIndice] = useState(0);
+  const [direcao, setDirecao] = useState(1);
 
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [celular, setCelular] = useState("");
   const [honeypot, setHoneypot] = useState("");
   const [respostas, setRespostas] = useState<Record<string, number>>({});
+  const [erroMsg, setErroMsg] = useState<string | null>(null);
   const [resultado, setResultado] = useState<{ nota: number; mensagem: string } | null>(null);
 
   useEffect(() => {
@@ -43,22 +39,42 @@ export default function DiagnosticoPublicoForm() {
         setRespostas(Object.fromEntries(data.perguntas.map((p: Pergunta) => [p.id, 5])));
       } catch {
         setEtapa("erro");
-      } finally {
-        setCarregando(false);
       }
     }
     carregar();
   }, []);
 
-  async function enviarContato(e: React.FormEvent) {
+  const perguntaAtual = perguntas[indice];
+  const progresso = perguntas.length > 0 ? ((indice + 1) / perguntas.length) * 100 : 0;
+
+  function avancarContato(e: React.FormEvent) {
     e.preventDefault();
     if (!nome.trim() || !email.trim()) return;
-    setEtapa("perguntas");
+    setDirecao(1);
+    setEtapa("pergunta");
   }
 
-  async function enviarRespostas() {
-    setEnviando(true);
-    setErro(null);
+  function proxima() {
+    if (indice < perguntas.length - 1) {
+      setDirecao(1);
+      setIndice((i) => i + 1);
+    } else {
+      enviar();
+    }
+  }
+
+  function anterior() {
+    if (indice > 0) {
+      setDirecao(-1);
+      setIndice((i) => i - 1);
+    } else {
+      setEtapa("contato");
+    }
+  }
+
+  async function enviar() {
+    setEtapa("enviando");
+    setErroMsg(null);
     try {
       const res = await fetch("/api/diagnostico-publico", {
         method: "POST",
@@ -73,152 +89,279 @@ export default function DiagnosticoPublicoForm() {
       });
       const data = await res.json();
       if (!res.ok) {
-        setErro(data.error || "Não foi possível enviar agora.");
-        setEnviando(false);
+        setErroMsg(data.error || "Não foi possível enviar agora.");
+        setEtapa("pergunta");
         return;
       }
       setResultado({ nota: data.nota, mensagem: data.mensagem });
       setEtapa("resultado");
     } catch {
-      setErro("Não foi possível enviar agora. Verifique sua conexão e tente de novo.");
+      setErroMsg("Não foi possível enviar agora. Verifique sua conexão e tente de novo.");
+      setEtapa("pergunta");
     }
-    setEnviando(false);
   }
 
-  if (carregando) {
-    return <Loader2 size={22} className="animate-spin text-primary mt-24" />;
-  }
+  const variantes = {
+    entra: (d: number) => ({ opacity: 0, x: d > 0 ? 24 : -24 }),
+    centro: { opacity: 1, x: 0 },
+    sai: (d: number) => ({ opacity: 0, x: d > 0 ? -24 : 24 }),
+  };
 
   if (etapa === "erro") {
     return (
-      <div className="text-center text-[13.5px] text-[#767c88] mt-24 max-w-[360px]">
+      <div className="min-h-screen flex items-center justify-center bg-[#101319] text-white/70 text-[13.5px] px-6 text-center">
         Não foi possível carregar o diagnóstico agora. Tente novamente em instantes.
       </div>
     );
   }
 
-  return (
-    <div className="w-full max-w-[480px] flex flex-col items-center">
-      <Image src="/logo.png" alt="Ninho Consultoria" width={150} height={60} className="h-11 w-auto mb-8" priority />
+  // ---------- ETAPA 1: CONTATO (hero escuro) ----------
+  if (etapa === "contato") {
+    return (
+      <div className="min-h-screen bg-[#101319] relative overflow-hidden flex items-center justify-center px-6 py-16">
+        <div
+          className="absolute inset-0 opacity-70"
+          style={{ background: "radial-gradient(ellipse 90% 60% at 50% -10%, rgba(0,74,173,0.35), transparent 60%)" }}
+        />
+        <div className="absolute inset-0 textura-diagnostico opacity-[0.15]" />
 
-      <div className="w-full bg-white border border-[#eef0f2] rounded-2xl shadow-sm p-8">
-        {etapa === "contato" && (
-          <>
-            <div className="text-[11.5px] font-semibold text-primary uppercase tracking-wide mb-2">
-              Diagnóstico gratuito
-            </div>
-            <h1 className="text-[20px] font-semibold text-[#16181d] leading-snug">
-              Descubra o estágio de maturidade do seu negócio
-            </h1>
-            <p className="text-[13px] text-[#767c88] mt-2 mb-6">
-              {perguntas.length} perguntas rápidas, menos de 3 minutos, feito por {empresa}.
-            </p>
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="relative w-full max-w-[460px]"
+        >
+          <div className="flex items-center gap-2 mb-10">
+            <div className="w-2 h-2 rounded-full bg-[#4B93E8]" />
+            <span className="text-[12px] tracking-[0.18em] text-white/50 uppercase font-medium">Ninho Consultoria</span>
+          </div>
 
-            <form onSubmit={enviarContato} className="flex flex-col gap-3.5">
-              <input
-                value={nome}
-                onChange={(e) => setNome(e.target.value)}
-                required
-                placeholder="Nome completo"
-                className="w-full border border-[#e4e6ea] rounded-lg px-3.5 py-2.5 text-[13.5px] text-[#16181d] outline-none focus:border-primary"
-              />
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                placeholder="E-mail"
-                className="w-full border border-[#e4e6ea] rounded-lg px-3.5 py-2.5 text-[13.5px] text-[#16181d] outline-none focus:border-primary"
-              />
-              <input
-                value={celular}
-                onChange={(e) => setCelular(e.target.value)}
-                placeholder="Celular (com DDD)"
-                className="w-full border border-[#e4e6ea] rounded-lg px-3.5 py-2.5 text-[13.5px] text-[#16181d] outline-none focus:border-primary"
-              />
-              {/* Honeypot — invisível pra pessoas, só bots preenchem */}
-              <input
-                value={honeypot}
-                onChange={(e) => setHoneypot(e.target.value)}
-                tabIndex={-1}
-                autoComplete="off"
-                aria-hidden="true"
-                className="absolute opacity-0 pointer-events-none w-0 h-0"
-              />
-              <button
-                type="submit"
-                className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-[13.5px] font-semibold bg-primary text-white shadow-sm hover:brightness-110 transition mt-1"
-              >
-                Acessar meu diagnóstico
-                <ArrowRight size={15} />
-              </button>
-            </form>
-          </>
-        )}
+          <div className="text-[11.5px] tracking-[0.14em] text-[#4B93E8] uppercase font-semibold mb-4">
+            Diagnóstico empresarial gratuito
+          </div>
+          <h1 className="font-display text-[38px] leading-[1.12] text-white mb-4">
+            Qual é o estágio real de maturidade do seu negócio?
+          </h1>
+          <p className="text-[14.5px] text-white/55 leading-relaxed mb-10">
+            {perguntas.length || 7} perguntas, menos de 3 minutos. No final você recebe um retrato honesto de onde
+            sua empresa está — e nossa equipe entra em contato pra te mostrar o próximo passo.
+          </p>
 
-        {etapa === "perguntas" && (
-          <>
-            <h1 className="text-[17px] font-semibold text-[#16181d] mb-1">Responda com sinceridade</h1>
-            <p className="text-[12.5px] text-[#9aa0ac] mb-6">0 = não existe / não fazemos · 10 = totalmente estruturado</p>
-
-            <div className="flex flex-col gap-5">
-              {perguntas.map((p) => (
-                <div key={p.id}>
-                  <div className="text-[13.5px] font-medium text-[#16181d] mb-2">{p.texto}</div>
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="range"
-                      min={0}
-                      max={10}
-                      value={respostas[p.id] ?? 5}
-                      onChange={(e) => setRespostas((r) => ({ ...r, [p.id]: Number(e.target.value) }))}
-                      className="flex-1 accent-primary"
-                    />
-                    <span className="text-[13px] font-semibold text-primary w-6 text-right">{respostas[p.id] ?? 5}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {erro && <div className="text-[12.5px] text-[#f04438] bg-[#fdecea] rounded-lg px-3.5 py-2.5 mt-5">{erro}</div>}
+          <form onSubmit={avancarContato} className="flex flex-col gap-3">
+            <input
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              required
+              placeholder="Nome completo"
+              className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3.5 text-[14px] text-white placeholder:text-white/30 outline-none focus:border-[#4B93E8] focus:bg-white/[0.06] transition-colors"
+            />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              placeholder="E-mail"
+              className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3.5 text-[14px] text-white placeholder:text-white/30 outline-none focus:border-[#4B93E8] focus:bg-white/[0.06] transition-colors"
+            />
+            <input
+              value={celular}
+              onChange={(e) => setCelular(e.target.value)}
+              placeholder="Celular (com DDD)"
+              className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3.5 text-[14px] text-white placeholder:text-white/30 outline-none focus:border-[#4B93E8] focus:bg-white/[0.06] transition-colors"
+            />
+            <input
+              value={honeypot}
+              onChange={(e) => setHoneypot(e.target.value)}
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              className="absolute opacity-0 pointer-events-none w-0 h-0"
+            />
 
             <button
-              onClick={enviarRespostas}
-              disabled={enviando}
-              className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-[13.5px] font-semibold bg-primary text-white shadow-sm hover:brightness-110 transition mt-6 disabled:opacity-60"
+              type="submit"
+              disabled={perguntas.length === 0}
+              className="group flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-[14px] font-semibold bg-[#004AAD] text-white mt-3 hover:bg-[#0057C7] transition-colors disabled:opacity-50"
             >
-              {enviando ? <Loader2 size={15} className="animate-spin" /> : <CheckCircle2 size={15} />}
-              {enviando ? "Enviando..." : "Ver meu resultado"}
+              Começar diagnóstico
+              <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
             </button>
-          </>
-        )}
-
-        {etapa === "resultado" && resultado && (
-          <div className="flex flex-col items-center text-center py-4">
-            <div
-              className="rounded-full w-[110px] h-[110px] flex items-center justify-center mb-5"
-              style={{ background: `conic-gradient(${corPorFaixa(resultado.nota)} ${resultado.nota * 36}deg, #f0f1f3 0deg)` }}
-            >
-              <div className="bg-white rounded-full w-[86px] h-[86px] flex items-center justify-center">
-                <span className="text-[26px] font-bold" style={{ color: corPorFaixa(resultado.nota) }}>
-                  {resultado.nota.toFixed(1)}
-                </span>
-              </div>
-            </div>
-            <span
-              className="text-[12px] font-semibold px-2.5 py-1 rounded-full mb-3"
-              style={{ background: `${corPorFaixa(resultado.nota)}1a`, color: corPorFaixa(resultado.nota) }}
-            >
-              {labelPorFaixa(resultado.nota)}
-            </span>
-            <h1 className="text-[18px] font-semibold text-[#16181d]">Diagnóstico recebido, {nome.split(" ")[0]}!</h1>
-            <p className="text-[13.5px] text-[#767c88] mt-2 max-w-[340px]">
-              Essa é uma visão rápida do estágio atual do seu negócio. Nossa equipe vai analisar suas respostas
-              com calma e entrar em contato para te mostrar o que isso significa na prática.
-            </p>
-          </div>
-        )}
+          </form>
+        </motion.div>
       </div>
-    </div>
-  );
+    );
+  }
+
+  // ---------- ETAPA 2: PERGUNTAS (papel claro, uma por vez) ----------
+  if (etapa === "pergunta" || etapa === "enviando") {
+    return (
+      <div className="min-h-screen bg-[#FAFAF8] textura-diagnostico flex flex-col">
+        <div className="h-[3px] bg-[#e8e6e0] w-full">
+          <motion.div
+            className="h-full bg-[#004AAD]"
+            animate={{ width: `${progresso}%` }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+          />
+        </div>
+
+        <div className="flex-1 flex items-center justify-center px-6 py-16">
+          <div className="w-full max-w-[560px]">
+            <div className="flex items-center justify-between mb-8">
+              <span className="text-[11.5px] tracking-[0.14em] text-[#004AAD] uppercase font-semibold">
+                {empresa}
+              </span>
+              <span className="text-[11.5px] text-[#9aa0ac] font-medium tabular-nums">
+                {indice + 1} / {perguntas.length}
+              </span>
+            </div>
+
+            <AnimatePresence mode="wait" custom={direcao}>
+              <motion.div
+                key={perguntaAtual?.id ?? "carregando"}
+                custom={direcao}
+                variants={variantes}
+                initial="entra"
+                animate="centro"
+                exit="sai"
+                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              >
+                {perguntaAtual ? (
+                  <>
+                    <h2 className="font-display text-[28px] leading-[1.25] text-[#16181d] mb-10">
+                      {perguntaAtual.texto}
+                    </h2>
+
+                    <div className="mb-2">
+                      <div className="flex items-baseline justify-between mb-5">
+                        <span className="text-[11.5px] text-[#9aa0ac]">Não existe hoje</span>
+                        <span className="font-display text-[44px] leading-none text-[#004AAD] tabular-nums">
+                          {respostas[perguntaAtual.id] ?? 5}
+                        </span>
+                        <span className="text-[11.5px] text-[#9aa0ac]">Totalmente estruturado</span>
+                      </div>
+                      <input
+                        type="range"
+                        min={0}
+                        max={10}
+                        value={respostas[perguntaAtual.id] ?? 5}
+                        onChange={(e) =>
+                          setRespostas((r) => ({ ...r, [perguntaAtual.id]: Number(e.target.value) }))
+                        }
+                        className="slider-instrumento w-full"
+                        style={{
+                          background: `linear-gradient(to right, #004AAD ${((respostas[perguntaAtual.id] ?? 5) / 10) * 100}%, #e4e2da ${((respostas[perguntaAtual.id] ?? 5) / 10) * 100}%)`,
+                        }}
+                      />
+                      <div className="flex justify-between mt-1.5">
+                        {Array.from({ length: 11 }).map((_, i) => (
+                          <span key={i} className="w-px h-1.5 bg-[#d8d5cc]" />
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="h-[240px]" />
+                )}
+              </motion.div>
+            </AnimatePresence>
+
+            {erroMsg && <div className="text-[13px] text-[#E0554F] mt-6">{erroMsg}</div>}
+
+            <div className="flex items-center justify-between mt-12">
+              <button
+                onClick={anterior}
+                className="flex items-center gap-1.5 text-[13px] font-medium text-[#767c88] hover:text-[#16181d] transition-colors"
+              >
+                <ArrowLeft size={14} /> Voltar
+              </button>
+              <button
+                onClick={proxima}
+                disabled={etapa === "enviando"}
+                className="flex items-center gap-2 px-6 py-3 rounded-xl text-[13.5px] font-semibold bg-[#16181d] text-white hover:bg-[#004AAD] transition-colors disabled:opacity-60"
+              >
+                {etapa === "enviando" ? (
+                  <>
+                    <Loader2 size={14} className="animate-spin" /> Calculando...
+                  </>
+                ) : indice < perguntas.length - 1 ? (
+                  <>
+                    Próxima <ArrowRight size={14} />
+                  </>
+                ) : (
+                  <>
+                    Ver resultado <ArrowRight size={14} />
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ---------- ETAPA 3: RESULTADO (retorna ao escuro) ----------
+  if (etapa === "resultado" && resultado) {
+    const f = faixa(resultado.nota);
+    const circunferencia = 2 * Math.PI * 78;
+    const preenchido = (resultado.nota / 10) * circunferencia;
+
+    return (
+      <div className="min-h-screen bg-[#101319] relative overflow-hidden flex items-center justify-center px-6 py-16">
+        <div
+          className="absolute inset-0 opacity-60"
+          style={{ background: `radial-gradient(ellipse 80% 55% at 50% -5%, ${f.cor}33, transparent 60%)` }}
+        />
+        <div className="absolute inset-0 textura-diagnostico opacity-[0.12]" />
+
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="relative w-full max-w-[440px] flex flex-col items-center text-center"
+        >
+          <div className="relative w-[200px] h-[200px] mb-8">
+            <svg width="200" height="200" viewBox="0 0 200 200" className="-rotate-90">
+              <circle cx="100" cy="100" r="78" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="10" />
+              <motion.circle
+                cx="100"
+                cy="100"
+                r="78"
+                fill="none"
+                stroke={f.cor}
+                strokeWidth="10"
+                strokeLinecap="round"
+                strokeDasharray={circunferencia}
+                initial={{ strokeDashoffset: circunferencia }}
+                animate={{ strokeDashoffset: circunferencia - preenchido }}
+                transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+              />
+            </svg>
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <span className="font-display text-[52px] leading-none text-white tabular-nums">{resultado.nota.toFixed(1)}</span>
+              <span className="text-[11px] text-white/40 mt-1">de 10</span>
+            </div>
+          </div>
+
+          <span
+            className="text-[11.5px] font-semibold px-3 py-1.5 rounded-full mb-5 tracking-wide"
+            style={{ background: `${f.cor}22`, color: f.cor }}
+          >
+            {f.label}
+          </span>
+
+          <h1 className="font-display text-[24px] leading-snug text-white mb-3">
+            Obrigado, {nome.split(" ")[0]}.
+          </h1>
+          <p className="text-[14px] text-white/55 leading-relaxed max-w-[380px]">{f.texto}</p>
+          <p className="text-[13px] text-white/40 leading-relaxed max-w-[380px] mt-4">
+            Nossa equipe vai analisar suas respostas com calma e entrar em contato em breve pra te mostrar o que
+            esse resultado significa na prática.
+          </p>
+        </motion.div>
+      </div>
+    );
+  }
+
+  return null;
 }

@@ -131,8 +131,8 @@ export default function PortalDiagnostico() {
         <div className="w-14 h-14 rounded-2xl bg-[#f5f6f8] flex items-center justify-center mb-5">
           <ClipboardCheck size={22} className="text-[#9aa0ac]" />
         </div>
-        <h1 className="text-[17px] font-semibold text-[#16181d]">Nenhum diagnóstico disponível agora</h1>
-        <p className="text-[13.5px] text-[#767c88] mt-2 max-w-[400px]">
+        <h1 className="font-display text-[22px] text-[#16181d]">Nenhum diagnóstico disponível agora</h1>
+        <p className="text-[13.5px] text-[#767c88] mt-2.5 max-w-[400px] leading-relaxed">
           Sua consultoria ainda não abriu um novo ciclo de diagnóstico de acompanhamento. Assim que abrir, você
           verá um aviso aqui e no Meu Painel.
         </p>
@@ -149,10 +149,10 @@ export default function PortalDiagnostico() {
         <div className="w-14 h-14 rounded-2xl bg-[#eafaf1] flex items-center justify-center mb-5">
           <CheckCircle2 size={22} className="text-[#0e9f6e]" />
         </div>
-        <h1 className="text-[17px] font-semibold text-[#16181d]">
+        <h1 className="font-display text-[22px] text-[#16181d]">
           {enviado ? "Diagnóstico enviado — obrigado!" : "Você já respondeu esse diagnóstico"}
         </h1>
-        <p className="text-[13.5px] text-[#767c88] mt-2 max-w-[400px]">
+        <p className="text-[13.5px] text-[#767c88] mt-2.5 max-w-[400px] leading-relaxed">
           Sua consultoria já recebeu suas respostas para &quot;{campanha.titulo}&quot;. Se precisar preencher de
           novo por algum motivo, peça ao seu consultor para liberar um novo envio.
         </p>
@@ -166,9 +166,9 @@ export default function PortalDiagnostico() {
   return (
     <div className="max-w-[900px] mx-auto px-7 py-7 flex flex-col gap-5">
       <div>
-        <div className="text-[11.5px] font-semibold text-primary uppercase tracking-wide mb-1">{campanha.titulo}</div>
-        <h1 className="text-[19px] font-semibold text-[#16181d]">Diagnóstico de Acompanhamento</h1>
-        <p className="text-[13px] text-[#767c88] mt-1">
+        <div className="text-[11.5px] font-semibold text-primary uppercase tracking-[0.1em] mb-1.5">{campanha.titulo}</div>
+        <h1 className="font-display text-[26px] text-[#16181d]">Diagnóstico de Acompanhamento</h1>
+        <p className="text-[13.5px] text-[#767c88] mt-1.5 leading-relaxed">
           Avalie de 0 a 10 o quanto cada área está estruturada hoje na sua empresa. Sem certo ou errado — quanto
           mais sincero, mais útil fica pra sua consultoria te ajudar.
         </p>
@@ -178,12 +178,12 @@ export default function PortalDiagnostico() {
 
       <div className="grid grid-cols-2 gap-3.5">
         {areasDiagnostico.map((a) => (
-          <div key={a.area} className="bg-white border border-[#eef0f2] rounded-2xl p-4">
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[13.5px] font-semibold text-[#16181d]">{a.area}</span>
-              <span className="text-[15px] font-bold text-primary">{notas[a.area]}</span>
+          <div key={a.area} className="bg-white border border-[#eef0f2] rounded-2xl p-5">
+            <div className="flex items-center justify-between mb-2">
+              <span className="font-display text-[16px] text-[#16181d]">{a.area}</span>
+              <span className="font-display text-[22px] text-primary tabular-nums">{notas[a.area]}</span>
             </div>
-            <ul className="text-[11.5px] text-[#9aa0ac] mb-2.5 list-disc list-inside">
+            <ul className="text-[11.5px] text-[#9aa0ac] mb-3 list-disc list-inside leading-relaxed">
               {a.perguntas.map((p) => (
                 <li key={p}>{p}</li>
               ))}
@@ -194,7 +194,10 @@ export default function PortalDiagnostico() {
               max={10}
               value={notas[a.area]}
               onChange={(e) => setNotas((prev) => ({ ...prev, [a.area]: Number(e.target.value) }))}
-              className="w-full accent-primary"
+              className="slider-instrumento w-full"
+              style={{
+                background: `linear-gradient(to right, #004AAD ${(notas[a.area] / 10) * 100}%, #e4e6ea ${(notas[a.area] / 10) * 100}%)`,
+              }}
             />
           </div>
         ))}
@@ -203,7 +206,7 @@ export default function PortalDiagnostico() {
       <div className="flex items-center justify-between bg-white border border-[#eef0f2] rounded-2xl p-4 sticky bottom-4">
         <div>
           <div className="text-[11.5px] text-[#9aa0ac]">Índice geral</div>
-          <div className="text-[18px] font-bold text-[#16181d]">{indiceGeral.toFixed(1)} / 10</div>
+          <div className="font-display text-[22px] text-[#16181d]">{indiceGeral.toFixed(1)} / 10</div>
         </div>
         <button
           onClick={enviar}
