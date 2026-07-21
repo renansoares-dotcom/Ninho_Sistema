@@ -40,7 +40,8 @@ function Marca({ empresa, logoUrl, tamanho = "normal" }: { empresa: string; logo
   );
 }
 
-export default function DiagnosticoPublicoForm() {
+export default function DiagnosticoPublicoForm({ slug }: { slug?: string } = {}) {
+  const urlBase = slug ? `/api/diagnostico-publico/${slug}` : "/api/diagnostico-publico";
   const [etapa, setEtapa] = useState<Etapa>("contato");
   const [empresa, setEmpresa] = useState("");
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
@@ -59,7 +60,7 @@ export default function DiagnosticoPublicoForm() {
   useEffect(() => {
     async function carregar() {
       try {
-        const res = await fetch("/api/diagnostico-publico");
+        const res = await fetch(urlBase);
         const data = await res.json();
         if (!res.ok) throw new Error();
         setEmpresa(data.empresa);
@@ -105,7 +106,7 @@ export default function DiagnosticoPublicoForm() {
     setEtapa("enviando");
     setErroMsg(null);
     try {
-      const res = await fetch("/api/diagnostico-publico", {
+      const res = await fetch(urlBase, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

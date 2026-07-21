@@ -27,6 +27,7 @@ export default function LoginForm() {
   const linkInvalido = searchParams.get("erro") === "link_invalido";
   const semPerfil = searchParams.get("erro") === "sem_perfil";
   const inativo = searchParams.get("erro") === "inativo";
+  const tenantSuspenso = searchParams.get("erro") === "tenant_suspenso";
 
   return (
     <div className="bg-white border border-[#eef0f2] rounded-2xl shadow-sm p-8">
@@ -50,6 +51,12 @@ export default function LoginForm() {
       {inativo && (
         <div className="text-[12.5px] text-[#e08a00] bg-[#fff7e6] rounded-lg px-3.5 py-2.5 mb-4">
           Seu acesso está desativado. Fale com um administrador da consultoria.
+        </div>
+      )}
+
+      {tenantSuspenso && (
+        <div className="text-[12.5px] text-[#e08a00] bg-[#fff7e6] rounded-lg px-3.5 py-2.5 mb-4">
+          O acesso da sua consultoria está temporariamente suspenso. Fale com o suporte.
         </div>
       )}
 

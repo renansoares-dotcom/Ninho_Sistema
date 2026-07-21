@@ -31,6 +31,22 @@ export async function entrar(_estado: EstadoAuth, formData: FormData): Promise<E
     return { erro: "Não foi possível entrar. Tente novamente em instantes." };
   }
 
+  // Escritório (tenant) suspenso pelo super admin não pode acessar, mesmo
+  // com e-mail/senha corretos.
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (user) {
+    const { data: perfil } = await supabase.from("profiles").select("tenant_id").eq("id", user.id).maybeSingle();
+    if (perfil?.tenant_id) {
+      const { data: tenant } = await supabase.from("tenants").select("ativo").eq("id", perfil.tenant_id).maybeSingle();
+      if (tenant && !tenant.ativo) {
+        await supabase.auth.signOut();
+        return { erro: "O acesso da sua consultoria está temporariamente suspenso. Fale com o suporte." };
+      }
+    }
+  }
+
   revalidatePath("/", "layout");
   redirect(proximo || "/dashboard");
 }

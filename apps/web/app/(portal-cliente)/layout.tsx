@@ -31,6 +31,12 @@ export default async function PortalClienteLayout({
     redirect("/dashboard");
   }
 
+  const { data: tenant } = await supabase.from("tenants").select("ativo").eq("id", profile.tenant_id).maybeSingle();
+  if (tenant && !tenant.ativo) {
+    await supabase.auth.signOut();
+    redirect("/login?erro=tenant_suspenso");
+  }
+
   let clienteNome: string | null = null;
   if (profile.cliente_id) {
     const { data: cliente } = await supabase
