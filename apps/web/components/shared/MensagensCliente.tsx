@@ -62,6 +62,14 @@ export default function MensagensCliente({
     if (!error) {
       setTexto("");
       await carregar();
+      // Dispara o e-mail em segundo plano — se falhar, a mensagem já foi
+      // salva e a notificação dentro do app já foi criada pelo gatilho no
+      // banco, então não vale travar a UI por causa do e-mail.
+      fetch("/api/notificar-mensagem", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ clienteId, autorId: userId }),
+      }).catch(() => {});
     }
     setEnviando(false);
   }

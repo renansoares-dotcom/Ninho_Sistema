@@ -3,12 +3,13 @@
 import { useEffect, useState } from "react";
 import { Loader2, Download, FileText, Image as ImageIcon, File as FileIcon } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { abrirArquivoPrivado } from "@/lib/storage";
 import { usePortal } from "./PortalContext";
 
 type Arquivo = {
   id: string;
   nome: string;
-  url: string;
+  caminho: string | null;
   categoria: string | null;
   tamanho: number | null;
   tipo_arquivo: string | null;
@@ -38,7 +39,7 @@ export default function PortalArquivos() {
     async function carregar() {
       const { data } = await supabase
         .from("arquivos")
-        .select("id, nome, url, categoria, tamanho, tipo_arquivo, created_at")
+        .select("id, nome, caminho, categoria, tamanho, tipo_arquivo, created_at")
         .eq("cliente_id", clienteId)
         .order("created_at", { ascending: false });
       setArquivos((data as Arquivo[]) ?? []);
@@ -64,12 +65,10 @@ export default function PortalArquivos() {
           {arquivos.map((a) => {
             const Icon = iconePorTipo(a.tipo_arquivo);
             return (
-              <a
+              <button
                 key={a.id}
-                href={a.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3.5 px-4 py-3 hover:bg-[#f7f8fa] transition-colors"
+                onClick={() => abrirArquivoPrivado(a.caminho)}
+                className="w-full flex items-center gap-3.5 px-4 py-3 hover:bg-[#f7f8fa] transition-colors text-left"
               >
                 <div className="w-9 h-9 rounded-lg bg-[#eaf1fb] flex items-center justify-center shrink-0">
                   <Icon size={16} className="text-primary" />
@@ -82,7 +81,7 @@ export default function PortalArquivos() {
                   </div>
                 </div>
                 <Download size={15} className="text-[#9aa0ac] shrink-0" />
-              </a>
+              </button>
             );
           })}
         </div>

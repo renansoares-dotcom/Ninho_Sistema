@@ -5,6 +5,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { sair } from "@/lib/auth/actions";
 import { PortalProvider } from "@/components/portal/PortalContext";
 import PortalNav from "@/components/portal/PortalNav";
+import NotificationsBell from "@/components/shared/NotificationsBell";
 
 export default async function PortalClienteLayout({
   children,
@@ -61,6 +62,7 @@ export default async function PortalClienteLayout({
             {profile.cliente_id && <PortalNav />}
           </div>
           <div className="flex items-center gap-4">
+            {profile.cliente_id && <NotificationsBell />}
             <span className="text-[13px] text-[#5b6270] hidden sm:inline">Olá, {profile.nome.split(" ")[0]}</span>
             <form action={sair}>
               <button

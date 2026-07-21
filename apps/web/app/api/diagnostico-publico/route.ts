@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { enviarEmail, emailBase } from "@/lib/email";
 
 // Rota pública (sem login) que alimenta o formulário de Diagnóstico Público
 // (lead magnet). Propositalmente NÃO usa o cliente autenticado do navegador
@@ -128,6 +129,28 @@ export async function POST(request: NextRequest) {
 
   if (error) {
     return NextResponse.json({ error: "Não foi possível enviar agora. Tente novamente." }, { status: 500 });
+  }
+
+  // Avisa a gestão por e-mail (best-effort — não bloqueia a resposta pro
+  // visitante se o e-mail falhar ou não estiver configurado).
+  const { data: gestao } = await supabase
+    .from("profiles")
+    .select("email")
+    .eq("tenant_id", tenant.id)
+    .eq("ativo", true)
+    .in("role", ["admin", "diretor"]);
+  const emailsGestao = (gestao ?? []).map((g) => g.email).filter(Boolean);
+  if (emailsGestao.length > 0) {
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+    enviarEmail({
+      para: emailsGestao,
+      assunto: `Novo diagnóstico público recebido — ${nome.trim()} (nota ${notaTotal})`,
+      html: emailBase({
+        titulo: "Novo diagnóstico público recebido",
+        corpo: `${nome.trim()} (${email.trim()}${celular ? `, ${celular.trim()}` : ""}) preencheu o diagnóstico público com nota ${notaTotal}/10. Revise e decida se vale importar como lead.`,
+        cta: { texto: "Ver diagnósticos recebidos", url: `${siteUrl}/diagnostico` },
+      }),
+    }).catch(() => {});
   }
 
   return NextResponse.json({ nota: notaTotal, mensagem: "Diagnóstico recebido com sucesso." });

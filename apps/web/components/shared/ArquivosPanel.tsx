@@ -13,6 +13,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { abrirArquivoPrivado } from "@/lib/storage";
 import Dropzone from "./Dropzone";
 
 const TENANT_ID = "00000000-0000-0000-0000-000000000001";
@@ -23,7 +24,7 @@ const categorias = ["Geral", "Diagnóstico", "Contrato", "Visita", "Financeiro",
 type Arquivo = {
   id: string;
   nome: string;
-  url: string;
+  caminho: string | null;
   categoria: string | null;
   favorito: boolean;
   tamanho: number | null;
@@ -62,7 +63,7 @@ export default function ArquivosPanel({ clienteId }: { clienteId?: string }) {
     setCarregando(true);
     let sel = supabase
       .from("arquivos")
-      .select("id, nome, url, categoria, favorito, tamanho, tipo_arquivo, created_at, clientes(nome_fantasia, razao_social)")
+      .select("id, nome, caminho, categoria, favorito, tamanho, tipo_arquivo, created_at, clientes(nome_fantasia, razao_social)")
       .order("created_at", { ascending: false });
 
     if (clienteId) sel = sel.eq("cliente_id", clienteId);
@@ -86,12 +87,10 @@ export default function ArquivosPanel({ clienteId }: { clienteId?: string }) {
         continue;
       }
 
-      const { data: urlData } = supabase.storage.from(BUCKET).getPublicUrl(caminho);
-
       const { error: erroInsert } = await supabase.from("arquivos").insert({
         tenant_id: TENANT_ID,
         nome: file.name,
-        url: urlData.publicUrl,
+        caminho,
         categoria: "Geral",
         cliente_id: clienteId ?? null,
         tamanho: file.size,
@@ -209,15 +208,13 @@ export default function ArquivosPanel({ clienteId }: { clienteId?: string }) {
                 </select>
 
                 <div className="flex items-center gap-2 mt-1">
-                  <a
-                    href={a.url}
-                    target="_blank"
-                    rel="noreferrer"
+                  <button
+                    onClick={() => abrirArquivoPrivado(a.caminho)}
                     className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg border border-[#e4e6ea] text-[12px] font-medium text-[#3f434d] hover:bg-[#f5f6f8]"
                   >
                     <Download size={12} />
                     Abrir
-                  </a>
+                  </button>
                   <button
                     onClick={() => excluir(a)}
                     className="w-8 h-8 rounded-lg border border-[#f5c2bd] text-[#f04438] flex items-center justify-center hover:bg-[#fdecea] shrink-0"

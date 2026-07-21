@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Paperclip, X, ExternalLink, Loader2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { abrirArquivoPrivado } from "@/lib/storage";
 import Dropzone from "./Dropzone";
 
 const BUCKET = "arquivos";
@@ -10,7 +11,7 @@ const BUCKET = "arquivos";
 type Anexo = {
   id: string;
   nome: string;
-  url: string;
+  caminho: string | null;
 };
 
 export default function TarefaAnexos({ tarefaId }: { tarefaId: string }) {
@@ -27,7 +28,7 @@ export default function TarefaAnexos({ tarefaId }: { tarefaId: string }) {
     setCarregando(true);
     const { data } = await supabase
       .from("tarefa_anexos")
-      .select("id, nome, url")
+      .select("id, nome, caminho")
       .eq("tarefa_id", tarefaId)
       .order("created_at", { ascending: false });
     setAnexos(data ?? []);
@@ -47,12 +48,10 @@ export default function TarefaAnexos({ tarefaId }: { tarefaId: string }) {
         continue;
       }
 
-      const { data: urlData } = supabase.storage.from(BUCKET).getPublicUrl(caminho);
-
       const { error: erroInsert } = await supabase.from("tarefa_anexos").insert({
         tarefa_id: tarefaId,
         nome: file.name,
-        url: urlData.publicUrl,
+        caminho,
       });
 
       if (erroInsert) setErro(erroInsert.message);
@@ -82,15 +81,13 @@ export default function TarefaAnexos({ tarefaId }: { tarefaId: string }) {
           {anexos.map((a) => (
             <div key={a.id} className="flex items-center gap-2 group border border-[#eef0f2] rounded-lg px-2.5 py-1.5">
               <Paperclip size={12} className="text-[#9aa0ac] shrink-0" />
-              <a
-                href={a.url}
-                target="_blank"
-                rel="noreferrer"
-                className="text-[12.5px] text-[#3f434d] flex-1 truncate hover:text-primary hover:underline flex items-center gap-1"
+              <button
+                onClick={() => abrirArquivoPrivado(a.caminho)}
+                className="text-[12.5px] text-[#3f434d] flex-1 truncate hover:text-primary hover:underline flex items-center gap-1 text-left"
               >
                 {a.nome}
                 <ExternalLink size={10} className="shrink-0" />
-              </a>
+              </button>
               <button onClick={() => remover(a.id)} className="opacity-0 group-hover:opacity-100 text-[#c2c6cd] hover:text-[#f04438]">
                 <X size={13} />
               </button>
