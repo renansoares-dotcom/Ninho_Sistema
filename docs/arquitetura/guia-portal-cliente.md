@@ -37,6 +37,15 @@ responde pela aba **"Mensagens"** dentro do Workspace do cliente
 (`comentarios`, com `entidade_tipo = 'cliente_mensagem'`), então a conversa
 aparece em tempo real (via reload) dos dois lados.
 
+Rode também a migration `027_notificacao_mensagem_cliente.sql` (depois da
+026) — ela cria um gatilho que, toda vez que o **cliente** manda uma
+mensagem, gera uma notificação (sininho no topo) para o consultor
+responsável pelo cliente + todo Admin/Diretor do tenant. O sino atualiza
+sozinho a cada ~25 segundos, então não precisa recarregar a página pra ver
+uma mensagem nova chegando. (Mensagem da equipe pro cliente ainda não gera
+notificação do lado do cliente — o Portal não tem sino próprio por
+enquanto.)
+
 ## 5. Limitação conhecida do bucket de Arquivos
 
 O bucket `arquivos` no Storage foi criado como **público** (migration 013,
@@ -50,6 +59,6 @@ quebrar os links já salvos, mas é uma boa próxima melhoria de segurança.
 
 ## 6. O que ainda não existe
 
-- Notificação por e-mail quando chega uma mensagem nova ou um arquivo novo.
+- Notificação por e-mail quando chega uma mensagem nova ou um arquivo novo (hoje é só o sininho dentro do app).
 - Cliente não pode ter mais de uma empresa vinculada (cenário de grupo econômico).
 - Sem app mobile dedicado — o Portal é responsivo, mas é a mesma interface web.

@@ -2,10 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { Bell, Wallet, Stethoscope, CalendarDays, Users2, Loader2, Check } from "lucide-react";
+import { Bell, Wallet, Stethoscope, CalendarDays, Users2, Loader2, Check, MessageCircle } from "lucide-react";
 import { supabase } from "@/lib/supabase";
-
-const TENANT_ID = "00000000-0000-0000-0000-000000000001";
 
 type Notificacao = {
   id: string;
@@ -21,6 +19,7 @@ const iconePorTipo: Record<string, any> = {
   diagnostico: Stethoscope,
   agenda: CalendarDays,
   crm: Users2,
+  mensagem: MessageCircle,
 };
 
 export default function NotificationsBell() {
@@ -31,6 +30,11 @@ export default function NotificationsBell() {
 
   useEffect(() => {
     carregar();
+    // A tabela não tem Realtime habilitado por padrão no Supabase, então
+    // usamos um polling simples pra notificação de mensagem nova aparecer
+    // sem precisar recarregar a página.
+    const intervalo = setInterval(carregar, 25000);
+    return () => clearInterval(intervalo);
   }, []);
 
   useEffect(() => {
@@ -46,7 +50,6 @@ export default function NotificationsBell() {
     const { data } = await supabase
       .from("notificacoes")
       .select("id, tipo, titulo, lida, link, created_at")
-      .eq("tenant_id", TENANT_ID)
       .order("created_at", { ascending: false })
       .limit(20);
     setNotificacoes(data ?? []);
@@ -60,7 +63,7 @@ export default function NotificationsBell() {
 
   async function marcarTodasComoLidas() {
     setNotificacoes((prev) => prev.map((n) => ({ ...n, lida: true })));
-    await supabase.from("notificacoes").update({ lida: true }).eq("tenant_id", TENANT_ID).eq("lida", false);
+    await supabase.from("notificacoes").update({ lida: true }).eq("lida", false);
   }
 
   const naoLidas = notificacoes.filter((n) => !n.lida).length;
