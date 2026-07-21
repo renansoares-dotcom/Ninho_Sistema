@@ -43,3 +43,9 @@
 ---
 
 **Minha recomendação**: os itens 🟢 são rápidos. O item 7 (IA consultora) é o que eu acho que mais aumenta o valor percebido pelo cliente final do escritório.
+
+---
+
+## Atualização — Editor de texto rico no Kanban
+
+Concluído. A descrição das tarefas do Kanban (`components/shared/TarefaFormModal.tsx`) agora usa um editor de texto rico (Tiptap) — negrito, itálico, tachado, título, lista, lista numerada, checklist, citação, código e link. Sem migration necessária: o campo `descricao` já era texto livre no banco, só passou a guardar HTML em vez de texto puro. Descrições antigas continuam abrindo normalmente.

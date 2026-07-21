@@ -62,8 +62,67 @@ body {
   border-radius: 999px;
 }
 
-/* Textura sutil tipo papel milimetrado — reforça a ideia de "medição" sem
-   chamar atenção pra si mesma. */
+/* Estilo do conteúdo dentro do editor de texto rico (Tiptap) — usado na
+   descrição das tarefas do Kanban. */
+.prose-editor p {
+  margin: 0 0 0.5em;
+}
+.prose-editor p:last-child {
+  margin-bottom: 0;
+}
+.prose-editor h2 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #16181d;
+  margin: 0.6em 0 0.35em;
+}
+.prose-editor ul,
+.prose-editor ol {
+  padding-left: 1.25em;
+  margin: 0 0 0.5em;
+}
+.prose-editor ul {
+  list-style: disc;
+}
+.prose-editor ol {
+  list-style: decimal;
+}
+.prose-editor blockquote {
+  border-left: 2.5px solid #004aad;
+  padding-left: 0.75em;
+  margin: 0.5em 0;
+  color: #5b6270;
+}
+.prose-editor code {
+  background: #f5f6f8;
+  color: #c0255c;
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+.prose-editor ul[data-type="taskList"] {
+  list-style: none;
+  padding-left: 0;
+}
+.prose-editor ul[data-type="taskList"] li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5em;
+  margin-bottom: 0.25em;
+}
+.prose-editor ul[data-type="taskList"] li > label {
+  margin-top: 0.2em;
+}
+.prose-editor ul[data-type="taskList"] input[type="checkbox"] {
+  accent-color: #004aad;
+}
+.prose-editor p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: #9aa0ac;
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
 .textura-diagnostico {
   background-image: linear-gradient(rgba(0, 74, 173, 0.035) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0, 74, 173, 0.035) 1px, transparent 1px);

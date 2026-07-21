@@ -7,6 +7,7 @@ import { colunasKanban } from "@/lib/mock-data";
 import TarefaChecklist from "./TarefaChecklist";
 import TarefaComentarios from "./TarefaComentarios";
 import TarefaAnexos from "./TarefaAnexos";
+import RichTextEditor from "./RichTextEditor";
 
 const TENANT_ID = "00000000-0000-0000-0000-000000000001";
 
@@ -167,12 +168,10 @@ export default function TarefaFormModal({
 
             <div>
               <label className="text-[12px] text-[#9aa0ac] mb-1 block">Descrição</label>
-              <textarea
-                value={form.descricao}
-                onChange={(e) => set("descricao")(e.target.value)}
-                rows={4}
+              <RichTextEditor
+                value={form.descricao || ""}
+                onChange={(html) => set("descricao")(html)}
                 placeholder="Detalhes, contexto, critérios de conclusão..."
-                className="w-full border border-[#e4e6ea] rounded-lg px-3 py-2.5 text-[13px] text-[#16181d] outline-none focus:border-primary resize-none"
               />
             </div>
 
