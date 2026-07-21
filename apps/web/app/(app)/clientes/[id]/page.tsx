@@ -20,6 +20,7 @@ import ClienteScores from "@/components/shared/ClienteScores";
 import VisitasPanel from "@/components/shared/VisitasPanel";
 import ClientePlanoTrabalhoTab from "@/components/workspace/ClientePlanoTrabalhoTab";
 import ClienteKpisTab from "@/components/workspace/ClienteKpisTab";
+import ClienteMensagensTab from "@/components/workspace/ClienteMensagensTab";
 import { supabase } from "@/lib/supabase";
 
 const statusStyles: Record<string, string> = {
@@ -276,6 +277,7 @@ export default function ClienteDetalhePage() {
         {aba === "visitas" && <VisitasPanel clienteId={cliente.id} />}
         {aba === "plano-trabalho" && <ClientePlanoTrabalhoTab clienteId={cliente.id} />}
         {aba === "kpis" && <ClienteKpisTab clienteId={cliente.id} />}
+        {aba === "mensagens" && <ClienteMensagensTab clienteId={cliente.id} />}
       </div>
 
       <ClienteFormModal

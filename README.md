@@ -19,7 +19,8 @@ Plataforma SaaS multi-tenant para gestão completa de consultorias empresariais 
 | 2. Interface | ✅ concluída — todos os módulos, ver `docs/prototipos/` e `docs/design/` |
 | 3. Backend / Banco / CRUD | ✅ concluída — Supabase conectado em todos os módulos |
 | 4. Login/Auth + RLS por perfil | ✅ concluída — ver `docs/arquitetura/guia-login-auth.md` |
-| 5. Portal do Cliente, IA consultora, multi-tenant | ⬜ não iniciadas — ver `docs/arquitetura/pendencias-por-complexidade.md` |
+| 5. Portal do Cliente | ✅ concluída — ver `docs/arquitetura/guia-portal-cliente.md` |
+| 6. IA consultora, multi-tenant, editor rico | ⬜ não iniciadas — ver `docs/arquitetura/pendencias-por-complexidade.md` |
 
 ## Estrutura do repositório
 

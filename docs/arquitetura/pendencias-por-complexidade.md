@@ -23,11 +23,11 @@
 
 ## 🔴 Alta complexidade (o que resta)
 
-13. **Portal do Cliente** — área separada onde o cliente da consultoria acompanha só os próprios dados. O login e o isolamento por RLS já existem (perfil `cliente` é redirecionado para `/portal`); falta construir as telas de verdade (plano de trabalho, indicadores, arquivos, mensagens)
+13. ~~Portal do Cliente~~ — **concluído.** Meu Painel, Plano de Trabalho, Indicadores, Arquivos e Mensagens (chat com a equipe), tudo com RLS escopado por `cliente_id`. Guia de ativação em `docs/arquitetura/guia-portal-cliente.md`. Pendência conhecida: o bucket de Arquivos ainda é público no Storage (ver guia).
 14. **IA consultora (a antiga F4)** — integração com OpenAI: resumir reuniões, gerar sugestões, responder perguntas sobre o histórico do cliente
 15. **Editor de texto rico nos cards do Kanban** — hoje a descrição é um campo de texto simples; um editor tipo Notion (formatação, blocos) é bem mais complexo de implementar
 16. **Multi-tenant de verdade** — hoje existe um único "tenant" fixo (todo usuário novo é vinculado a ele automaticamente); as políticas de RLS já são escritas por `tenant_id`, então suportar múltiplas consultorias deve ser mais sobre lógica de qual tenant escolher do que reescrever segurança
 
 ---
 
-**Minha recomendação**: com o login pronto, os itens 🟢 e 🟡 restantes (Automações reais, Organograma/mapa) são rápidos de fechar. O Portal do Cliente é o próximo salto grande, já que a base de autenticação dele já está pronta.
+**Minha recomendação**: os itens 🟢 e 🟡 restantes (Automações reais, Organograma/mapa) continuam sendo os mais rápidos de fechar. Depois deles, a IA consultora é o próximo salto de valor percebido pelo cliente final.
