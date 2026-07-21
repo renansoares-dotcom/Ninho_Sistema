@@ -10,6 +10,7 @@ export type Profile = {
   role: UserRole;
   avatar_url: string | null;
   tenant_id: string;
+  logoUrl: string | null;
 };
 
 const ProfileContext = createContext<Profile | null>(null);

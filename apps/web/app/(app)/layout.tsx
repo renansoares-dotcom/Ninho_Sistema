@@ -41,8 +41,14 @@ export default async function AppGroupLayout({
     redirect("/portal");
   }
 
+  const { data: configuracoes } = await supabase
+    .from("configuracoes_empresa")
+    .select("logo_url")
+    .eq("tenant_id", profile.tenant_id)
+    .maybeSingle();
+
   return (
-    <ProfileProvider profile={profile as Profile}>
+    <ProfileProvider profile={{ ...profile, logoUrl: configuracoes?.logo_url ?? null }}>
       <div className="min-h-screen bg-background">
         <TopNav />
         {children}

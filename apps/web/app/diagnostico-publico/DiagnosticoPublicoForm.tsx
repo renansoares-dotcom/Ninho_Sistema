@@ -13,9 +13,37 @@ function faixa(nota: number) {
   return { cor: "#E0554F", label: "Estágio inicial", texto: "A empresa ainda depende muito de esforço individual — é exatamente o momento em que estruturar traz mais retorno." };
 }
 
+function Marca({ empresa, logoUrl, tamanho = "normal" }: { empresa: string; logoUrl: string | null; tamanho?: "normal" | "pequeno" }) {
+  if (logoUrl) {
+    return (
+      <div
+        className={`inline-flex items-center justify-center rounded-xl bg-white ${
+          tamanho === "pequeno" ? "px-2.5 py-1.5" : "px-4 py-3"
+        } shadow-[0_4px_20px_rgba(0,0,0,0.18)]`}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={logoUrl}
+          alt={empresa || "Logo"}
+          className={tamanho === "pequeno" ? "h-5 w-auto max-w-[110px] object-contain" : "h-8 w-auto max-w-[160px] object-contain"}
+        />
+      </div>
+    );
+  }
+  return (
+    <div className="flex items-center gap-2">
+      <div className="w-2 h-2 rounded-full bg-[#4B93E8]" />
+      <span className="text-[12px] tracking-[0.18em] uppercase font-medium text-white/50">
+        {empresa || "Consultoria"}
+      </span>
+    </div>
+  );
+}
+
 export default function DiagnosticoPublicoForm() {
   const [etapa, setEtapa] = useState<Etapa>("contato");
   const [empresa, setEmpresa] = useState("");
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [perguntas, setPerguntas] = useState<Pergunta[]>([]);
   const [indice, setIndice] = useState(0);
   const [direcao, setDirecao] = useState(1);
@@ -35,6 +63,7 @@ export default function DiagnosticoPublicoForm() {
         const data = await res.json();
         if (!res.ok) throw new Error();
         setEmpresa(data.empresa);
+        setLogoUrl(data.logoUrl ?? null);
         setPerguntas(data.perguntas);
         setRespostas(Object.fromEntries(data.perguntas.map((p: Pergunta) => [p.id, 5])));
       } catch {
@@ -123,31 +152,55 @@ export default function DiagnosticoPublicoForm() {
           className="absolute inset-0 opacity-70"
           style={{ background: "radial-gradient(ellipse 90% 60% at 50% -10%, rgba(0,74,173,0.35), transparent 60%)" }}
         />
+        <div
+          className="absolute inset-0 opacity-50"
+          style={{ background: "radial-gradient(ellipse 60% 40% at 85% 90%, rgba(2,115,188,0.25), transparent 65%)" }}
+        />
         <div className="absolute inset-0 textura-diagnostico opacity-[0.15]" />
 
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          initial="oculto"
+          animate="visivel"
+          variants={{ visivel: { transition: { staggerChildren: 0.09, delayChildren: 0.1 } } }}
           className="relative w-full max-w-[460px]"
         >
-          <div className="flex items-center gap-2 mb-10">
-            <div className="w-2 h-2 rounded-full bg-[#4B93E8]" />
-            <span className="text-[12px] tracking-[0.18em] text-white/50 uppercase font-medium">Ninho Consultoria</span>
-          </div>
+          <motion.div
+            variants={{ oculto: { opacity: 0, y: 10 }, visivel: { opacity: 1, y: 0 } }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="mb-10"
+          >
+            <Marca empresa={empresa} logoUrl={logoUrl} />
+          </motion.div>
 
-          <div className="text-[11.5px] tracking-[0.14em] text-[#4B93E8] uppercase font-semibold mb-4">
+          <motion.div
+            variants={{ oculto: { opacity: 0, y: 10 }, visivel: { opacity: 1, y: 0 } }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="text-[11.5px] tracking-[0.14em] text-[#4B93E8] uppercase font-semibold mb-4"
+          >
             Diagnóstico empresarial gratuito
-          </div>
-          <h1 className="font-display text-[38px] leading-[1.12] text-white mb-4">
+          </motion.div>
+          <motion.h1
+            variants={{ oculto: { opacity: 0, y: 14 }, visivel: { opacity: 1, y: 0 } }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            className="font-display text-[38px] leading-[1.12] text-white mb-4"
+          >
             Qual é o estágio real de maturidade do seu negócio?
-          </h1>
-          <p className="text-[14.5px] text-white/55 leading-relaxed mb-10">
+          </motion.h1>
+          <motion.p
+            variants={{ oculto: { opacity: 0, y: 10 }, visivel: { opacity: 1, y: 0 } }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="text-[14.5px] text-white/55 leading-relaxed mb-10"
+          >
             {perguntas.length || 7} perguntas, menos de 3 minutos. No final você recebe um retrato honesto de onde
             sua empresa está — e nossa equipe entra em contato pra te mostrar o próximo passo.
-          </p>
+          </motion.p>
 
-          <form onSubmit={avancarContato} className="flex flex-col gap-3">
+          <motion.form
+            variants={{ oculto: { opacity: 0, y: 10 }, visivel: { opacity: 1, y: 0 } }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            onSubmit={avancarContato}
+            className="flex flex-col gap-3"
+          >
             <input
               value={nome}
               onChange={(e) => setNome(e.target.value)}
@@ -186,7 +239,7 @@ export default function DiagnosticoPublicoForm() {
               Começar diagnóstico
               <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
             </button>
-          </form>
+          </motion.form>
         </motion.div>
       </div>
     );
@@ -207,9 +260,14 @@ export default function DiagnosticoPublicoForm() {
         <div className="flex-1 flex items-center justify-center px-6 py-16">
           <div className="w-full max-w-[560px]">
             <div className="flex items-center justify-between mb-8">
-              <span className="text-[11.5px] tracking-[0.14em] text-[#004AAD] uppercase font-semibold">
-                {empresa}
-              </span>
+              <div className="opacity-90">
+                {logoUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={logoUrl} alt={empresa} className="h-6 w-auto max-w-[130px] object-contain" />
+                ) : (
+                  <span className="text-[11.5px] tracking-[0.14em] text-[#004AAD] uppercase font-semibold">{empresa}</span>
+                )}
+              </div>
               <span className="text-[11.5px] text-[#9aa0ac] font-medium tabular-nums">
                 {indice + 1} / {perguntas.length}
               </span>
@@ -320,6 +378,10 @@ export default function DiagnosticoPublicoForm() {
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           className="relative w-full max-w-[440px] flex flex-col items-center text-center"
         >
+          <div className="mb-8">
+            <Marca empresa={empresa} logoUrl={logoUrl} tamanho="pequeno" />
+          </div>
+
           <div className="relative w-[200px] h-[200px] mb-8">
             <svg width="200" height="200" viewBox="0 0 200 200" className="-rotate-90">
               <circle cx="100" cy="100" r="78" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="10" />

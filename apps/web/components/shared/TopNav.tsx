@@ -86,7 +86,12 @@ export default function TopNav() {
       <div className="max-w-[1360px] mx-auto px-7 h-[60px] flex items-center justify-between">
         <div className="flex items-center gap-8">
           <div className="flex items-center gap-2">
-            <Image src="/logo.png" alt="Ninho Consultoria" width={110} height={45} className="h-8 w-auto" priority />
+            {profile.logoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={profile.logoUrl} alt="Logo" className="h-8 w-auto max-w-[140px] object-contain" />
+            ) : (
+              <Image src="/logo.png" alt="Ninho Consultoria" width={110} height={45} className="h-8 w-auto" priority />
+            )}
           </div>
 
           <nav className="flex items-center gap-1">

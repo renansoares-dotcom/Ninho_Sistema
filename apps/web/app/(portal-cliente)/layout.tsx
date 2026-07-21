@@ -40,12 +40,24 @@ export default async function PortalClienteLayout({
     clienteNome = cliente?.nome_fantasia || cliente?.razao_social || null;
   }
 
+  const { data: configuracoes } = await supabase
+    .from("configuracoes_empresa")
+    .select("logo_url")
+    .eq("tenant_id", profile.tenant_id)
+    .maybeSingle();
+  const logoUrl = configuracoes?.logo_url ?? null;
+
   return (
     <div className="min-h-screen bg-background">
       <div className="border-b border-[#eef0f2] bg-white sticky top-0 z-20">
         <div className="max-w-[1100px] mx-auto px-7 h-[60px] flex items-center justify-between">
           <div className="flex items-center gap-6">
-            <Image src="/logo.png" alt="Ninho Consultoria" width={110} height={45} className="h-8 w-auto" priority />
+            {logoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={logoUrl} alt="Logo" className="h-8 w-auto max-w-[140px] object-contain" />
+            ) : (
+              <Image src="/logo.png" alt="Ninho Consultoria" width={110} height={45} className="h-8 w-auto" priority />
+            )}
             {profile.cliente_id && <PortalNav />}
           </div>
           <div className="flex items-center gap-4">
@@ -72,7 +84,14 @@ export default async function PortalClienteLayout({
         </div>
       ) : (
         <PortalProvider
-          valor={{ userId: profile.id, userNome: profile.nome, clienteId: profile.cliente_id, clienteNome, tenantId: profile.tenant_id }}
+          valor={{
+            userId: profile.id,
+            userNome: profile.nome,
+            clienteId: profile.cliente_id,
+            clienteNome,
+            tenantId: profile.tenant_id,
+            logoUrl,
+          }}
         >
           {children}
         </PortalProvider>

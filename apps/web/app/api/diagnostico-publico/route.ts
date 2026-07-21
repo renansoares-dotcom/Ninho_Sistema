@@ -27,7 +27,13 @@ export async function GET() {
     .eq("ativa", true)
     .order("ordem", { ascending: true });
 
-  return NextResponse.json({ empresa: tenant.nome, perguntas: perguntas ?? [] });
+  const { data: configuracoes } = await supabase
+    .from("configuracoes_empresa")
+    .select("logo_url")
+    .eq("tenant_id", tenant.id)
+    .maybeSingle();
+
+  return NextResponse.json({ empresa: tenant.nome, logoUrl: configuracoes?.logo_url ?? null, perguntas: perguntas ?? [] });
 }
 
 type RespostaEnviada = { id: string; resposta: number };

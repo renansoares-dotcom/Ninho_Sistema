@@ -8,6 +8,7 @@ export type PortalContexto = {
   clienteId: string;
   clienteNome: string;
   tenantId: string;
+  logoUrl: string | null;
 };
 
 const Ctx = createContext<PortalContexto | null>(null);

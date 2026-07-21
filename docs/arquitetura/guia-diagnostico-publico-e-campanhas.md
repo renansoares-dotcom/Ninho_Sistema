@@ -66,3 +66,15 @@ Proteções incluídas:
 - O sistema ainda assume um único tenant (a rota pública sempre usa o primeiro tenant cadastrado) — consistente com o resto do produto até o multi-tenant de verdade existir.
 - Sem captcha visual (só honeypot + limite de reenvio por e-mail) — suficiente contra bots simples, mas não contra spam mais sofisticado. Se virar um problema, dá pra adicionar reCAPTCHA/hCaptcha depois.
 - O resultado teaser é só a nota — sem um "relatório" mais elaborado pro visitante. Isso pode ser uma boa evolução futura (ex: gerar um PDF ou uma página de resultado mais rica por faixa de nota).
+
+## 8. Logo do escritório (Identidade Visual)
+
+**Configurações → Identidade Visual** (só Admin/Diretor): envie a logo em PNG ou SVG com fundo transparente (fica melhor). Assim que enviar, ela passa a aparecer automaticamente em três lugares:
+
+- Menu superior do sistema principal
+- Cabeçalho do Portal do Cliente
+- Link público de Diagnóstico (nas três telas: abertura, perguntas e resultado)
+
+Antes de enviar uma logo, o sistema usa a logo padrão do Ninho (`/logo.png`) como reserva — nada quebra se você ainda não subiu a sua.
+
+Tecnicamente: a logo fica guardada num bucket próprio do Storage (`logos`, público, separado do bucket de arquivos de clientes) e o link é salvo em `configuracoes_empresa.logo_url` — já preparado pra quando existir mais de um tenant, cada um com a própria logo. Precisa rodar a migration `029_logo_identidade_visual.sql` antes de usar.
