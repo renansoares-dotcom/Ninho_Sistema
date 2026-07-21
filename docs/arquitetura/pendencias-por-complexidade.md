@@ -46,6 +46,22 @@
 
 ---
 
+## Atualização — Auditoria dos itens 🟢
+
+Conferindo o código, os 3 itens 🟢 já estavam implementados (a lista é que
+estava desatualizada, sem verificar contra o código real):
+- E-mail para NFe: já existe em `ClienteFormModal.tsx` e é usado em `NotaFiscalFormModal.tsx`
+- Editar diagnóstico: `DiagnosticoForm.tsx` já suporta `?editar=<id>`, com botão de edição na tela de detalhe
+- Módulo de Visitas: `VisitasPanel.tsx` já tem CRUD completo (data, hora, objetivo, relato, decisões, pendências)
+
 ## Atualização — Editor de texto rico no Kanban
 
 Concluído. A descrição das tarefas do Kanban (`components/shared/TarefaFormModal.tsx`) agora usa um editor de texto rico (Tiptap) — negrito, itálico, tachado, título, lista, lista numerada, checklist, citação, código e link. Sem migration necessária: o campo `descricao` já era texto livre no banco, só passou a guardar HTML em vez de texto puro. Descrições antigas continuam abrindo normalmente.
+
+## Atualização — Convite por e-mail no Super Admin
+
+Concluído. Criar um escritório novo em `/admin/novo` não pede mais senha —
+manda um convite de verdade por e-mail (usando o sistema de e-mail nativo
+do Supabase Auth, não depende do Resend), e a pessoa define a própria
+senha ao clicar no link. Mais seguro e mais profissional que compartilhar
+senha manualmente.

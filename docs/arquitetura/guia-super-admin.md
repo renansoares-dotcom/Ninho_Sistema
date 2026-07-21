@@ -54,8 +54,9 @@ resto do sistema (fundo escuro) de propósito — pra nunca confundir com a
 **Escritórios** (`/admin`)
 - Lista todos, com contagem de usuários e clientes
 - **Novo escritório**: cria o tenant + configurações padrão + as 5
-  automações (desativadas) + as 7 perguntas do Diagnóstico Público + o
-  primeiro usuário Admin, tudo de uma vez
+  automações (desativadas) + as 7 perguntas do Diagnóstico Público + envia
+  um **convite por e-mail** pro primeiro Admin — a pessoa define a própria
+  senha ao clicar no link, você não precisa criar nem repassar nada
 - **Suspender/Reativar**: bloqueia login de todo mundo daquele escritório
   na hora (checado tanto na entrada do login quanto a cada carregamento de
   página, então até quem já estava logado é desconectado)
@@ -85,4 +86,3 @@ resto do sistema (fundo escuro) de propósito — pra nunca confundir com a
 - **Cobrança automática** (Stripe ou similar) — hoje o financeiro é uma ficha manual
 - **Controle de quais módulos cada escritório pode usar** (ex: plano básico sem Portal do Cliente) — hoje todo escritório tem acesso a tudo
 - **Editar/trocar o slug** de um escritório depois de criado — hoje só define na criação
-- **Convite por e-mail** pro primeiro admin — hoje você define a senha na hora e repassa manualmente

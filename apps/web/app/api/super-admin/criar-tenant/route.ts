@@ -35,10 +35,10 @@ export async function POST(request: NextRequest) {
   if (!souSuperAdmin) return NextResponse.json({ error: "Sem permissão." }, { status: 403 });
 
   const body = await request.json().catch(() => null);
-  const { nomeEscritorio, slug, nomeAdmin, emailAdmin, senhaAdmin } = body ?? {};
+  const { nomeEscritorio, slug, nomeAdmin, emailAdmin } = body ?? {};
 
-  if (!nomeEscritorio?.trim() || !nomeAdmin?.trim() || !emailAdmin?.trim() || !senhaAdmin || senhaAdmin.length < 8) {
-    return NextResponse.json({ error: "Preencha todos os campos (senha com pelo menos 8 caracteres)." }, { status: 400 });
+  if (!nomeEscritorio?.trim() || !nomeAdmin?.trim() || !emailAdmin?.trim()) {
+    return NextResponse.json({ error: "Preencha todos os campos." }, { status: 400 });
   }
 
   const slugFinal = slugify(slug?.trim() || nomeEscritorio);
@@ -68,20 +68,21 @@ export async function POST(request: NextRequest) {
     admin.from("diagnostico_publico_perguntas").insert(PERGUNTAS_PADRAO.map((p) => ({ tenant_id: tenant.id, ...p }))),
   ]);
 
-  // 5. Cria o primeiro usuário Admin — o gatilho handle_new_user já cria o
-  // profile automaticamente, lendo o tenant_id do metadata abaixo.
-  const { data: novoUsuario, error: erroUsuario } = await admin.auth.admin.createUser({
-    email: emailAdmin.trim(),
-    password: senhaAdmin,
-    email_confirm: true,
-    user_metadata: { nome: nomeAdmin.trim(), role: "admin", tenant_id: tenant.id },
+  // 5. Convida o primeiro usuário Admin por e-mail — ele mesmo define a
+  // senha ao clicar no link (mais seguro que a gente escolher a senha e
+  // repassar por fora). O gatilho handle_new_user já cria o profile
+  // automaticamente, lendo o tenant_id do metadata abaixo.
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const { data: novoUsuario, error: erroUsuario } = await admin.auth.admin.inviteUserByEmail(emailAdmin.trim(), {
+    data: { nome: nomeAdmin.trim(), role: "admin", tenant_id: tenant.id },
+    redirectTo: `${siteUrl}/auth/confirm?next=/redefinir-senha`,
   });
 
   if (erroUsuario || !novoUsuario.user) {
-    // O tenant já foi criado; melhor devolver o erro específico do usuário
+    // O tenant já foi criado; melhor devolver o erro específico do convite
     // pra você decidir se corrige o e-mail e tenta de novo, ou apaga o tenant.
     return NextResponse.json(
-      { error: `Escritório criado, mas o usuário admin falhou: ${erroUsuario?.message ?? "erro desconhecido"}` },
+      { error: `Escritório criado, mas o convite ao admin falhou: ${erroUsuario?.message ?? "erro desconhecido"}` },
       { status: 500 }
     );
   }

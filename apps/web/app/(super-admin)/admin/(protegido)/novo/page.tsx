@@ -11,7 +11,6 @@ export default function NovoEscritorioPage() {
   const [slug, setSlug] = useState("");
   const [nomeAdmin, setNomeAdmin] = useState("");
   const [emailAdmin, setEmailAdmin] = useState("");
-  const [senhaAdmin, setSenhaAdmin] = useState("");
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
   const [sucesso, setSucesso] = useState<{ slug: string } | null>(null);
@@ -24,7 +23,7 @@ export default function NovoEscritorioPage() {
     const res = await fetch("/api/super-admin/criar-tenant", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nomeEscritorio, slug, nomeAdmin, emailAdmin, senhaAdmin }),
+      body: JSON.stringify({ nomeEscritorio, slug, nomeAdmin, emailAdmin }),
     });
     const data = await res.json();
 
@@ -46,8 +45,8 @@ export default function NovoEscritorioPage() {
         </div>
         <h1 className="text-[19px] font-semibold text-white">Escritório criado com sucesso</h1>
         <p className="text-[13.5px] text-white/50 mt-2 leading-relaxed">
-          O admin já pode entrar em <strong className="text-white/80">/login</strong> com o e-mail e senha
-          que você definiu. O link de Diagnóstico Público desse escritório é:
+          Um convite foi enviado para <strong className="text-white/80">{emailAdmin}</strong> — a pessoa define
+          a própria senha ao clicar no link do e-mail. O link de Diagnóstico Público desse escritório é:
         </p>
         <code className="mt-3 text-[12.5px] text-[#4B93E8] bg-white/5 px-3 py-1.5 rounded-lg">
           /diagnostico-publico/{sucesso.slug}
@@ -63,7 +62,6 @@ export default function NovoEscritorioPage() {
               setSlug("");
               setNomeAdmin("");
               setEmailAdmin("");
-              setSenhaAdmin("");
             }}
             className="px-4 py-2.5 rounded-lg text-[13px] font-medium text-white/60 border border-white/10"
           >
@@ -140,18 +138,9 @@ export default function NovoEscritorioPage() {
             className="w-full bg-white/5 border border-white/10 rounded-lg px-3.5 py-2.5 text-[13.5px] text-white placeholder:text-white/25 outline-none focus:border-[#4B93E8]"
           />
         </div>
-        <div>
-          <label className="text-[11.5px] text-white/40 mb-1 block">Senha inicial</label>
-          <input
-            type="text"
-            value={senhaAdmin}
-            onChange={(e) => setSenhaAdmin(e.target.value)}
-            required
-            minLength={8}
-            placeholder="Pelo menos 8 caracteres — repasse pro cliente"
-            className="w-full bg-white/5 border border-white/10 rounded-lg px-3.5 py-2.5 text-[13.5px] text-white placeholder:text-white/25 outline-none focus:border-[#4B93E8]"
-          />
-        </div>
+        <p className="text-[11.5px] text-white/35 -mt-1">
+          A pessoa recebe um e-mail de convite e define a própria senha — você não precisa criar nem repassar nada.
+        </p>
 
         <button
           type="submit"
