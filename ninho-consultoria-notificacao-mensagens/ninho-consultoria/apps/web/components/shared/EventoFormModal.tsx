@@ -1,0 +1,337 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { X, Loader2, Trash2 } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+
+const TENANT_ID = "00000000-0000-0000-0000-000000000001";
+
+export type EventoFormData = {
+  id?: string;
+  titulo: string;
+  tipo: string;
+  cliente_id: string;
+  data: string;
+  hora: string;
+  responsavel_nome: string;
+  local?: string;
+  participantes?: string;
+  recorrencia?: string;
+  recorrenciaAte?: string;
+};
+
+const vazio: EventoFormData = {
+  titulo: "",
+  tipo: "reuniao",
+  cliente_id: "",
+  data: "",
+  hora: "09:00",
+  responsavel_nome: "",
+  local: "",
+  participantes: "",
+  recorrencia: "nenhuma",
+  recorrenciaAte: "",
+};
+
+const tipos = [
+  { value: "reuniao", label: "Reunião" },
+  { value: "visita_tecnica", label: "Visita técnica" },
+  { value: "videoconferencia", label: "Videoconferência" },
+];
+
+function gerarDatasRecorrencia(dataInicial: string, tipo: string, ate: string): string[] {
+  if (tipo === "nenhuma" || !ate) return [dataInicial];
+  const datas: string[] = [];
+  let cursor = new Date(dataInicial + "T12:00:00");
+  const limite = new Date(ate + "T12:00:00");
+  while (cursor <= limite) {
+    datas.push(cursor.toISOString().slice(0, 10));
+    if (tipo === "semanal") cursor.setDate(cursor.getDate() + 7);
+    else if (tipo === "mensal") cursor.setMonth(cursor.getMonth() + 1);
+    else break;
+  }
+  return datas.length > 0 ? datas : [dataInicial];
+}
+
+export default function EventoFormModal({
+  open,
+  onClose,
+  onSaved,
+  onDeleted,
+  eventoInicial,
+}: {
+  open: boolean;
+  onClose: () => void;
+  onSaved: () => void;
+  onDeleted?: () => void;
+  eventoInicial?: EventoFormData;
+}) {
+  const [form, setForm] = useState<EventoFormData>(eventoInicial ?? vazio);
+  const [clientes, setClientes] = useState<{ id: string; nome: string }[]>([]);
+  const [salvando, setSalvando] = useState(false);
+  const [excluindo, setExcluindo] = useState(false);
+  const [erro, setErro] = useState<string | null>(null);
+
+  useEffect(() => {
+    setForm(eventoInicial ?? vazio);
+    setErro(null);
+  }, [eventoInicial, open]);
+
+  useEffect(() => {
+    if (!open) return;
+    supabase
+      .from("clientes")
+      .select("id, nome_fantasia, razao_social")
+      .order("nome_fantasia")
+      .then(({ data }) => {
+        setClientes((data ?? []).map((c) => ({ id: c.id, nome: c.nome_fantasia ?? c.razao_social })));
+      });
+  }, [open]);
+
+  if (!open) return null;
+
+  const set = (campo: keyof EventoFormData) => (v: string) => setForm((f) => ({ ...f, [campo]: v }));
+
+  async function salvar() {
+    if (!form.titulo.trim() || !form.data) {
+      setErro("Título e data são obrigatórios.");
+      return;
+    }
+    setSalvando(true);
+    setErro(null);
+
+    const participantesArray = (form.participantes ?? "")
+      .split(",")
+      .map((p) => p.trim())
+      .filter(Boolean);
+
+    const basePayload = {
+      titulo: form.titulo,
+      tipo: form.tipo,
+      cliente_id: form.cliente_id || null,
+      responsavel_nome: form.responsavel_nome || null,
+      local: form.local || null,
+      participantes: participantesArray,
+    };
+
+    if (form.id) {
+      const { error } = await supabase
+        .from("eventos")
+        .update({ ...basePayload, data_inicio: `${form.data}T${form.hora}:00` })
+        .eq("id", form.id);
+      setSalvando(false);
+      if (error) {
+        setErro(error.message);
+        return;
+      }
+      onSaved();
+      onClose();
+      return;
+    }
+
+    // Criação: se houver recorrência, gera vários eventos com o mesmo grupo
+    const datas = gerarDatasRecorrencia(form.data, form.recorrencia ?? "nenhuma", form.recorrenciaAte ?? "");
+    const grupoId = datas.length > 1 ? crypto.randomUUID() : null;
+
+    const linhas = datas.map((d) => ({
+      ...basePayload,
+      tenant_id: TENANT_ID,
+      data_inicio: `${d}T${form.hora}:00`,
+      recorrencia_grupo_id: grupoId,
+    }));
+
+    const { error } = await supabase.from("eventos").insert(linhas);
+    setSalvando(false);
+
+    if (error) {
+      setErro(error.message);
+      return;
+    }
+
+    onSaved();
+    onClose();
+  }
+
+  async function excluir() {
+    if (!form.id) return;
+    if (!confirm(`Tem certeza que deseja excluir o evento "${form.titulo}"?`)) return;
+    setExcluindo(true);
+    const { error } = await supabase.from("eventos").delete().eq("id", form.id);
+    setExcluindo(false);
+    if (error) {
+      setErro(error.message);
+      return;
+    }
+    onDeleted?.();
+    onClose();
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/30 z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl w-full max-w-[520px] max-h-[85vh] overflow-y-auto shadow-xl">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#eef0f2] sticky top-0 bg-white">
+          <span className="text-[15px] font-semibold text-[#16181d]">
+            {form.id ? "Editar evento" : "Novo evento"}
+          </span>
+          <button onClick={onClose} className="text-[#9aa0ac] hover:text-[#5b6270]">
+            <X size={18} />
+          </button>
+        </div>
+
+        <div className="p-6 flex flex-col gap-4">
+          {erro && (
+            <div className="text-[13px] text-[#f04438] bg-[#fdecea] rounded-lg px-3 py-2.5">{erro}</div>
+          )}
+
+          <div>
+            <label className="text-[12px] text-[#9aa0ac] mb-1 block">Título *</label>
+            <input
+              value={form.titulo}
+              onChange={(e) => set("titulo")(e.target.value)}
+              placeholder="Ex: Reunião de diagnóstico"
+              className="w-full border border-[#e4e6ea] rounded-lg px-3 py-2.5 text-[13.5px] text-[#16181d] outline-none focus:border-primary"
+            />
+          </div>
+
+          <div>
+            <label className="text-[12px] text-[#9aa0ac] mb-1 block">Cliente</label>
+            <select
+              value={form.cliente_id}
+              onChange={(e) => set("cliente_id")(e.target.value)}
+              className="w-full border border-[#e4e6ea] rounded-lg px-3 py-2.5 text-[13.5px] text-[#16181d] outline-none focus:border-primary"
+            >
+              <option value="">Nenhum</option>
+              {clientes.map((c) => (
+                <option key={c.id} value={c.id}>{c.nome}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="text-[12px] text-[#9aa0ac] mb-1 block">Tipo</label>
+              <select
+                value={form.tipo}
+                onChange={(e) => set("tipo")(e.target.value)}
+                className="w-full border border-[#e4e6ea] rounded-lg px-3 py-2.5 text-[13.5px] text-[#16181d] outline-none focus:border-primary"
+              >
+                {tipos.map((t) => (
+                  <option key={t.value} value={t.value}>{t.label}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="text-[12px] text-[#9aa0ac] mb-1 block">Responsável (iniciais)</label>
+              <input
+                value={form.responsavel_nome}
+                onChange={(e) => set("responsavel_nome")(e.target.value)}
+                placeholder="Ex: MC"
+                className="w-full border border-[#e4e6ea] rounded-lg px-3 py-2.5 text-[13.5px] text-[#16181d] outline-none focus:border-primary"
+              />
+            </div>
+            <div>
+              <label className="text-[12px] text-[#9aa0ac] mb-1 block">Data *</label>
+              <input
+                type="date"
+                value={form.data}
+                onChange={(e) => set("data")(e.target.value)}
+                className="w-full border border-[#e4e6ea] rounded-lg px-3 py-2.5 text-[13.5px] text-[#16181d] outline-none focus:border-primary"
+              />
+            </div>
+            <div>
+              <label className="text-[12px] text-[#9aa0ac] mb-1 block">Hora</label>
+              <input
+                type="time"
+                value={form.hora}
+                onChange={(e) => set("hora")(e.target.value)}
+                className="w-full border border-[#e4e6ea] rounded-lg px-3 py-2.5 text-[13.5px] text-[#16181d] outline-none focus:border-primary"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="text-[12px] text-[#9aa0ac] mb-1 block">Local</label>
+            <input
+              value={form.local}
+              onChange={(e) => set("local")(e.target.value)}
+              placeholder="Ex: Sede do cliente, Recife/PE ou link da chamada"
+              className="w-full border border-[#e4e6ea] rounded-lg px-3 py-2.5 text-[13.5px] text-[#16181d] outline-none focus:border-primary"
+            />
+          </div>
+
+          <div>
+            <label className="text-[12px] text-[#9aa0ac] mb-1 block">Participantes (separados por vírgula)</label>
+            <input
+              value={form.participantes}
+              onChange={(e) => set("participantes")(e.target.value)}
+              placeholder="Ex: Marcelo Andrade, Fernanda Lima"
+              className="w-full border border-[#e4e6ea] rounded-lg px-3 py-2.5 text-[13.5px] text-[#16181d] outline-none focus:border-primary"
+            />
+          </div>
+
+          {!form.id && (
+            <div className="pt-2 border-t border-[#f2f3f5]">
+              <div className="text-[12.5px] font-semibold text-[#3f434d] mb-3 mt-3">Recorrência</div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-[12px] text-[#9aa0ac] mb-1 block">Repetir</label>
+                  <select
+                    value={form.recorrencia}
+                    onChange={(e) => set("recorrencia")(e.target.value)}
+                    className="w-full border border-[#e4e6ea] rounded-lg px-3 py-2.5 text-[13.5px] text-[#16181d] outline-none focus:border-primary"
+                  >
+                    <option value="nenhuma">Não repetir</option>
+                    <option value="semanal">Semanalmente</option>
+                    <option value="mensal">Mensalmente</option>
+                  </select>
+                </div>
+                {form.recorrencia !== "nenhuma" && (
+                  <div>
+                    <label className="text-[12px] text-[#9aa0ac] mb-1 block">Repetir até</label>
+                    <input
+                      type="date"
+                      value={form.recorrenciaAte}
+                      onChange={(e) => set("recorrenciaAte")(e.target.value)}
+                      className="w-full border border-[#e4e6ea] rounded-lg px-3 py-2.5 text-[13.5px] text-[#16181d] outline-none focus:border-primary"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="flex items-center justify-between gap-2 px-6 py-4 border-t border-[#eef0f2] sticky bottom-0 bg-white">
+          {form.id ? (
+            <button
+              onClick={excluir}
+              disabled={excluindo}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-[13.5px] font-medium border border-[#f5c2bd] text-[#f04438] hover:bg-[#fdecea] disabled:opacity-60"
+            >
+              {excluindo ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
+              Excluir
+            </button>
+          ) : (
+            <span />
+          )}
+          <div className="flex gap-2">
+            <button
+              onClick={onClose}
+              className="px-4 py-2 rounded-lg text-[13.5px] font-medium border border-[#e4e6ea] bg-white text-[#3f434d]"
+            >
+              Cancelar
+            </button>
+            <button
+              onClick={salvar}
+              disabled={salvando}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg text-[13.5px] font-semibold bg-primary text-white disabled:opacity-60"
+            >
+              {salvando && <Loader2 size={14} className="animate-spin" />}
+              {form.id ? "Salvar alterações" : "Criar evento"}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
