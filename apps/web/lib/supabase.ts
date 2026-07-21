@@ -1,9 +1,18 @@
-import { createClient } from "@supabase/supabase-js";
+"use client";
 
-// Fallback defensivo: evita que o build quebre inteiro caso as variáveis de
-// ambiente não estejam disponíveis no momento exato do build na Vercel.
-// Em uso normal (com as variáveis configuradas), os valores reais são usados.
+import { createBrowserClient } from "@supabase/ssr";
+
+// Cliente Supabase para uso em Client Components.
+//
+// Usa @supabase/ssr (createBrowserClient) em vez do createClient() puro do
+// @supabase/supabase-js: a diferença é que a sessão fica guardada em cookies
+// (em vez de localStorage), o que permite que o middleware e os Server
+// Components enxerguem o mesmo usuário logado que o navegador. É a peça que
+// faz o login "conversar" com o resto do Next.js (App Router).
+//
+// Mantemos o nome de export "supabase" para não quebrar os ~30 arquivos que
+// já importam `{ supabase } from "@/lib/supabase"` em todo o projeto.
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://placeholder.supabase.co";
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "placeholder-anon-key";
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createBrowserClient(supabaseUrl, supabaseAnonKey);

@@ -16,9 +16,10 @@ Plataforma SaaS multi-tenant para gestão completa de consultorias empresariais 
 | Fase | Status |
 |---|---|
 | 1. Arquitetura | ✅ concluída — ver `docs/arquitetura/` |
-| 2. Interface | 🔶 em andamento — Dashboard Executivo + CRM prontos, ver `docs/prototipos/` e `docs/design/` |
-| 3. Backend | ⬜ não iniciada |
-| 4. Integrações | ⬜ não iniciada |
+| 2. Interface | ✅ concluída — todos os módulos, ver `docs/prototipos/` e `docs/design/` |
+| 3. Backend / Banco / CRUD | ✅ concluída — Supabase conectado em todos os módulos |
+| 4. Login/Auth + RLS por perfil | ✅ concluída — ver `docs/arquitetura/guia-login-auth.md` |
+| 5. Portal do Cliente, IA consultora, multi-tenant | ⬜ não iniciadas — ver `docs/arquitetura/pendencias-por-complexidade.md` |
 
 ## Estrutura do repositório
 
@@ -40,11 +41,18 @@ Detalhes completos de cada módulo, entidades do banco e contratos de API estão
 
 ## Perfis de usuário
 
-Administrador, Diretor, Coordenador, Consultor, Financeiro e Cliente (Portal). Controle de acesso via RLS no Supabase por `tenant_id` + `role` + vínculo direto com o registro.
+Administrador, Diretor, Coordenador, Consultor, Financeiro e Cliente (Portal). Controle de acesso via RLS no Supabase por `tenant_id` + `role` + vínculo direto com o registro. Login real via Supabase Auth — passo a passo de ativação em `docs/arquitetura/guia-login-auth.md`.
 
-## Como rodar (a preencher na Fase 3)
+## Como rodar
 
-Instruções de setup local do frontend e backend serão adicionadas quando o backend for implementado.
+```bash
+cd apps/web
+npm install
+cp .env.example .env.local   # preencha com as credenciais do seu projeto Supabase
+npm run dev
+```
+
+Antes do primeiro acesso, rode as migrations em `packages/db/migrations/` (em ordem, no SQL Editor do Supabase) e siga `docs/arquitetura/guia-login-auth.md` para criar o primeiro usuário Admin.
 
 ## Contribuindo
 

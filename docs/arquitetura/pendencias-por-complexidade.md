@@ -17,14 +17,17 @@
 10. **Automações reais** — hoje os toggles de `/automacoes` não disparam nada; implementar um motor simples que executa as regras (ex: gerar tarefas quando diagnóstico é concluído)
 11. **Organograma e mapa de localização** — os dois itens que deixei de fora na Etapa B do cadastro de cliente, por exigirem mais infraestrutura
 
-## 🔴 Alta complexidade
+## ✅ Concluído
 
-12. **Login real (Supabase Auth) + RLS por perfil** — hoje qualquer pessoa com o link acessa tudo, sem distinção de Administrador/Diretor/Consultor/etc. Essa é a peça que destrava segurança de verdade
-13. **Portal do Cliente** — área separada, com login próprio, onde o cliente da consultoria acompanha só os próprios dados
+**Login real (Supabase Auth) + RLS por perfil** — feito. Sessão via cookies (`@supabase/ssr`), middleware protegendo rotas, menu contextual por perfil, "esqueci minha senha", gestão de usuários em Configurações, e políticas de RLS reais (substituindo o "allow all" temporário) nas 29 tabelas do banco. Guia de ativação em `docs/arquitetura/guia-login-auth.md`.
+
+## 🔴 Alta complexidade (o que resta)
+
+13. **Portal do Cliente** — área separada onde o cliente da consultoria acompanha só os próprios dados. O login e o isolamento por RLS já existem (perfil `cliente` é redirecionado para `/portal`); falta construir as telas de verdade (plano de trabalho, indicadores, arquivos, mensagens)
 14. **IA consultora (a antiga F4)** — integração com OpenAI: resumir reuniões, gerar sugestões, responder perguntas sobre o histórico do cliente
 15. **Editor de texto rico nos cards do Kanban** — hoje a descrição é um campo de texto simples; um editor tipo Notion (formatação, blocos) é bem mais complexo de implementar
-16. **Multi-tenant de verdade** — hoje existe um único "tenant" fixo no código; suportar múltiplas consultorias de verdade (cada uma com seus próprios dados isolados) exige repensar como o sistema identifica "de qual empresa é esse dado" em todo lugar
+16. **Multi-tenant de verdade** — hoje existe um único "tenant" fixo (todo usuário novo é vinculado a ele automaticamente); as políticas de RLS já são escritas por `tenant_id`, então suportar múltiplas consultorias deve ser mais sobre lógica de qual tenant escolher do que reescrever segurança
 
 ---
 
-**Minha recomendação**: fechar os itens 🟢 (rápidos) primeiro, junto com o Faturamento (item 6, que já está em andamento), antes de entrar em Login/Auth — porque depois que o login existir, toda tela que ainda não tem RLS de verdade vai precisar de um ajuste.
+**Minha recomendação**: com o login pronto, os itens 🟢 e 🟡 restantes (Automações reais, Organograma/mapa) são rápidos de fechar. O Portal do Cliente é o próximo salto grande, já que a base de autenticação dele já está pronta.

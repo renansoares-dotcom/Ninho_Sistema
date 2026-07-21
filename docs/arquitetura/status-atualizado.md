@@ -16,6 +16,8 @@ Itens de media complexidade concluidos:
 
 Dados de teste: 10 exemplos em praticamente todos os modulos.
 
+Login real (Supabase Auth) + RLS por perfil: implementado. Sessao via cookies (@supabase/ssr), middleware protegendo todas as rotas internas, menu superior contextual por perfil (Admin/Diretor veem tudo; Coordenador/Consultor sem Financeiro/Automacoes/Configuracoes; Financeiro com acesso financeiro; Cliente redirecionado para /portal), tela de "esqueci minha senha" / redefinicao, gestao de usuarios e perfis em Configuracoes, e RLS real (nao mais "allow all") nas 29 tabelas do banco — ver `packages/db/migrations/025_login_auth_rls.sql` e `docs/arquitetura/guia-login-auth.md` para o passo a passo de ativacao no Supabase.
+
 ## Ainda restam (media complexidade)
 
 1. Automacoes reais - hoje os toggles de /automacoes nao disparam nada de verdade
@@ -23,12 +25,11 @@ Dados de teste: 10 exemplos em praticamente todos os modulos.
 
 ## Restam (alta complexidade)
 
-3. Login real (Supabase Auth) + RLS por perfil
-4. Portal do Cliente
-5. IA consultora (integracao OpenAI)
-6. Editor de texto rico no Kanban
-7. Multi-tenant de verdade
+3. Portal do Cliente (telas de verdade — hoje so existe o login + placeholder)
+4. IA consultora (integracao OpenAI)
+5. Editor de texto rico no Kanban
+6. Multi-tenant de verdade (RLS ja preparado por tenant_id; falta a logica de multiplos tenants)
 
 ## Recomendacao
 
-Login/Auth (item 3) e o mais importante estruturalmente. Os itens 1 e 2 sao mais rapidos e podem entrar antes ou depois.
+Com o login pronto, os itens 1 e 2 (rapidos) ou o Portal do Cliente (que ja tem a base de auth pronta) sao os proximos passos naturais.
