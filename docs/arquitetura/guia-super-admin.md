@@ -11,14 +11,39 @@ sabe de qual escritório é assim que a pessoa loga, não pela URL.
 1. `032` (rodada por você via texto, no início dessa etapa) — cria `super_admins`, `tenants.slug`, corrige o gatilho de criação de usuário
 2. `033_super_admin_plataforma.sql` — fecha o RLS de `super_admins`, cria `tenants.ativo` (suspensão) e a tabela `tenant_assinaturas` (financeiro)
 
-## 2. Se tornar Super Admin
+## 2. Login exclusivo do Super Admin
 
-Depois da migration 032, rode (trocando pelo seu e-mail):
-```sql
-insert into super_admins (id, email)
-select id, email from auth.users where email = 'seu-email@aqui.com'
-on conflict (id) do nothing;
-```
+O painel agora tem uma tela de login própria, separada de qualquer
+escritório: **`/admin/login`**. Pra usar, você precisa de uma conta de
+autenticação dedicada (e-mail/senha que não sejam os mesmos do seu acesso
+Admin dentro de um escritório):
+
+1. Supabase → **Authentication → Users → Add user**
+   - E-mail e senha exclusivos (ex: `superadmin@devcode.com`) — pode ser
+     um e-mail que não existe de verdade, só usado pra login, já que
+     ninguém recebe notificação nessa conta
+   - Marque **"Auto Confirm User"**
+2. No SQL Editor, torne essa conta super admin (troque pelo e-mail que você usou):
+   ```sql
+   insert into super_admins (id, email)
+   select id, email from auth.users where email = 'superadmin@devcode.com'
+   on conflict (id) do nothing;
+   ```
+3. Se sua conta de Admin de escritório também estava em `super_admins` (de
+   quando testamos antes de existir login separado), pode remover pra
+   manter só a conta dedicada:
+   ```sql
+   delete from super_admins where email = 'seu-email-de-admin-do-escritorio@aqui.com';
+   ```
+
+Acesse em `https://[seu-dominio]/admin/login` — é uma tela separada da
+`/login` normal, com visual escuro.
+
+⚠️ **Importante**: como é a mesma sessão de navegador, logar como Super
+Admin substitui qualquer sessão de escritório ativa (e vice-versa) — não
+dá pra estar logado nos dois ao mesmo tempo na mesma aba/navegador. Se
+precisar alternar, saia de um antes de entrar no outro (ou use uma aba
+anônima separada).
 
 ## 3. O painel — `/admin`
 

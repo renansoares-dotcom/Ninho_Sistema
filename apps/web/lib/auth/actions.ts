@@ -58,6 +58,42 @@ export async function sair() {
   redirect("/login");
 }
 
+// Login exclusivo do Super Admin — usa uma conta separada (e-mail/senha
+// próprios, sem relação com nenhum escritório). Depois de autenticar,
+// confere se essa conta está na tabela super_admins; se não estiver,
+// desloga na hora e nem revela se a senha "quase" funcionou.
+export async function entrarSuperAdmin(_estado: EstadoAuth, formData: FormData): Promise<EstadoAuth> {
+  const email = String(formData.get("email") || "").trim();
+  const senha = String(formData.get("senha") || "");
+
+  if (!email || !senha) {
+    return { erro: "Informe e-mail e senha." };
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const { error: erroLogin } = await supabase.auth.signInWithPassword({ email, password: senha });
+
+  if (erroLogin) {
+    return { erro: "E-mail ou senha incorretos." };
+  }
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { data: souSuperAdmin } = user
+    ? await supabase.from("super_admins").select("id").eq("id", user.id).maybeSingle()
+    : { data: null };
+
+  if (!souSuperAdmin) {
+    await supabase.auth.signOut();
+    return { erro: "E-mail ou senha incorretos." };
+  }
+
+  revalidatePath("/", "layout");
+  redirect("/admin");
+}
+
 export async function solicitarRedefinicaoSenha(
   _estado: EstadoAuth,
   formData: FormData

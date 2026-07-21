@@ -12,6 +12,7 @@ const ROTAS_PUBLICAS = [
   "/diagnostico-publico",
   "/api/diagnostico-publico",
   "/api/cron",
+  "/admin/login",
 ];
 
 function isRotaPublica(pathname: string) {
@@ -51,7 +52,9 @@ export async function updateSession(request: NextRequest) {
 
   if (!user && !publica) {
     const url = request.nextUrl.clone();
-    url.pathname = "/login";
+    // /admin (fora de /admin/login) tem login próprio, separado do login
+    // normal do sistema — manda pra lá em vez do /login de escritório.
+    url.pathname = pathname.startsWith("/admin") ? "/admin/login" : "/login";
     url.searchParams.set("proximo", pathname);
     return NextResponse.redirect(url);
   }
@@ -59,6 +62,13 @@ export async function updateSession(request: NextRequest) {
   if (user && pathname === "/login") {
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";
+    url.search = "";
+    return NextResponse.redirect(url);
+  }
+
+  if (user && pathname === "/admin/login") {
+    const url = request.nextUrl.clone();
+    url.pathname = "/admin";
     url.search = "";
     return NextResponse.redirect(url);
   }
