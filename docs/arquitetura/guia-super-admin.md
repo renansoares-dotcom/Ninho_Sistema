@@ -8,8 +8,14 @@ sabe de qual escritório é assim que a pessoa loga, não pela URL.
 
 ## 1. Rodar as migrations, na ordem
 
-1. `032` (rodada por você via texto, no início dessa etapa) — cria `super_admins`, `tenants.slug`, corrige o gatilho de criação de usuário
+1. `032_multi_tenant_super_admin.sql` — cria `super_admins`, `tenants.slug`, corrige o gatilho de criação de usuário
 2. `033_super_admin_plataforma.sql` — fecha o RLS de `super_admins`, cria `tenants.ativo` (suspensão) e a tabela `tenant_assinaturas` (financeiro)
+
+(Se seu banco em produção já tem essas mudanças aplicadas — porque a 032
+foi originalmente rodada direto no SQL Editor, sem passar por arquivo —
+não precisa rodar de novo; o arquivo `032_multi_tenant_super_admin.sql`
+existe agora só pra deixar o histórico de migrations completo, caso
+alguém precise recriar o banco do zero.)
 
 ## 2. Login exclusivo do Super Admin
 

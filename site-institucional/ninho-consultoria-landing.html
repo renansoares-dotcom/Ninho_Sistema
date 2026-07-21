@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ninho Consultoria — Diagnóstico, plano de ação e acompanhamento para sua empresa</title>
+<meta name="description" content="Consultoria empresarial para negócios de qualquer segmento: diagnóstico completo em 9 áreas, plano de ação sob medida e acompanhamento próximo até os resultados aparecerem.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ==============================================================
+   TOKENS — identidade oficial do Ninho Consultoria (azul + grafite)
+   ============================================================== */
+:root{
+  --ink:#171B21;
+  --graphite:#232932;
+  --graphite-deep:#171A20;
+  --blue:#004AAD;
+  --blue-bright:#0273BC;
+  --blue-soft:#EAF1FB;
+  --emerald:#157A5D;
+  --emerald-soft:#E4F3EC;
+  --paper:#F7F8FA;
+  --white:#FFFFFF;
+  --line:rgba(23,27,33,0.09);
+  --line-dark:rgba(255,255,255,0.10);
+  --text-muted:#626B78;
+  --text-on-dark:rgba(255,255,255,0.74);
+  --text-on-dark-dim:rgba(255,255,255,0.45);
+  --radius-s:10px; --radius-m:16px; --radius-l:26px;
+  --shadow-soft:0 24px 60px -24px rgba(23,41,66,0.22);
+  --ease:cubic-bezier(.16,.8,.24,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important}
+}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:'Inter',sans-serif; font-size:16px; line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+img,svg{display:block; max-width:100%}
+a{color:inherit; text-decoration:none}
+h1,h2,h3,h4{font-family:'Sora',sans-serif; margin:0; font-weight:700; letter-spacing:-0.015em; color:var(--graphite-deep)}
+p{margin:0}
+.mono{font-family:'JetBrains Mono',monospace}
+.wrap{max-width:1180px; margin:0 auto; padding:0 32px}
+@media (max-width:768px){ .wrap{padding:0 20px} }
+:focus-visible{outline:2.5px solid var(--blue-bright); outline-offset:3px}
+
+.eyebrow{
+  font-family:'JetBrains Mono',monospace; font-size:12.5px; font-weight:500;
+  letter-spacing:0.06em; text-transform:uppercase; color:var(--blue-bright);
+  display:flex; align-items:center; gap:8px;
+}
+.eyebrow::before{content:''; width:16px; height:1.5px; background:var(--blue-bright)}
+
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  padding:13px 24px; border-radius:999px; font-weight:600; font-size:14.5px;
+  font-family:'Inter',sans-serif; border:1.5px solid transparent; cursor:pointer;
+  transition:transform .35s var(--ease), background .25s var(--ease), border-color .25s var(--ease), box-shadow .25s var(--ease);
+}
+.btn:hover{transform:translateY(-2px)}
+.btn-primary{background:var(--blue); color:#fff; box-shadow:0 14px 30px -12px rgba(0,74,173,0.55)}
+.btn-primary:hover{background:var(--blue-bright)}
+.btn-ghost{background:transparent; color:var(--graphite-deep); border-color:var(--line)}
+.btn-ghost:hover{border-color:var(--blue); color:var(--blue)}
+.btn-on-dark{background:transparent; color:#fff; border-color:var(--line-dark)}
+.btn-on-dark:hover{border-color:#fff}
+.btn-whats{background:var(--emerald); color:#fff; box-shadow:0 14px 30px -12px rgba(21,122,93,0.5)}
+.btn-whats:hover{background:#12694F}
+
+.section{padding:104px 0}
+@media (max-width:768px){ .section{padding:72px 0} }
+.section-head{max-width:640px; margin-bottom:52px}
+.section-head h2{font-size:36px; line-height:1.18}
+.section-head p{margin-top:14px; font-size:16.5px; color:var(--text-muted)}
+@media (max-width:600px){ .section-head h2{font-size:28px} }
+
+.reveal{opacity:0; transform:translateY(22px); transition:opacity .8s var(--ease), transform .8s var(--ease)}
+.reveal.in{opacity:1; transform:translateY(0)}
+.reveal-stagger.in > *{transition-delay:calc(var(--i,0) * 70ms)}
+
+/* ---------- topo / loader ---------- */
+#page-loader-fill{height:100%; width:0; background:linear-gradient(90deg,var(--blue),var(--blue-bright)); transition:width 1s var(--ease), opacity .4s ease .25s}
+
+/* ---------- nav ---------- */
+.site-nav{position:sticky; top:0; z-index:100; background:rgba(247,248,250,0.86); backdrop-filter:blur(14px); border-bottom:1px solid var(--line)}
+.nav-inner{height:76px; display:flex; align-items:center; justify-content:space-between; gap:24px}
+.nav-logo{display:flex; align-items:center; gap:10px}
+.nav-logo-mark{
+  width:34px; height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(150deg,var(--blue),var(--blue-bright)); color:#fff; font-family:'Sora',sans-serif; font-weight:700; font-size:15px;
+}
+.nav-logo-text{font-family:'Sora',sans-serif; font-weight:700; font-size:17.5px; color:var(--graphite-deep); letter-spacing:-0.01em}
+.nav-logo-text span{font-weight:400; color:var(--text-muted); font-size:12.5px; display:block; margin-top:-2px; letter-spacing:0.01em}
+.nav-links{display:flex; align-items:center; gap:30px}
+.nav-links a{font-size:14px; font-weight:500; color:var(--graphite); opacity:.78; transition:opacity .2s}
+.nav-links a:hover{opacity:1}
+.nav-cta{white-space:nowrap}
+.nav-burger{display:none; background:none; border:none; font-size:22px; cursor:pointer; color:var(--graphite-deep)}
+.nav-mobile-panel{display:none; flex-direction:column; gap:2px; padding:10px 20px 22px}
+.nav-mobile-panel a{padding:12px 4px; font-size:15px; font-weight:500; border-bottom:1px solid var(--line)}
+@media (max-width:860px){
+  .nav-links, .nav-cta.desktop-only{display:none}
+  .nav-burger{display:block}
+  .nav-mobile-panel.open{display:flex}
+}
+
+/* ---------- hero ---------- */
+.hero{padding:76px 0 40px; position:relative; overflow:hidden}
+.hero::before{
+  content:''; position:absolute; top:-180px; right:-160px; width:560px; height:560px; border-radius:50%;
+  background:radial-gradient(circle,rgba(0,74,173,0.10),transparent 70%); pointer-events:none;
+}
+.hero-grid{display:grid; grid-template-columns:1.05fr 0.95fr; gap:56px; align-items:center; position:relative}
+@media (max-width:960px){ .hero-grid{grid-template-columns:1fr; gap:44px} }
+.hero h1{font-size:50px; line-height:1.08; margin-top:18px}
+.hero h1 em{font-style:normal; color:var(--blue)}
+@media (max-width:600px){ .hero h1{font-size:34px} }
+.hero-sub{font-size:17.5px; color:var(--text-muted); margin-top:20px; max-width:490px}
+.hero-ctas{display:flex; gap:12px; margin-top:32px; flex-wrap:wrap}
+.hero-note{display:flex; align-items:center; gap:10px; margin-top:26px; font-size:13px; color:var(--text-muted)}
+.hero-note-dot{width:7px; height:7px; border-radius:50%; background:var(--emerald)}
+
+/* ---------- painel de diagnóstico (assinatura visual) ---------- */
+.diag-panel{
+  background:var(--graphite-deep); border-radius:var(--radius-l); padding:30px 28px 26px; color:#fff;
+  box-shadow:var(--shadow-soft); position:relative;
+}
+.diag-panel-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:22px}
+.diag-panel-title{font-size:14px; font-weight:600; color:#fff}
+.diag-panel-tag{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--text-on-dark-dim); border:1px solid var(--line-dark); border-radius:999px; padding:4px 10px}
+.diag-row{display:grid; grid-template-columns:96px 1fr 40px; align-items:center; gap:12px; margin-bottom:13px}
+.diag-row-label{font-size:12.5px; color:var(--text-on-dark)}
+.diag-row-track{height:7px; border-radius:999px; background:rgba(255,255,255,0.09); overflow:hidden}
+.diag-row-fill{height:100%; width:0; border-radius:999px; background:linear-gradient(90deg,var(--blue-bright),#4FA8E0); transition:width 1.3s var(--ease)}
+.diag-row-val{font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text-on-dark-dim); text-align:right}
+.diag-panel-foot{margin-top:20px; padding-top:18px; border-top:1px solid var(--line-dark); display:flex; align-items:center; justify-content:space-between; gap:12px}
+.diag-panel-foot-txt{font-size:12px; color:var(--text-on-dark-dim); max-width:230px}
+.diag-panel-score{text-align:right}
+.diag-panel-score b{font-family:'Sora',sans-serif; font-size:26px; color:#fff; display:block}
+.diag-panel-score span{font-size:11px; color:var(--text-on-dark-dim)}
+
+/* ---------- antes/depois ---------- */
+.comparativo{display:grid; grid-template-columns:1fr 1fr; gap:22px}
+@media (max-width:760px){ .comparativo{grid-template-columns:1fr} }
+.comp-card{border-radius:var(--radius-m); padding:32px 28px; border:1px solid var(--line)}
+.comp-card.antes{background:#fff}
+.comp-card.depois{background:var(--graphite-deep); border-color:var(--line-dark)}
+.comp-tag{font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.06em; font-weight:500}
+.comp-card.antes .comp-tag{color:#B23B3B}
+.comp-card.depois .comp-tag{color:#59C9A5}
+.comp-card h3{font-size:19px; margin-top:10px; color:var(--graphite-deep)}
+.comp-card.depois h3{color:#fff}
+.comp-list{list-style:none; margin:20px 0 0; padding:0; display:flex; flex-direction:column; gap:13px}
+.comp-list li{display:flex; gap:10px; font-size:14.5px; line-height:1.5}
+.comp-card.antes .comp-list li{color:var(--graphite)}
+.comp-card.depois .comp-list li{color:var(--text-on-dark)}
+.comp-list li::before{content:'—'; opacity:.5; flex-shrink:0}
+
+/* ---------- áreas de atuação ---------- */
+.areas-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
+@media (max-width:860px){ .areas-grid{grid-template-columns:repeat(2,1fr)} }
+@media (max-width:560px){ .areas-grid{grid-template-columns:1fr} }
+.area-card{background:#fff; border:1px solid var(--line); border-radius:var(--radius-m); padding:24px 22px; transition:border-color .25s var(--ease), transform .25s var(--ease)}
+.area-card:hover{border-color:var(--blue); transform:translateY(-3px)}
+.area-num{font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--blue-bright); font-weight:500}
+.area-card h4{font-size:17px; margin-top:12px}
+.area-card p{font-size:13.5px; color:var(--text-muted); margin-top:8px; line-height:1.55}
+
+/* ---------- como funciona ---------- */
+.passos{display:grid; grid-template-columns:repeat(3,1fr); gap:20px; counter-reset:passo}
+@media (max-width:860px){ .passos{grid-template-columns:1fr} }
+.passo{position:relative; padding:28px 24px 24px; border-radius:var(--radius-m); background:#fff; border:1px solid var(--line)}
+.passo-num{font-family:'Sora',sans-serif; font-size:34px; font-weight:800; color:var(--blue-soft); -webkit-text-stroke:1.5px var(--blue)}
+.passo h3{font-size:18px; margin-top:14px}
+.passo p{font-size:14px; color:var(--text-muted); margin-top:9px; line-height:1.55}
+.passo-conector{position:absolute; top:44px; right:-20px; width:20px; height:1.5px; background:var(--line)}
+@media (max-width:860px){ .passo-conector{display:none} }
+
+/* ---------- portal do cliente ---------- */
+.portal-section{background:var(--graphite-deep); border-radius:var(--radius-l); padding:64px; color:#fff; overflow:hidden; position:relative}
+@media (max-width:760px){ .portal-section{padding:40px 24px} }
+.portal-grid{display:grid; grid-template-columns:1fr 1fr; gap:52px; align-items:center}
+@media (max-width:860px){ .portal-grid{grid-template-columns:1fr} }
+.portal-section .eyebrow{color:#59C9A5}
+.portal-section .eyebrow::before{background:#59C9A5}
+.portal-section h2{color:#fff; font-size:32px; margin-top:14px}
+.portal-section p.desc{color:var(--text-on-dark); margin-top:16px; font-size:15.5px; max-width:440px}
+.portal-list{list-style:none; margin:26px 0 0; padding:0; display:flex; flex-direction:column; gap:14px}
+.portal-list li{display:flex; gap:12px; font-size:14.5px; color:var(--text-on-dark)}
+.portal-list li b{color:#fff; font-weight:600}
+.portal-check{width:20px; height:20px; border-radius:6px; background:rgba(89,201,165,0.16); color:#59C9A5; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0; margin-top:1px}
+.portal-mock{background:#171A20; border:1px solid var(--line-dark); border-radius:18px; padding:22px}
+.portal-mock-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:18px}
+.portal-mock-title{font-size:13px; font-weight:600; color:#fff}
+.portal-mock-dot{display:flex; gap:5px}
+.portal-mock-dot span{width:7px; height:7px; border-radius:50%; background:var(--line-dark)}
+.portal-mock-row{display:flex; align-items:center; justify-content:space-between; padding:13px 0; border-top:1px solid var(--line-dark)}
+.portal-mock-row:first-of-type{border-top:none}
+.portal-mock-label{font-size:12.5px; color:var(--text-on-dark-dim)}
+.portal-mock-val{font-size:13px; font-weight:600; color:#fff; font-family:'JetBrains Mono',monospace}
+.portal-mock-bar{height:6px; border-radius:999px; background:rgba(255,255,255,0.08); margin-top:14px; overflow:hidden}
+.portal-mock-bar span{display:block; height:100%; width:68%; background:linear-gradient(90deg,var(--blue-bright),#59C9A5); border-radius:999px}
+
+/* ---------- confiança ---------- */
+.confianca-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px}
+@media (max-width:860px){ .confianca-grid{grid-template-columns:1fr} }
+.confianca-card{padding:6px 0}
+.confianca-icon{width:42px; height:42px; border-radius:11px; background:var(--blue-soft); color:var(--blue); display:flex; align-items:center; justify-content:center; font-size:18px}
+.confianca-card h4{font-size:16.5px; margin-top:16px}
+.confianca-card p{font-size:14px; color:var(--text-muted); margin-top:8px; line-height:1.55}
+
+/* ---------- FAQ ---------- */
+.faq-list{display:flex; flex-direction:column; border-top:1px solid var(--line)}
+.faq-item{border-bottom:1px solid var(--line)}
+.faq-q{width:100%; background:none; border:none; text-align:left; padding:22px 4px; display:flex; align-items:center; justify-content:space-between; gap:16px; cursor:pointer; font-family:'Sora',sans-serif; font-size:16px; font-weight:600; color:var(--graphite-deep)}
+.faq-q-plus{font-family:'JetBrains Mono',monospace; font-size:18px; color:var(--blue); flex-shrink:0; transition:transform .3s var(--ease)}
+.faq-item.open .faq-q-plus{transform:rotate(45deg)}
+.faq-a{max-height:0; overflow:hidden; transition:max-height .4s var(--ease)}
+.faq-a p{padding:0 4px 22px; font-size:14.5px; color:var(--text-muted); max-width:640px; line-height:1.6}
+
+/* ---------- CTA final ---------- */
+.cta-final{background:linear-gradient(155deg,var(--blue) 0%,#003580 100%); border-radius:var(--radius-l); padding:64px; color:#fff; position:relative; overflow:hidden}
+@media (max-width:760px){ .cta-final{padding:36px 22px} }
+.cta-final-grid{display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:start; position:relative}
+@media (max-width:860px){ .cta-final-grid{grid-template-columns:1fr} }
+.cta-final .eyebrow{color:#BFD9F7}
+.cta-final .eyebrow::before{background:#BFD9F7}
+.cta-final h2{color:#fff; font-size:32px; margin-top:14px}
+.cta-final p.desc{color:rgba(255,255,255,0.78); margin-top:14px; font-size:15.5px; max-width:420px}
+.cta-final .hero-ctas{margin-top:28px}
+.form-card{background:#fff; border-radius:18px; padding:26px}
+.f-group{display:flex; flex-direction:column; gap:6px; margin-bottom:14px}
+.f-group label{font-size:12.5px; font-weight:500; color:var(--text-muted)}
+.f-group input, .f-group textarea{
+  border:1.5px solid var(--line); border-radius:10px; padding:11px 13px; font-size:14px; font-family:'Inter',sans-serif;
+  color:var(--ink); background:#fff; resize:vertical; transition:border-color .2s;
+}
+.f-group input:focus, .f-group textarea:focus{outline:none; border-color:var(--blue)}
+.f-row{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+@media (max-width:480px){ .f-row{grid-template-columns:1fr} }
+.form-card .btn{width:100%; margin-top:4px}
+.form-hint{font-size:11.5px; color:var(--text-muted); margin-top:12px; text-align:center}
+
+/* ---------- footer ---------- */
+.site-footer{border-top:1px solid var(--line); padding:44px 0}
+.foot-grid{display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap}
+.foot-copy{font-size:13px; color:var(--text-muted)}
+.foot-links{display:flex; gap:22px}
+.foot-links a{font-size:13px; color:var(--text-muted)}
+.foot-links a:hover{color:var(--blue)}
+</style>
+</head>
+<body>
+
+<div id="page-loader" style="position:fixed; top:0; left:0; right:0; height:2.5px; z-index:2000; background:transparent">
+  <div id="page-loader-fill"></div>
+</div>
+
+<header class="site-nav">
+  <div class="wrap nav-inner">
+    <div class="nav-logo">
+      <div class="nav-logo-mark">N</div>
+      <div class="nav-logo-text">Ninho<span>Consultoria empresarial</span></div>
+    </div>
+    <nav class="nav-links">
+      <a href="#areas">Áreas de atuação</a>
+      <a href="#como-funciona">Como funciona</a>
+      <a href="#portal">Portal do cliente</a>
+      <a href="#faq">Dúvidas</a>
+    </nav>
+    <a class="btn btn-primary nav-cta desktop-only" href="#" id="btn-diagnostico-nav">Diagnóstico gratuito</a>
+    <button class="nav-burger" id="nav-burger" onclick="toggleMenuMobile()" aria-label="Abrir menu">☰</button>
+  </div>
+  <div class="nav-mobile-panel" id="nav-mobile-panel">
+    <a href="#areas" onclick="fecharMenuMobile()">Áreas de atuação</a>
+    <a href="#como-funciona" onclick="fecharMenuMobile()">Como funciona</a>
+    <a href="#portal" onclick="fecharMenuMobile()">Portal do cliente</a>
+    <a href="#faq" onclick="fecharMenuMobile()">Dúvidas</a>
+    <a href="#" id="btn-diagnostico-nav-mobile" class="btn btn-primary" style="margin-top:10px; text-align:center" onclick="fecharMenuMobile()">Diagnóstico gratuito</a>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow reveal">consultoria empresarial · qualquer segmento</div>
+      <h1 class="reveal">Toda empresa tem um ponto cego. <em>A gente mostra onde ele está.</em></h1>
+      <p class="hero-sub reveal">Diagnóstico completo do seu negócio em 9 áreas, plano de ação com prioridade e prazo definidos, e acompanhamento próximo até os números mudarem de verdade.</p>
+      <div class="hero-ctas reveal">
+        <a href="#" id="btn-diagnostico-hero" class="btn btn-primary">Peça seu diagnóstico gratuito</a>
+        <a href="#" id="btn-whatsapp-hero" class="btn btn-whats">Falar no WhatsApp</a>
+      </div>
+      <div class="hero-note reveal"><span class="hero-note-dot"></span> Sem compromisso — o diagnóstico é gratuito e leva poucos minutos</div>
+    </div>
+
+    <div class="diag-panel reveal" id="diag-panel">
+      <div class="diag-panel-head">
+        <span class="diag-panel-title">Raio-x da empresa — exemplo</span>
+        <span class="diag-panel-tag mono">9 áreas</span>
+      </div>
+      <div id="diag-rows"></div>
+      <div class="diag-panel-foot">
+        <p class="diag-panel-foot-txt">Este é um exemplo ilustrativo. O diagnóstico da sua empresa começa do zero, com base nas suas respostas.</p>
+        <div class="diag-panel-score">
+          <b data-count="68" data-suffix="%">0%</b>
+          <span>maturidade geral</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ANTES / DEPOIS ================= -->
+<section class="section" id="antes-depois">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">você reconhece essa empresa?</div>
+      <h2>A diferença não é trabalhar mais. É enxergar melhor.</h2>
+    </div>
+    <div class="comparativo reveal-stagger">
+      <div class="comp-card antes reveal" style="--i:0">
+        <span class="comp-tag mono">hoje</span>
+        <h3>Decisão no achismo</h3>
+        <ul class="comp-list">
+          <li>Fluxo de caixa que só existe na cabeça de quem toca o negócio</li>
+          <li>Comercial sem meta clara, sem funil, sem previsibilidade</li>
+          <li>Cada área resolve do seu jeito, sem processo escrito</li>
+          <li>Decisão importante tomada no calor da hora, sem indicador nenhum</li>
+        </ul>
+      </div>
+      <div class="comp-card depois reveal" style="--i:1">
+        <span class="comp-tag mono">com a consultoria</span>
+        <h3>Direção com clareza</h3>
+        <ul class="comp-list">
+          <li>Visão real do financeiro, com PF e PJ separados de verdade</li>
+          <li>Comercial com meta, funil e ritual de acompanhamento</li>
+          <li>Processos documentados — a empresa não depende de uma pessoa só</li>
+          <li>Plano de ação com prioridade, responsável e prazo definidos</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ÁREAS DE ATUAÇÃO ================= -->
+<section class="section" id="areas">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">onde a gente atua</div>
+      <h2>9 áreas. O diagnóstico mostra exatamente onde focar primeiro.</h2>
+      <p>Não é uma lista genérica de serviço — é a mesma estrutura usada pra avaliar todo cliente novo, do jeito que a empresa realmente funciona no dia a dia.</p>
+    </div>
+    <div class="areas-grid reveal-stagger" id="areas-grid"></div>
+  </div>
+</section>
+
+<!-- ================= COMO FUNCIONA ================= -->
+<section class="section" id="como-funciona">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">como funciona</div>
+      <h2>Três etapas, sem enrolação.</h2>
+    </div>
+    <div class="passos reveal-stagger">
+      <div class="passo reveal" style="--i:0">
+        <span class="passo-num">01</span>
+        <h3>Diagnóstico gratuito</h3>
+        <p>Um raio-x rápido do seu negócio nas 9 áreas — pra saber, com dado e não com opinião, onde estão os gargalos que mais custam caro hoje.</p>
+        <span class="passo-conector"></span>
+      </div>
+      <div class="passo reveal" style="--i:1">
+        <span class="passo-num">02</span>
+        <h3>Plano de ação sob medida</h3>
+        <p>Nada de recomendação genérica. Prioridade, responsável e prazo definidos pra cada ação — o que fazer primeiro e por quê.</p>
+        <span class="passo-conector"></span>
+      </div>
+      <div class="passo reveal" style="--i:2">
+        <span class="passo-num">03</span>
+        <h3>Acompanhamento próximo</h3>
+        <p>Reuniões periódicas, indicadores acompanhados de perto e ajuste de rota sempre que o cenário mudar — a gente não desaparece depois do relatório.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PORTAL DO CLIENTE ================= -->
+<section class="section" id="portal">
+  <div class="wrap">
+    <div class="portal-section reveal">
+      <div class="portal-grid">
+        <div>
+          <div class="eyebrow">portal exclusivo do cliente</div>
+          <h2>Acompanhe tudo, sem precisar ligar pra saber "como está".</h2>
+          <p class="desc">Cada empresa atendida ganha acesso a um portal próprio — disponível sempre que você quiser olhar, não só na próxima reunião marcada.</p>
+          <ul class="portal-list">
+            <li><span class="portal-check">✓</span><span><b>Plano de ação</b> atualizado, com status de cada frente</span></li>
+            <li><span class="portal-check">✓</span><span><b>Indicadores</b> mostrando a evolução real, não só a foto do mês</span></li>
+            <li><span class="portal-check">✓</span><span><b>Canal direto</b> com a equipe responsável pelo seu projeto</span></li>
+          </ul>
+        </div>
+        <div class="portal-mock">
+          <div class="portal-mock-head">
+            <span class="portal-mock-title">Meu painel</span>
+            <div class="portal-mock-dot"><span></span><span></span><span></span></div>
+          </div>
+          <div class="portal-mock-row"><span class="portal-mock-label">Progresso do plano de ação</span><span class="portal-mock-val">68%</span></div>
+          <div class="portal-mock-bar"><span></span></div>
+          <div class="portal-mock-row"><span class="portal-mock-label">Próxima reunião</span><span class="portal-mock-val">Qui · 10h</span></div>
+          <div class="portal-mock-row"><span class="portal-mock-label">Ações em andamento</span><span class="portal-mock-val">7</span></div>
+          <div class="portal-mock-row"><span class="portal-mock-label">Health score</span><span class="portal-mock-val">7.4</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONFIANÇA ================= -->
+<section class="section" id="seguranca">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">confidencialidade</div>
+      <h2>Tratamos os dados da sua empresa com o mesmo cuidado que tratamos os nossos.</h2>
+    </div>
+    <div class="confianca-grid reveal-stagger">
+      <div class="confianca-card reveal" style="--i:0">
+        <div class="confianca-icon">🔒</div>
+        <h4>Sigilo contratual</h4>
+        <p>Todo projeto é protegido por acordo de confidencialidade, desde a primeira conversa até o fim do acompanhamento.</p>
+      </div>
+      <div class="confianca-card reveal" style="--i:1">
+        <div class="confianca-icon">👤</div>
+        <h4>Acesso restrito</h4>
+        <p>Dentro da nossa equipe, cada pessoa só acessa o que precisa pra atender o seu projeto — nada de informação circulando à toa.</p>
+      </div>
+      <div class="confianca-card reveal" style="--i:2">
+        <div class="confianca-icon">🗂️</div>
+        <h4>Você decide quem vê o quê</h4>
+        <p>No portal, você escolhe quem da sua empresa tem acesso a cada informação — plano de ação, indicadores e arquivos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section class="section" id="faq">
+  <div class="wrap" style="max-width:800px">
+    <div class="section-head reveal" style="max-width:100%">
+      <div class="eyebrow">perguntas frequentes</div>
+      <h2>Dúvidas antes de começar.</h2>
+    </div>
+    <div class="faq-list reveal">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Serve pra empresa de qualquer segmento?<span class="faq-q-plus mono">+</span></button>
+        <div class="faq-a"><p>Sim. As 9 áreas do diagnóstico (financeiro, comercial, marketing, gestão, RH, produção, fiscal, compras e estoque) existem em praticamente qualquer negócio — o peso de cada uma é que muda de segmento pra segmento, e é isso que o diagnóstico ajusta.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Preciso já ter algum processo estruturado?<span class="faq-q-plus mono">+</span></button>
+        <div class="faq-a"><p>Não. Boa parte dos clientes chega sem nenhum processo escrito — é exatamente esse o ponto de partida mais comum do diagnóstico.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Quanto tempo leva o diagnóstico gratuito?<span class="faq-q-plus mono">+</span></button>
+        <div class="faq-a"><p>Poucos minutos pra responder o questionário inicial, com um resultado teaser na hora. A leitura completa, com plano de ação, vem depois de uma conversa com a nossa equipe.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Depois do diagnóstico, sou obrigado a contratar?<span class="faq-q-plus mono">+</span></button>
+        <div class="faq-a"><p>Não. O diagnóstico é gratuito e sem compromisso — o próximo passo só acontece se fizer sentido pros dois lados.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Como funciona o acompanhamento no dia a dia?<span class="faq-q-plus mono">+</span></button>
+        <div class="faq-a"><p>Reuniões periódicas com a equipe responsável, indicadores acompanhados entre uma reunião e outra, e o portal do cliente disponível sempre que você quiser ver o andamento sem precisar ligar.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CTA FINAL ================= -->
+<section class="section" id="contato">
+  <div class="wrap">
+    <div class="cta-final reveal">
+      <div class="cta-final-grid">
+        <div>
+          <div class="eyebrow">vamos começar</div>
+          <h2>Prefere falar direto com a gente?</h2>
+          <p class="desc">Preencha os dados abaixo ou chame no WhatsApp. Se preferir, o diagnóstico gratuito também já é um jeito rápido de começar.</p>
+          <div class="hero-ctas">
+            <a href="#" id="btn-whatsapp-cta" class="btn btn-on-dark">Chamar no WhatsApp →</a>
+            <a href="#" id="btn-diagnostico-cta" class="btn btn-ghost" style="border-color:var(--line-dark); color:#fff">Fazer o diagnóstico →</a>
+          </div>
+        </div>
+        <form class="form-card" id="lead-form" onsubmit="return enviarFormulario(event)">
+          <div class="f-row">
+            <div class="f-group"><label>Seu nome</label><input type="text" id="lf-nome" placeholder="Como podemos te chamar" required></div>
+            <div class="f-group"><label>Empresa</label><input type="text" id="lf-empresa" placeholder="Nome da empresa" required></div>
+          </div>
+          <div class="f-group"><label>Segmento (opcional)</label><input type="text" id="lf-segmento" placeholder="Ex: comércio, indústria, serviços..."></div>
+          <div class="f-group"><label>WhatsApp</label><input type="tel" id="lf-whats" placeholder="(00) 00000-0000" required></div>
+          <div class="f-group"><label>Alguma coisa que devemos saber? (opcional)</label><textarea id="lf-msg" rows="3" placeholder="Conte um pouco sobre o momento da empresa"></textarea></div>
+          <button type="submit" class="btn btn-primary">Enviar e falar no WhatsApp</button>
+          <p class="form-hint">Ao enviar, abrimos uma conversa no WhatsApp já com seus dados preenchidos.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap foot-grid">
+    <div class="nav-logo">
+      <div class="nav-logo-mark">N</div>
+      <div class="foot-copy">© <span id="foot-year"></span> Ninho Consultoria — consultoria empresarial.</div>
+    </div>
+    <div class="foot-links">
+      <a href="#areas">Áreas de atuação</a>
+      <a href="#faq">Dúvidas</a>
+      <a href="#" id="link-whatsapp-footer">WhatsApp</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ==============================================================
+   CONFIGURAÇÃO — edite estes três valores antes de publicar
+   ============================================================== */
+const CONFIG = {
+  // Número de WhatsApp do escritório, só dígitos, com DDI 55 + DDD (ex: 5581999998888)
+  whatsappNumero: "5500000000000",
+  // Link do Diagnóstico Público do escritório no sistema Ninho
+  linkDiagnostico: "https://ninho-sistema.vercel.app/diagnostico-publico",
+  // As 9 áreas do diagnóstico interno — mesma nomenclatura usada no sistema
+  areas: [
+    { nome: "Financeiro", desc: "Fluxo de caixa, separação PF/PJ e saúde financeira real do negócio.", valor: 62 },
+    { nome: "Comercial", desc: "Meta clara, funil estruturado e previsibilidade de vendas.", valor: 71 },
+    { nome: "Marketing", desc: "Posicionamento e geração de demanda, não só \"postar mais\".", valor: 48 },
+    { nome: "Gestão", desc: "Governança, papéis claros e decisão que não trava numa pessoa só.", valor: 75 },
+    { nome: "RH", desc: "Estrutura de equipe, avaliação de desempenho e retenção.", valor: 55 },
+    { nome: "Produção", desc: "Eficiência operacional e identificação de gargalos.", valor: 68 },
+    { nome: "Fiscal", desc: "Enquadramento correto e planejamento tributário ativo.", valor: 80 },
+    { nome: "Compras", desc: "Negociação estruturada e cotação em vez de decisão isolada.", valor: 52 },
+    { nome: "Estoque", desc: "Ponto de reposição, giro e capital que não fica parado.", valor: 59 },
+  ],
+};
+
+document.getElementById('foot-year').textContent = new Date().getFullYear();
+
+function linkWhatsapp(mensagem){
+  const texto = encodeURIComponent(mensagem || "Olá! Vim pelo site e queria saber mais sobre o diagnóstico gratuito.");
+  return `https://wa.me/${CONFIG.whatsappNumero}?text=${texto}`;
+}
+['btn-whatsapp-hero','btn-whatsapp-cta','link-whatsapp-footer'].forEach(id => {
+  const el = document.getElementById(id);
+  if(el) el.href = linkWhatsapp();
+});
+['btn-diagnostico-hero','btn-diagnostico-nav','btn-diagnostico-nav-mobile','btn-diagnostico-cta'].forEach(id => {
+  const el = document.getElementById(id);
+  if(el){ el.href = CONFIG.linkDiagnostico; el.target = '_blank'; el.rel = 'noopener'; }
+});
+
+function enviarFormulario(ev){
+  ev.preventDefault();
+  try {
+    const nome = document.getElementById('lf-nome').value.trim();
+    const empresa = document.getElementById('lf-empresa').value.trim();
+    const segmento = document.getElementById('lf-segmento').value.trim();
+    const whats = document.getElementById('lf-whats').value.trim();
+    const msg = document.getElementById('lf-msg').value.trim();
+    let texto = `Olá! Sou ${nome}, da empresa ${empresa}.`;
+    if(segmento) texto += ` Segmento: ${segmento}.`;
+    texto += ` Meu WhatsApp: ${whats}.`;
+    if(msg) texto += ` ${msg}`;
+    texto += ` Vim pelo site e gostaria de saber mais sobre o diagnóstico gratuito.`;
+    window.open(linkWhatsapp(texto), '_blank');
+  } catch(e){ console.warn('Falha ao montar o link do WhatsApp:', e); }
+  return false;
+}
+
+// ---------- monta o painel de diagnóstico (hero) e a grade de áreas ----------
+try {
+  const rows = document.getElementById('diag-rows');
+  CONFIG.areas.forEach((a, i) => {
+    const row = document.createElement('div');
+    row.className = 'diag-row';
+    row.innerHTML = `
+      <span class="diag-row-label mono">${a.nome}</span>
+      <span class="diag-row-track"><span class="diag-row-fill" data-fill="${a.valor}"></span></span>
+      <span class="diag-row-val">${a.valor}%</span>
+    `;
+    rows.appendChild(row);
+  });
+
+  const grid = document.getElementById('areas-grid');
+  CONFIG.areas.forEach((a, i) => {
+    const card = document.createElement('div');
+    card.className = 'area-card reveal';
+    card.style.setProperty('--i', i);
+    card.innerHTML = `
+      <span class="area-num mono">0${i + 1}</span>
+      <h4>${a.nome}</h4>
+      <p>${a.desc}</p>
+    `;
+    grid.appendChild(card);
+  });
+} catch(e){ console.warn('Falha ao montar o painel de diagnóstico:', e); }
+
+// ---------- reveal on scroll ----------
+try {
+  const revealEls = document.querySelectorAll('.reveal, .reveal-stagger');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('in');
+        if(entry.target.classList.contains('reveal-stagger')){
+          entry.target.querySelectorAll(':scope > .reveal').forEach(el => el.classList.add('in'));
+        }
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => io.observe(el));
+} catch(e){ console.warn('Falha no reveal-on-scroll:', e); }
+
+// ---------- painel do hero: barras + contador ao entrar na tela ----------
+try {
+  const painel = document.getElementById('diag-panel');
+  if(painel){
+    const painelIo = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          painel.querySelectorAll('[data-fill]').forEach(el => { el.style.width = el.dataset.fill + '%'; });
+          const contador = painel.querySelector('[data-count]');
+          if(contador){
+            const alvo = parseInt(contador.dataset.count, 10);
+            const sufixo = contador.dataset.suffix || '';
+            const dur = 1200; const t0 = performance.now();
+            (function passo(t){
+              const p = Math.min(1, (t - t0) / dur);
+              const ease = 1 - Math.pow(1 - p, 3);
+              contador.textContent = Math.round(ease * alvo) + sufixo;
+              if(p < 1) requestAnimationFrame(passo);
+            })(t0);
+          }
+          painelIo.unobserve(painel);
+        }
+      });
+    }, { threshold: 0.35 });
+    painelIo.observe(painel);
+  }
+} catch(e){ console.warn('Falha no painel do hero:', e); }
+
+// ---------- barra de carregamento do topo ----------
+try {
+  const fill = document.getElementById('page-loader-fill');
+  if(fill){
+    requestAnimationFrame(() => { fill.style.width = '100%'; });
+    setTimeout(() => {
+      fill.style.opacity = '0';
+      setTimeout(() => { const l = document.getElementById('page-loader'); if(l) l.style.display = 'none'; }, 500);
+    }, 650);
+  }
+} catch(e){ console.warn('Falha na barra de carregamento:', e); }
+
+// ---------- FAQ (acordeão) ----------
+function toggleFaq(el){
+  try {
+    const item = el.closest('.faq-item');
+    if(!item) return;
+    const resposta = item.querySelector('.faq-a');
+    const abrindo = !item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(o => {
+      if(o !== item){ o.classList.remove('open'); o.querySelector('.faq-a').style.maxHeight = '0'; }
+    });
+    item.classList.toggle('open', abrindo);
+    resposta.style.maxHeight = abrindo ? '300px' : '0';
+  } catch(e){ console.warn('Falha no FAQ:', e); }
+}
+
+// ---------- menu mobile ----------
+function toggleMenuMobile(){
+  try {
+    const painel = document.getElementById('nav-mobile-panel');
+    const btn = document.getElementById('nav-burger');
+    if(!painel) return;
+    const abrindo = !painel.classList.contains('open');
+    painel.classList.toggle('open', abrindo);
+    if(btn) btn.textContent = abrindo ? '✕' : '☰';
+  } catch(e){ console.warn('Falha no menu mobile:', e); }
+}
+function fecharMenuMobile(){
+  try {
+    const painel = document.getElementById('nav-mobile-panel');
+    const btn = document.getElementById('nav-burger');
+    if(painel) painel.classList.remove('open');
+    if(btn) btn.textContent = '☰';
+  } catch(e){ console.warn('Falha ao fechar o menu mobile:', e); }
+}
+</script>
+</body>
+</html>
