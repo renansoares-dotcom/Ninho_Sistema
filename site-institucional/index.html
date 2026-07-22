@@ -3,32 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ninho Consultoria — Diagnóstico, plano de ação e acompanhamento para sua empresa</title>
-<meta name="description" content="Consultoria empresarial para negócios de qualquer segmento: diagnóstico completo em 9 áreas, plano de ação sob medida e acompanhamento próximo até os resultados aparecerem.">
+<title>Ninho Consultoria — Consultoria e Instrutoria Empresarial em Palmares, PE</title>
+<meta name="description" content="Consultoria e Instrutoria Empresarial especializada em performance financeira, aplicando o Método G3: Geração, Gerenciável e Grandeza. Diagnóstico gratuito, plano de ação e acompanhamento próximo.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* ==============================================================
-   TOKENS — identidade oficial do Ninho Consultoria (azul + grafite)
+   TOKENS — identidade do Ninho Consultoria (paleta 100% em azul)
    ============================================================== */
 :root{
-  --ink:#171B21;
-  --graphite:#232932;
-  --graphite-deep:#171A20;
+  --ink:#1B2433;
+  --ink-deep:#0F1E33;
   --blue:#004AAD;
   --blue-bright:#0273BC;
   --blue-soft:#EAF1FB;
+  --blue-deep:#0A2F63;
+  --blue-deep-2:#0C3B7A;
+  --blue-light-accent:#7FC4F5;
   --emerald:#157A5D;
-  --emerald-soft:#E4F3EC;
   --paper:#F7F8FA;
   --white:#FFFFFF;
-  --line:rgba(23,27,33,0.09);
-  --line-dark:rgba(255,255,255,0.10);
-  --text-muted:#626B78;
-  --text-on-dark:rgba(255,255,255,0.74);
-  --text-on-dark-dim:rgba(255,255,255,0.45);
+  --line:rgba(15,30,51,0.09);
+  --line-dark:rgba(255,255,255,0.14);
+  --text-muted:#57647A;
+  --text-on-dark:rgba(255,255,255,0.82);
+  --text-on-dark-dim:rgba(255,255,255,0.55);
   --radius-s:10px; --radius-m:16px; --radius-l:26px;
-  --shadow-soft:0 24px 60px -24px rgba(23,41,66,0.22);
+  --shadow-soft:0 24px 60px -24px rgba(10,47,99,0.28);
   --ease:cubic-bezier(.16,.8,.24,1);
 }
 *{box-sizing:border-box}
@@ -44,7 +45,7 @@ body{
 }
 img,svg{display:block; max-width:100%}
 a{color:inherit; text-decoration:none}
-h1,h2,h3,h4{font-family:'Sora',sans-serif; margin:0; font-weight:700; letter-spacing:-0.015em; color:var(--graphite-deep)}
+h1,h2,h3,h4{font-family:'Sora',sans-serif; margin:0; font-weight:700; letter-spacing:-0.015em; color:var(--ink-deep)}
 p{margin:0}
 .mono{font-family:'JetBrains Mono',monospace}
 .wrap{max-width:1180px; margin:0 auto; padding:0 32px}
@@ -67,7 +68,7 @@ p{margin:0}
 .btn:hover{transform:translateY(-2px)}
 .btn-primary{background:var(--blue); color:#fff; box-shadow:0 14px 30px -12px rgba(0,74,173,0.55)}
 .btn-primary:hover{background:var(--blue-bright)}
-.btn-ghost{background:transparent; color:var(--graphite-deep); border-color:var(--line)}
+.btn-ghost{background:transparent; color:var(--ink-deep); border-color:var(--line)}
 .btn-ghost:hover{border-color:var(--blue); color:var(--blue)}
 .btn-on-dark{background:transparent; color:#fff; border-color:var(--line-dark)}
 .btn-on-dark:hover{border-color:#fff}
@@ -85,7 +86,6 @@ p{margin:0}
 .reveal.in{opacity:1; transform:translateY(0)}
 .reveal-stagger.in > *{transition-delay:calc(var(--i,0) * 70ms)}
 
-/* ---------- topo / loader ---------- */
 #page-loader-fill{height:100%; width:0; background:linear-gradient(90deg,var(--blue),var(--blue-bright)); transition:width 1s var(--ease), opacity .4s ease .25s}
 
 /* ---------- nav ---------- */
@@ -96,16 +96,16 @@ p{margin:0}
   width:34px; height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center;
   background:linear-gradient(150deg,var(--blue),var(--blue-bright)); color:#fff; font-family:'Sora',sans-serif; font-weight:700; font-size:15px;
 }
-.nav-logo-text{font-family:'Sora',sans-serif; font-weight:700; font-size:17.5px; color:var(--graphite-deep); letter-spacing:-0.01em}
+.nav-logo-text{font-family:'Sora',sans-serif; font-weight:700; font-size:17.5px; color:var(--ink-deep); letter-spacing:-0.01em}
 .nav-logo-text span{font-weight:400; color:var(--text-muted); font-size:12.5px; display:block; margin-top:-2px; letter-spacing:0.01em}
-.nav-links{display:flex; align-items:center; gap:30px}
-.nav-links a{font-size:14px; font-weight:500; color:var(--graphite); opacity:.78; transition:opacity .2s}
+.nav-links{display:flex; align-items:center; gap:26px}
+.nav-links a{font-size:14px; font-weight:500; color:var(--ink); opacity:.78; transition:opacity .2s}
 .nav-links a:hover{opacity:1}
 .nav-cta{white-space:nowrap}
-.nav-burger{display:none; background:none; border:none; font-size:22px; cursor:pointer; color:var(--graphite-deep)}
+.nav-burger{display:none; background:none; border:none; font-size:22px; cursor:pointer; color:var(--ink-deep)}
 .nav-mobile-panel{display:none; flex-direction:column; gap:2px; padding:10px 20px 22px}
 .nav-mobile-panel a{padding:12px 4px; font-size:15px; font-weight:500; border-bottom:1px solid var(--line)}
-@media (max-width:860px){
+@media (max-width:900px){
   .nav-links, .nav-cta.desktop-only{display:none}
   .nav-burger{display:block}
   .nav-mobile-panel.open{display:flex}
@@ -119,17 +119,17 @@ p{margin:0}
 }
 .hero-grid{display:grid; grid-template-columns:1.05fr 0.95fr; gap:56px; align-items:center; position:relative}
 @media (max-width:960px){ .hero-grid{grid-template-columns:1fr; gap:44px} }
-.hero h1{font-size:50px; line-height:1.08; margin-top:18px}
+.hero h1{font-size:47px; line-height:1.1; margin-top:18px}
 .hero h1 em{font-style:normal; color:var(--blue)}
-@media (max-width:600px){ .hero h1{font-size:34px} }
-.hero-sub{font-size:17.5px; color:var(--text-muted); margin-top:20px; max-width:490px}
+@media (max-width:600px){ .hero h1{font-size:32px} }
+.hero-sub{font-size:17.5px; color:var(--text-muted); margin-top:20px; max-width:500px}
 .hero-ctas{display:flex; gap:12px; margin-top:32px; flex-wrap:wrap}
 .hero-note{display:flex; align-items:center; gap:10px; margin-top:26px; font-size:13px; color:var(--text-muted)}
 .hero-note-dot{width:7px; height:7px; border-radius:50%; background:var(--emerald)}
 
-/* ---------- painel de diagnóstico (assinatura visual) ---------- */
+/* ---------- painel de diagnóstico (assinatura visual, agora em azul) ---------- */
 .diag-panel{
-  background:var(--graphite-deep); border-radius:var(--radius-l); padding:30px 28px 26px; color:#fff;
+  background:linear-gradient(165deg,var(--blue-deep),var(--blue-deep-2)); border-radius:var(--radius-l); padding:30px 28px 26px; color:#fff;
   box-shadow:var(--shadow-soft); position:relative;
 }
 .diag-panel-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:22px}
@@ -137,8 +137,8 @@ p{margin:0}
 .diag-panel-tag{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--text-on-dark-dim); border:1px solid var(--line-dark); border-radius:999px; padding:4px 10px}
 .diag-row{display:grid; grid-template-columns:96px 1fr 40px; align-items:center; gap:12px; margin-bottom:13px}
 .diag-row-label{font-size:12.5px; color:var(--text-on-dark)}
-.diag-row-track{height:7px; border-radius:999px; background:rgba(255,255,255,0.09); overflow:hidden}
-.diag-row-fill{height:100%; width:0; border-radius:999px; background:linear-gradient(90deg,var(--blue-bright),#4FA8E0); transition:width 1.3s var(--ease)}
+.diag-row-track{height:7px; border-radius:999px; background:rgba(255,255,255,0.12); overflow:hidden}
+.diag-row-fill{height:100%; width:0; border-radius:999px; background:linear-gradient(90deg,var(--blue-light-accent),#fff); transition:width 1.3s var(--ease)}
 .diag-row-val{font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text-on-dark-dim); text-align:right}
 .diag-panel-foot{margin-top:20px; padding-top:18px; border-top:1px solid var(--line-dark); display:flex; align-items:center; justify-content:space-between; gap:12px}
 .diag-panel-foot-txt{font-size:12px; color:var(--text-on-dark-dim); max-width:230px}
@@ -146,57 +146,66 @@ p{margin:0}
 .diag-panel-score b{font-family:'Sora',sans-serif; font-size:26px; color:#fff; display:block}
 .diag-panel-score span{font-size:11px; color:var(--text-on-dark-dim)}
 
-/* ---------- antes/depois ---------- */
-.comparativo{display:grid; grid-template-columns:1fr 1fr; gap:22px}
-@media (max-width:760px){ .comparativo{grid-template-columns:1fr} }
-.comp-card{border-radius:var(--radius-m); padding:32px 28px; border:1px solid var(--line)}
-.comp-card.antes{background:#fff}
-.comp-card.depois{background:var(--graphite-deep); border-color:var(--line-dark)}
-.comp-tag{font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.06em; font-weight:500}
-.comp-card.antes .comp-tag{color:#B23B3B}
-.comp-card.depois .comp-tag{color:#59C9A5}
-.comp-card h3{font-size:19px; margin-top:10px; color:var(--graphite-deep)}
-.comp-card.depois h3{color:#fff}
-.comp-list{list-style:none; margin:20px 0 0; padding:0; display:flex; flex-direction:column; gap:13px}
-.comp-list li{display:flex; gap:10px; font-size:14.5px; line-height:1.5}
-.comp-card.antes .comp-list li{color:var(--graphite)}
-.comp-card.depois .comp-list li{color:var(--text-on-dark)}
-.comp-list li::before{content:'—'; opacity:.5; flex-shrink:0}
+/* ---------- sobre ---------- */
+.sobre-grid{display:grid; grid-template-columns:1.1fr 0.9fr; gap:48px; align-items:start}
+@media (max-width:860px){ .sobre-grid{grid-template-columns:1fr} }
+.sobre-texto p{font-size:16px; color:var(--ink); line-height:1.7}
+.sobre-texto p + p{margin-top:16px}
+.sobre-cards{display:flex; flex-direction:column; gap:14px}
+.sobre-card{background:#fff; border:1px solid var(--line); border-radius:var(--radius-m); padding:22px}
+.sobre-card .eyebrow{margin-bottom:8px}
+.sobre-card p{font-size:14.5px; color:var(--text-muted); line-height:1.6}
+
+/* ---------- Método G3 ---------- */
+.g3-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px}
+@media (max-width:860px){ .g3-grid{grid-template-columns:1fr} }
+.g3-card{background:linear-gradient(165deg,var(--blue-deep),var(--blue-deep-2)); border-radius:var(--radius-m); padding:30px 26px; color:#fff}
+.g3-card-letter{font-family:'Sora',sans-serif; font-size:15px; font-weight:800; width:38px; height:38px; border-radius:10px; background:rgba(255,255,255,0.12); display:flex; align-items:center; justify-content:center; color:var(--blue-light-accent)}
+.g3-card h3{color:#fff; font-size:19px; margin-top:16px}
+.g3-card p{color:var(--text-on-dark); font-size:14px; margin-top:9px; line-height:1.6}
 
 /* ---------- áreas de atuação ---------- */
 .areas-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
 @media (max-width:860px){ .areas-grid{grid-template-columns:repeat(2,1fr)} }
 @media (max-width:560px){ .areas-grid{grid-template-columns:1fr} }
-.area-card{background:#fff; border:1px solid var(--line); border-radius:var(--radius-m); padding:24px 22px; transition:border-color .25s var(--ease), transform .25s var(--ease)}
+.area-card{background:#fff; border:1px solid var(--line); border-radius:var(--radius-m); padding:22px 20px; transition:border-color .25s var(--ease), transform .25s var(--ease)}
 .area-card:hover{border-color:var(--blue); transform:translateY(-3px)}
 .area-num{font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--blue-bright); font-weight:500}
-.area-card h4{font-size:17px; margin-top:12px}
-.area-card p{font-size:13.5px; color:var(--text-muted); margin-top:8px; line-height:1.55}
+.area-card h4{font-size:16.5px; margin-top:11px}
+.area-card p{font-size:13.5px; color:var(--text-muted); margin-top:7px; line-height:1.55}
 
-/* ---------- como funciona ---------- */
-.passos{display:grid; grid-template-columns:repeat(3,1fr); gap:20px; counter-reset:passo}
-@media (max-width:860px){ .passos{grid-template-columns:1fr} }
-.passo{position:relative; padding:28px 24px 24px; border-radius:var(--radius-m); background:#fff; border:1px solid var(--line)}
-.passo-num{font-family:'Sora',sans-serif; font-size:34px; font-weight:800; color:var(--blue-soft); -webkit-text-stroke:1.5px var(--blue)}
-.passo h3{font-size:18px; margin-top:14px}
-.passo p{font-size:14px; color:var(--text-muted); margin-top:9px; line-height:1.55}
-.passo-conector{position:absolute; top:44px; right:-20px; width:20px; height:1.5px; background:var(--line)}
-@media (max-width:860px){ .passo-conector{display:none} }
+/* ---------- metodologia (8 passos) ---------- */
+.metodo-lista{display:flex; flex-direction:column; border-top:1px solid var(--line)}
+.metodo-item{display:grid; grid-template-columns:56px 1fr; gap:20px; padding:22px 4px; border-bottom:1px solid var(--line)}
+.metodo-num{font-family:'Sora',sans-serif; font-weight:800; font-size:18px; color:var(--blue)}
+.metodo-item h4{font-size:16.5px}
+.metodo-item p{font-size:14px; color:var(--text-muted); margin-top:6px; line-height:1.55; max-width:560px}
+
+/* ---------- equipe ---------- */
+.equipe-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px}
+@media (max-width:860px){ .equipe-grid{grid-template-columns:1fr} }
+.equipe-card{background:#fff; border:1px solid var(--line); border-radius:var(--radius-m); padding:26px 24px}
+.equipe-avatar{width:54px; height:54px; border-radius:50%; background:linear-gradient(150deg,var(--blue),var(--blue-bright)); color:#fff; font-family:'Sora',sans-serif; font-weight:700; font-size:18px; display:flex; align-items:center; justify-content:center}
+.equipe-card h4{font-size:17px; margin-top:16px}
+.equipe-card .cargo{font-size:12.5px; color:var(--blue-bright); font-weight:600; margin-top:3px}
+.equipe-card .bio{font-size:13.5px; color:var(--text-muted); margin-top:12px; line-height:1.55}
+.equipe-card .insta{display:inline-flex; align-items:center; gap:6px; margin-top:14px; font-size:12.5px; font-weight:600; color:var(--ink)}
+.equipe-card .insta:hover{color:var(--blue)}
 
 /* ---------- portal do cliente ---------- */
-.portal-section{background:var(--graphite-deep); border-radius:var(--radius-l); padding:64px; color:#fff; overflow:hidden; position:relative}
+.portal-section{background:linear-gradient(165deg,var(--blue-deep),var(--blue-deep-2)); border-radius:var(--radius-l); padding:64px; color:#fff; overflow:hidden; position:relative}
 @media (max-width:760px){ .portal-section{padding:40px 24px} }
 .portal-grid{display:grid; grid-template-columns:1fr 1fr; gap:52px; align-items:center}
 @media (max-width:860px){ .portal-grid{grid-template-columns:1fr} }
-.portal-section .eyebrow{color:#59C9A5}
-.portal-section .eyebrow::before{background:#59C9A5}
+.portal-section .eyebrow{color:var(--blue-light-accent)}
+.portal-section .eyebrow::before{background:var(--blue-light-accent)}
 .portal-section h2{color:#fff; font-size:32px; margin-top:14px}
 .portal-section p.desc{color:var(--text-on-dark); margin-top:16px; font-size:15.5px; max-width:440px}
 .portal-list{list-style:none; margin:26px 0 0; padding:0; display:flex; flex-direction:column; gap:14px}
 .portal-list li{display:flex; gap:12px; font-size:14.5px; color:var(--text-on-dark)}
 .portal-list li b{color:#fff; font-weight:600}
-.portal-check{width:20px; height:20px; border-radius:6px; background:rgba(89,201,165,0.16); color:#59C9A5; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0; margin-top:1px}
-.portal-mock{background:#171A20; border:1px solid var(--line-dark); border-radius:18px; padding:22px}
+.portal-check{width:20px; height:20px; border-radius:6px; background:rgba(127,196,245,0.2); color:var(--blue-light-accent); display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0; margin-top:1px}
+.portal-mock{background:rgba(6,26,58,0.55); border:1px solid var(--line-dark); border-radius:18px; padding:22px}
 .portal-mock-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:18px}
 .portal-mock-title{font-size:13px; font-weight:600; color:#fff}
 .portal-mock-dot{display:flex; gap:5px}
@@ -205,28 +214,37 @@ p{margin:0}
 .portal-mock-row:first-of-type{border-top:none}
 .portal-mock-label{font-size:12.5px; color:var(--text-on-dark-dim)}
 .portal-mock-val{font-size:13px; font-weight:600; color:#fff; font-family:'JetBrains Mono',monospace}
-.portal-mock-bar{height:6px; border-radius:999px; background:rgba(255,255,255,0.08); margin-top:14px; overflow:hidden}
-.portal-mock-bar span{display:block; height:100%; width:68%; background:linear-gradient(90deg,var(--blue-bright),#59C9A5); border-radius:999px}
+.portal-mock-bar{height:6px; border-radius:999px; background:rgba(255,255,255,0.1); margin-top:14px; overflow:hidden}
+.portal-mock-bar span{display:block; height:100%; width:68%; background:linear-gradient(90deg,var(--blue-light-accent),#fff); border-radius:999px}
+.portal-btns{display:flex; gap:12px; margin-top:26px; flex-wrap:wrap}
 
 /* ---------- confiança ---------- */
 .confianca-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px}
 @media (max-width:860px){ .confianca-grid{grid-template-columns:1fr} }
-.confianca-card{padding:6px 0}
 .confianca-icon{width:42px; height:42px; border-radius:11px; background:var(--blue-soft); color:var(--blue); display:flex; align-items:center; justify-content:center; font-size:18px}
 .confianca-card h4{font-size:16.5px; margin-top:16px}
 .confianca-card p{font-size:14px; color:var(--text-muted); margin-top:8px; line-height:1.55}
 
+/* ---------- depoimento ---------- */
+.depoimento-card{background:#fff; border:1px solid var(--line); border-radius:var(--radius-l); padding:44px; max-width:760px}
+.depoimento-aspas{font-family:'Sora',sans-serif; font-size:44px; color:var(--blue-soft); line-height:1; font-weight:800}
+.depoimento-texto{font-size:18px; color:var(--ink-deep); line-height:1.6; margin-top:6px; font-family:'Sora',sans-serif; font-weight:500}
+.depoimento-autor{margin-top:22px; display:flex; align-items:center; gap:12px}
+.depoimento-autor-avatar{width:38px; height:38px; border-radius:50%; background:var(--blue-soft); color:var(--blue); display:flex; align-items:center; justify-content:center; font-family:'Sora',sans-serif; font-weight:700; font-size:14px}
+.depoimento-autor-nome{font-size:14px; font-weight:600; color:var(--ink-deep)}
+.depoimento-autor-tag{font-size:12.5px; color:var(--text-muted)}
+
 /* ---------- FAQ ---------- */
 .faq-list{display:flex; flex-direction:column; border-top:1px solid var(--line)}
 .faq-item{border-bottom:1px solid var(--line)}
-.faq-q{width:100%; background:none; border:none; text-align:left; padding:22px 4px; display:flex; align-items:center; justify-content:space-between; gap:16px; cursor:pointer; font-family:'Sora',sans-serif; font-size:16px; font-weight:600; color:var(--graphite-deep)}
+.faq-q{width:100%; background:none; border:none; text-align:left; padding:22px 4px; display:flex; align-items:center; justify-content:space-between; gap:16px; cursor:pointer; font-family:'Sora',sans-serif; font-size:16px; font-weight:600; color:var(--ink-deep)}
 .faq-q-plus{font-family:'JetBrains Mono',monospace; font-size:18px; color:var(--blue); flex-shrink:0; transition:transform .3s var(--ease)}
 .faq-item.open .faq-q-plus{transform:rotate(45deg)}
 .faq-a{max-height:0; overflow:hidden; transition:max-height .4s var(--ease)}
 .faq-a p{padding:0 4px 22px; font-size:14.5px; color:var(--text-muted); max-width:640px; line-height:1.6}
 
 /* ---------- CTA final ---------- */
-.cta-final{background:linear-gradient(155deg,var(--blue) 0%,#003580 100%); border-radius:var(--radius-l); padding:64px; color:#fff; position:relative; overflow:hidden}
+.cta-final{background:linear-gradient(155deg,var(--blue) 0%,var(--blue-deep) 100%); border-radius:var(--radius-l); padding:64px; color:#fff; position:relative; overflow:hidden}
 @media (max-width:760px){ .cta-final{padding:36px 22px} }
 .cta-final-grid{display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:start; position:relative}
 @media (max-width:860px){ .cta-final-grid{grid-template-columns:1fr} }
@@ -249,12 +267,16 @@ p{margin:0}
 .form-hint{font-size:11.5px; color:var(--text-muted); margin-top:12px; text-align:center}
 
 /* ---------- footer ---------- */
-.site-footer{border-top:1px solid var(--line); padding:44px 0}
-.foot-grid{display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap}
-.foot-copy{font-size:13px; color:var(--text-muted)}
-.foot-links{display:flex; gap:22px}
-.foot-links a{font-size:13px; color:var(--text-muted)}
-.foot-links a:hover{color:var(--blue)}
+.site-footer{border-top:1px solid var(--line); padding:48px 0}
+.foot-top{display:flex; justify-content:space-between; gap:32px; flex-wrap:wrap; padding-bottom:32px; border-bottom:1px solid var(--line)}
+.foot-col h5{font-size:12.5px; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-muted); font-weight:600; margin-bottom:12px}
+.foot-col p, .foot-col a{display:block; font-size:13.5px; color:var(--ink); margin-bottom:7px}
+.foot-col a:hover{color:var(--blue)}
+.foot-social{display:flex; gap:10px; margin-top:4px}
+.foot-social a{width:34px; height:34px; border-radius:50%; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:14px}
+.foot-social a:hover{border-color:var(--blue); color:var(--blue)}
+.foot-bottom{display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap; padding-top:24px}
+.foot-copy{font-size:12.5px; color:var(--text-muted)}
 </style>
 </head>
 <body>
@@ -267,11 +289,12 @@ p{margin:0}
   <div class="wrap nav-inner">
     <div class="nav-logo">
       <div class="nav-logo-mark">N</div>
-      <div class="nav-logo-text">Ninho<span>Consultoria empresarial</span></div>
+      <div class="nav-logo-text">Ninho<span>Consultoria e Instrutoria Empresarial</span></div>
     </div>
     <nav class="nav-links">
-      <a href="#areas">Áreas de atuação</a>
-      <a href="#como-funciona">Como funciona</a>
+      <a href="#sobre">Sobre</a>
+      <a href="#metodo-g3">Método G3</a>
+      <a href="#equipe">Equipe</a>
       <a href="#portal">Portal do cliente</a>
       <a href="#faq">Dúvidas</a>
     </nav>
@@ -279,8 +302,9 @@ p{margin:0}
     <button class="nav-burger" id="nav-burger" onclick="toggleMenuMobile()" aria-label="Abrir menu">☰</button>
   </div>
   <div class="nav-mobile-panel" id="nav-mobile-panel">
-    <a href="#areas" onclick="fecharMenuMobile()">Áreas de atuação</a>
-    <a href="#como-funciona" onclick="fecharMenuMobile()">Como funciona</a>
+    <a href="#sobre" onclick="fecharMenuMobile()">Sobre</a>
+    <a href="#metodo-g3" onclick="fecharMenuMobile()">Método G3</a>
+    <a href="#equipe" onclick="fecharMenuMobile()">Equipe</a>
     <a href="#portal" onclick="fecharMenuMobile()">Portal do cliente</a>
     <a href="#faq" onclick="fecharMenuMobile()">Dúvidas</a>
     <a href="#" id="btn-diagnostico-nav-mobile" class="btn btn-primary" style="margin-top:10px; text-align:center" onclick="fecharMenuMobile()">Diagnóstico gratuito</a>
@@ -291,9 +315,9 @@ p{margin:0}
 <section class="hero">
   <div class="wrap hero-grid">
     <div>
-      <div class="eyebrow reveal">consultoria empresarial · qualquer segmento</div>
-      <h1 class="reveal">Toda empresa tem um ponto cego. <em>A gente mostra onde ele está.</em></h1>
-      <p class="hero-sub reveal">Diagnóstico completo do seu negócio em 9 áreas, plano de ação com prioridade e prazo definidos, e acompanhamento próximo até os números mudarem de verdade.</p>
+      <div class="eyebrow reveal">consultoria e instrutoria empresarial · Palmares, PE</div>
+      <h1 class="reveal">Performance financeira real, com o <em>Método G3</em>.</h1>
+      <p class="hero-sub reveal">Melhoramos a performance financeira das organizações empresariais, agregando valor de forma estratégica — do diagnóstico ao acompanhamento, com uma metodologia própria e uma equipe especializada ao seu lado.</p>
       <div class="hero-ctas reveal">
         <a href="#" id="btn-diagnostico-hero" class="btn btn-primary">Peça seu diagnóstico gratuito</a>
         <a href="#" id="btn-whatsapp-hero" class="btn btn-whats">Falar no WhatsApp</a>
@@ -308,7 +332,7 @@ p{margin:0}
       </div>
       <div id="diag-rows"></div>
       <div class="diag-panel-foot">
-        <p class="diag-panel-foot-txt">Este é um exemplo ilustrativo. O diagnóstico da sua empresa começa do zero, com base nas suas respostas.</p>
+        <p class="diag-panel-foot-txt">Exemplo ilustrativo. O diagnóstico da sua empresa começa do zero, com base nas suas respostas.</p>
         <div class="diag-panel-score">
           <b data-count="68" data-suffix="%">0%</b>
           <span>maturidade geral</span>
@@ -318,35 +342,40 @@ p{margin:0}
   </div>
 </section>
 
-<!-- ================= ANTES / DEPOIS ================= -->
-<section class="section" id="antes-depois">
+<!-- ================= SOBRE ================= -->
+<section class="section" id="sobre">
+  <div class="wrap">
+    <div class="sobre-grid">
+      <div class="reveal">
+        <div class="eyebrow">quem somos</div>
+        <h2 style="font-size:32px; margin-top:14px">Uma consultoria pensada pra transformar resultado, não só apontar problema.</h2>
+        <div class="sobre-texto" style="margin-top:22px">
+          <p>Somos uma empresa de Consultoria e Instrutoria Empresarial, especializada em desenvolver os resultados financeiros das empresas, aplicando nossa metodologia própria, o Método G3.</p>
+          <p>Nossa maior satisfação é ver a transformação das necessidades e desejos dos nossos clientes em uma qualidade sustentável dos objetivos — com a equipe presente em cada etapa do caminho.</p>
+        </div>
+      </div>
+      <div class="sobre-cards reveal-stagger">
+        <div class="sobre-card reveal" style="--i:0">
+          <div class="eyebrow">visão</div>
+          <p>Ser referência em Consultoria Empresarial no estado de Pernambuco.</p>
+        </div>
+        <div class="sobre-card reveal" style="--i:1">
+          <div class="eyebrow">missão</div>
+          <p>Melhorar a performance financeira das organizações empresariais, agregando valor de forma estratégica aos nossos clientes.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MÉTODO G3 ================= -->
+<section class="section" id="metodo-g3">
   <div class="wrap">
     <div class="section-head reveal">
-      <div class="eyebrow">você reconhece essa empresa?</div>
-      <h2>A diferença não é trabalhar mais. É enxergar melhor.</h2>
+      <div class="eyebrow">nossa metodologia</div>
+      <h2>Método G3 — eficaz e exclusivo, pensado pro seu negócio.</h2>
     </div>
-    <div class="comparativo reveal-stagger">
-      <div class="comp-card antes reveal" style="--i:0">
-        <span class="comp-tag mono">hoje</span>
-        <h3>Decisão no achismo</h3>
-        <ul class="comp-list">
-          <li>Fluxo de caixa que só existe na cabeça de quem toca o negócio</li>
-          <li>Comercial sem meta clara, sem funil, sem previsibilidade</li>
-          <li>Cada área resolve do seu jeito, sem processo escrito</li>
-          <li>Decisão importante tomada no calor da hora, sem indicador nenhum</li>
-        </ul>
-      </div>
-      <div class="comp-card depois reveal" style="--i:1">
-        <span class="comp-tag mono">com a consultoria</span>
-        <h3>Direção com clareza</h3>
-        <ul class="comp-list">
-          <li>Visão real do financeiro, com PF e PJ separados de verdade</li>
-          <li>Comercial com meta, funil e ritual de acompanhamento</li>
-          <li>Processos documentados — a empresa não depende de uma pessoa só</li>
-          <li>Plano de ação com prioridade, responsável e prazo definidos</li>
-        </ul>
-      </div>
-    </div>
+    <div class="g3-grid reveal-stagger" id="g3-grid"></div>
   </div>
 </section>
 
@@ -354,40 +383,33 @@ p{margin:0}
 <section class="section" id="areas">
   <div class="wrap">
     <div class="section-head reveal">
-      <div class="eyebrow">onde a gente atua</div>
-      <h2>9 áreas. O diagnóstico mostra exatamente onde focar primeiro.</h2>
-      <p>Não é uma lista genérica de serviço — é a mesma estrutura usada pra avaliar todo cliente novo, do jeito que a empresa realmente funciona no dia a dia.</p>
+      <div class="eyebrow">apoiado por diagnóstico contínuo</div>
+      <h2>O Método G3 é aplicado com dado, não com achismo.</h2>
+      <p>Acompanhamos 9 áreas do seu negócio de perto — a mesma estrutura usada no diagnóstico gratuito, pra saber exatamente onde focar primeiro.</p>
     </div>
     <div class="areas-grid reveal-stagger" id="areas-grid"></div>
   </div>
 </section>
 
-<!-- ================= COMO FUNCIONA ================= -->
+<!-- ================= METODOLOGIA (8 PASSOS) ================= -->
 <section class="section" id="como-funciona">
+  <div class="wrap" style="max-width:820px">
+    <div class="section-head reveal" style="max-width:100%">
+      <div class="eyebrow">passo a passo</div>
+      <h2>Mais de 3.000 horas de consultoria e instrutoria, nesses 8 passos.</h2>
+    </div>
+    <div class="metodo-lista reveal" id="metodo-lista"></div>
+  </div>
+</section>
+
+<!-- ================= EQUIPE ================= -->
+<section class="section" id="equipe">
   <div class="wrap">
     <div class="section-head reveal">
-      <div class="eyebrow">como funciona</div>
-      <h2>Três etapas, sem enrolação.</h2>
+      <div class="eyebrow">quem vai te atender</div>
+      <h2>Uma equipe especializada e pronta pra te atender.</h2>
     </div>
-    <div class="passos reveal-stagger">
-      <div class="passo reveal" style="--i:0">
-        <span class="passo-num">01</span>
-        <h3>Diagnóstico gratuito</h3>
-        <p>Um raio-x rápido do seu negócio nas 9 áreas — pra saber, com dado e não com opinião, onde estão os gargalos que mais custam caro hoje.</p>
-        <span class="passo-conector"></span>
-      </div>
-      <div class="passo reveal" style="--i:1">
-        <span class="passo-num">02</span>
-        <h3>Plano de ação sob medida</h3>
-        <p>Nada de recomendação genérica. Prioridade, responsável e prazo definidos pra cada ação — o que fazer primeiro e por quê.</p>
-        <span class="passo-conector"></span>
-      </div>
-      <div class="passo reveal" style="--i:2">
-        <span class="passo-num">03</span>
-        <h3>Acompanhamento próximo</h3>
-        <p>Reuniões periódicas, indicadores acompanhados de perto e ajuste de rota sempre que o cenário mudar — a gente não desaparece depois do relatório.</p>
-      </div>
-    </div>
+    <div class="equipe-grid reveal-stagger" id="equipe-grid"></div>
   </div>
 </section>
 
@@ -405,6 +427,9 @@ p{margin:0}
             <li><span class="portal-check">✓</span><span><b>Indicadores</b> mostrando a evolução real, não só a foto do mês</span></li>
             <li><span class="portal-check">✓</span><span><b>Canal direto</b> com a equipe responsável pelo seu projeto</span></li>
           </ul>
+          <div class="portal-btns">
+            <a href="#" id="btn-portal-login" class="btn btn-primary">Acessar o Portal do Cliente</a>
+          </div>
         </div>
         <div class="portal-mock">
           <div class="portal-mock-head">
@@ -438,12 +463,33 @@ p{margin:0}
       <div class="confianca-card reveal" style="--i:1">
         <div class="confianca-icon">👤</div>
         <h4>Acesso restrito</h4>
-        <p>Dentro da nossa equipe, cada pessoa só acessa o que precisa pra atender o seu projeto — nada de informação circulando à toa.</p>
+        <p>Dentro da nossa equipe, cada pessoa só acessa o que precisa pra atender o seu projeto.</p>
       </div>
       <div class="confianca-card reveal" style="--i:2">
         <div class="confianca-icon">🗂️</div>
         <h4>Você decide quem vê o quê</h4>
         <p>No portal, você escolhe quem da sua empresa tem acesso a cada informação — plano de ação, indicadores e arquivos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DEPOIMENTO ================= -->
+<section class="section" id="depoimentos">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">quem já passou pelo método</div>
+      <h2>Depoimento de quem já trabalhou com a gente.</h2>
+    </div>
+    <div class="depoimento-card reveal">
+      <span class="depoimento-aspas">"</span>
+      <p class="depoimento-texto" id="depoimento-texto"></p>
+      <div class="depoimento-autor">
+        <div class="depoimento-autor-avatar" id="depoimento-avatar"></div>
+        <div>
+          <div class="depoimento-autor-nome" id="depoimento-nome"></div>
+          <div class="depoimento-autor-tag">Cliente Ninho Consultoria</div>
+        </div>
       </div>
     </div>
   </div>
@@ -459,7 +505,7 @@ p{margin:0}
     <div class="faq-list reveal">
       <div class="faq-item">
         <button class="faq-q" onclick="toggleFaq(this)">Serve pra empresa de qualquer segmento?<span class="faq-q-plus mono">+</span></button>
-        <div class="faq-a"><p>Sim. As 9 áreas do diagnóstico (financeiro, comercial, marketing, gestão, RH, produção, fiscal, compras e estoque) existem em praticamente qualquer negócio — o peso de cada uma é que muda de segmento pra segmento, e é isso que o diagnóstico ajusta.</p></div>
+        <div class="faq-a"><p>Sim. O Método G3 e as 9 áreas do diagnóstico (financeiro, comercial, marketing, gestão, RH, produção, fiscal, compras e estoque) existem em praticamente qualquer negócio — o peso de cada uma é que muda de segmento pra segmento.</p></div>
       </div>
       <div class="faq-item">
         <button class="faq-q" onclick="toggleFaq(this)">Preciso já ter algum processo estruturado?<span class="faq-q-plus mono">+</span></button>
@@ -475,7 +521,7 @@ p{margin:0}
       </div>
       <div class="faq-item">
         <button class="faq-q" onclick="toggleFaq(this)">Como funciona o acompanhamento no dia a dia?<span class="faq-q-plus mono">+</span></button>
-        <div class="faq-a"><p>Reuniões periódicas com a equipe responsável, indicadores acompanhados entre uma reunião e outra, e o portal do cliente disponível sempre que você quiser ver o andamento sem precisar ligar.</p></div>
+        <div class="faq-a"><p>Reuniões periódicas com a equipe responsável, indicadores acompanhados entre uma reunião e outra, e o portal do cliente disponível sempre que você quiser ver o andamento.</p></div>
       </div>
     </div>
   </div>
@@ -512,40 +558,94 @@ p{margin:0}
 </section>
 
 <footer class="site-footer">
-  <div class="wrap foot-grid">
-    <div class="nav-logo">
-      <div class="nav-logo-mark">N</div>
-      <div class="foot-copy">© <span id="foot-year"></span> Ninho Consultoria — consultoria empresarial.</div>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-col" style="max-width:260px">
+        <div class="nav-logo" style="margin-bottom:14px">
+          <div class="nav-logo-mark">N</div>
+          <div class="nav-logo-text">Ninho<span>Consultoria e Instrutoria Empresarial</span></div>
+        </div>
+        <p style="color:var(--text-muted)">Consultoria e Instrutoria Empresarial especializada em performance financeira.</p>
+      </div>
+      <div class="foot-col">
+        <h5>Navegação</h5>
+        <a href="#sobre">Sobre</a>
+        <a href="#metodo-g3">Método G3</a>
+        <a href="#equipe">Equipe</a>
+        <a href="#faq">Dúvidas</a>
+      </div>
+      <div class="foot-col">
+        <h5>Contato</h5>
+        <span id="foot-localizacao"></span>
+        <a href="#" id="foot-whatsapp"></a>
+        <a href="#" id="foot-email"></a>
+      </div>
+      <div class="foot-col">
+        <h5>Redes sociais</h5>
+        <div class="foot-social">
+          <a href="#" id="foot-instagram" aria-label="Instagram" target="_blank" rel="noopener">IG</a>
+          <a href="#" id="foot-facebook" aria-label="Facebook" target="_blank" rel="noopener">FB</a>
+          <a href="#" id="foot-linkedin" aria-label="LinkedIn" target="_blank" rel="noopener">IN</a>
+        </div>
+      </div>
     </div>
-    <div class="foot-links">
-      <a href="#areas">Áreas de atuação</a>
-      <a href="#faq">Dúvidas</a>
-      <a href="#" id="link-whatsapp-footer">WhatsApp</a>
+    <div class="foot-bottom">
+      <div class="foot-copy">© <span id="foot-year"></span> Ninho Consultoria — todos os direitos reservados.</div>
     </div>
   </div>
 </footer>
 
 <script>
 /* ==============================================================
-   CONFIGURAÇÃO — edite estes três valores antes de publicar
+   CONFIGURAÇÃO — dados reais da Ninho Consultoria
    ============================================================== */
 const CONFIG = {
-  // Número de WhatsApp do escritório, só dígitos, com DDI 55 + DDD (ex: 5581999998888)
-  whatsappNumero: "5500000000000",
-  // Link do Diagnóstico Público do escritório no sistema Ninho
+  whatsappNumero: "5581997930318",
   linkDiagnostico: "https://ninho-sistema.vercel.app/diagnostico-publico",
-  // As 9 áreas do diagnóstico interno — mesma nomenclatura usada no sistema
-  areas: [
-    { nome: "Financeiro", desc: "Fluxo de caixa, separação PF/PJ e saúde financeira real do negócio.", valor: 62 },
-    { nome: "Comercial", desc: "Meta clara, funil estruturado e previsibilidade de vendas.", valor: 71 },
-    { nome: "Marketing", desc: "Posicionamento e geração de demanda, não só \"postar mais\".", valor: 48 },
-    { nome: "Gestão", desc: "Governança, papéis claros e decisão que não trava numa pessoa só.", valor: 75 },
-    { nome: "RH", desc: "Estrutura de equipe, avaliação de desempenho e retenção.", valor: 55 },
-    { nome: "Produção", desc: "Eficiência operacional e identificação de gargalos.", valor: 68 },
-    { nome: "Fiscal", desc: "Enquadramento correto e planejamento tributário ativo.", valor: 80 },
-    { nome: "Compras", desc: "Negociação estruturada e cotação em vez de decisão isolada.", valor: 52 },
-    { nome: "Estoque", desc: "Ponto de reposição, giro e capital que não fica parado.", valor: 59 },
+  linkPortalLogin: "https://ninho-sistema.vercel.app/login",
+  email: "ninho.consultoria@gmail.com",
+  localizacao: "Palmares, Pernambuco",
+  redes: {
+    instagram: "https://www.instagram.com/ninhoconsultoria/",
+    facebook: "https://www.facebook.com/ninhoconsultoria",
+    linkedin: "https://www.linkedin.com/company/ninho-consultoria/",
+  },
+  metodoG3: [
+    { letra:"G1", nome:"Geração", desc:"Relacionamento fluido com o empresário, pra acelerar a melhoria nos setores financeiro, administrativo e produtivo." },
+    { letra:"G2", nome:"Gerenciável", desc:"Estratégias financeiras aprimoradas, de forma que a empresa avance com vigor, mesmo sem a presença do diretor no dia a dia." },
+    { letra:"G3", nome:"Grandeza", desc:"Investimento com sustentabilidade, e visão de águia pra enxergar oportunidade onde a maioria não vê." },
   ],
+  areas: [
+    { nome: "Financeiro", desc: "Fluxo de caixa, separação PF/PJ e saúde financeira real do negócio." },
+    { nome: "Comercial", desc: "Meta clara, funil estruturado e previsibilidade de vendas." },
+    { nome: "Marketing", desc: "Posicionamento e geração de demanda, não só \"postar mais\"." },
+    { nome: "Gestão", desc: "Governança, papéis claros e decisão que não trava numa pessoa só." },
+    { nome: "RH", desc: "Estrutura de equipe, avaliação de desempenho e retenção." },
+    { nome: "Produção", desc: "Eficiência operacional e identificação de gargalos." },
+    { nome: "Fiscal", desc: "Enquadramento correto e planejamento tributário ativo." },
+    { nome: "Compras", desc: "Negociação estruturada e cotação em vez de decisão isolada." },
+    { nome: "Estoque", desc: "Ponto de reposição, giro e capital que não fica parado." },
+  ],
+  diagnosticoExemplo: [62,71,48,75,55,68,80,52,59],
+  metodologia: [
+    { titulo:"Consulta preliminar", desc:"Primeira conversa pra entender o momento da empresa e se faz sentido seguir." },
+    { titulo:"Preparar informação financeira", desc:"Organização dos dados que hoje estão espalhados ou só na cabeça do dono." },
+    { titulo:"Diagnóstico de situação", desc:"Raio-x completo nas 9 áreas do negócio, com prioridade clara pra cada uma." },
+    { titulo:"Medida de arrefecimento", desc:"Ações imediatas pra estancar o que está custando caro agora." },
+    { titulo:"Orçamento financeiro", desc:"Planejamento de entradas e saídas com previsibilidade, não no improviso." },
+    { titulo:"Investimento sustentável", desc:"Prioridade de investimento com retorno real, sem comprometer o caixa." },
+    { titulo:"Finanças pessoais, exclusivo para sócios", desc:"Separação de verdade entre o bolso do sócio e o caixa da empresa." },
+    { titulo:"Diretrizes finais", desc:"Plano de ação consolidado, com responsável e prazo pra cada frente." },
+  ],
+  equipe: [
+    { nome:"Elvis Torres", cargo:"CEO e Diretor Comercial", bio:"Especialista em Gestão de Produção e certificado internacionalmente como Mentor pela Global Mentoring Group. Mais de 10 anos de experiência com gestão, consultoria e palestras em pequenas e médias empresas.", instagram:"https://www.instagram.com/elvistorres_mentor" },
+    { nome:"Marcos Gomes", cargo:"Diretor Financeiro", bio:"Bacharel em Ciências Contábeis e Especialista em Planejamento Tributário pela UFPE. Atua na área contábil e financeira com foco em pequenas e médias empresas.", instagram:"https://www.instagram.com/marcosgomes.consultor/" },
+    { nome:"Silvio Dyego", cargo:"Diretor de Produção", bio:"Engenheiro de Produção pela UFPE, com foco em mapeamento, planejamento e controle de processos produtivos.", instagram:"https://www.instagram.com/silvio_dyego/" },
+  ],
+  depoimento: {
+    nome: "Carla Gleiciane",
+    texto: "A equipe Ninho trouxe conhecimento e clareza pra muitos aspectos da gestão da nossa empresa — uma consultoria diferenciada, que realmente colocou a mão na massa junto com a gente do início ao fim da jornada.",
+  },
 };
 
 document.getElementById('foot-year').textContent = new Date().getFullYear();
@@ -554,7 +654,7 @@ function linkWhatsapp(mensagem){
   const texto = encodeURIComponent(mensagem || "Olá! Vim pelo site e queria saber mais sobre o diagnóstico gratuito.");
   return `https://wa.me/${CONFIG.whatsappNumero}?text=${texto}`;
 }
-['btn-whatsapp-hero','btn-whatsapp-cta','link-whatsapp-footer'].forEach(id => {
+['btn-whatsapp-hero','btn-whatsapp-cta'].forEach(id => {
   const el = document.getElementById(id);
   if(el) el.href = linkWhatsapp();
 });
@@ -562,6 +662,20 @@ function linkWhatsapp(mensagem){
   const el = document.getElementById(id);
   if(el){ el.href = CONFIG.linkDiagnostico; el.target = '_blank'; el.rel = 'noopener'; }
 });
+try {
+  const btnPortal = document.getElementById('btn-portal-login');
+  if(btnPortal){ btnPortal.href = CONFIG.linkPortalLogin; btnPortal.target = '_blank'; btnPortal.rel = 'noopener'; }
+  document.getElementById('foot-localizacao').textContent = CONFIG.localizacao;
+  const footWhats = document.getElementById('foot-whatsapp');
+  footWhats.href = linkWhatsapp();
+  footWhats.textContent = "WhatsApp: " + CONFIG.whatsappNumero.replace(/^55(\d{2})(\d)(\d{4})(\d{4})$/, "($1) $2 $3-$4");
+  const footEmail = document.getElementById('foot-email');
+  footEmail.href = "mailto:" + CONFIG.email;
+  footEmail.textContent = CONFIG.email;
+  document.getElementById('foot-instagram').href = CONFIG.redes.instagram;
+  document.getElementById('foot-facebook').href = CONFIG.redes.facebook;
+  document.getElementById('foot-linkedin').href = CONFIG.redes.linkedin;
+} catch(e){ console.warn('Falha ao preencher contato/rodapé:', e); }
 
 function enviarFormulario(ev){
   ev.preventDefault();
@@ -581,18 +695,32 @@ function enviarFormulario(ev){
   return false;
 }
 
-// ---------- monta o painel de diagnóstico (hero) e a grade de áreas ----------
+// ---------- monta blocos dinâmicos a partir do CONFIG ----------
 try {
   const rows = document.getElementById('diag-rows');
   CONFIG.areas.forEach((a, i) => {
+    const valor = CONFIG.diagnosticoExemplo[i];
     const row = document.createElement('div');
     row.className = 'diag-row';
     row.innerHTML = `
       <span class="diag-row-label mono">${a.nome}</span>
-      <span class="diag-row-track"><span class="diag-row-fill" data-fill="${a.valor}"></span></span>
-      <span class="diag-row-val">${a.valor}%</span>
+      <span class="diag-row-track"><span class="diag-row-fill" data-fill="${valor}"></span></span>
+      <span class="diag-row-val">${valor}%</span>
     `;
     rows.appendChild(row);
+  });
+
+  const g3grid = document.getElementById('g3-grid');
+  CONFIG.metodoG3.forEach((g, i) => {
+    const card = document.createElement('div');
+    card.className = 'g3-card reveal';
+    card.style.setProperty('--i', i);
+    card.innerHTML = `
+      <span class="g3-card-letter mono">${g.letra}</span>
+      <h3>${g.nome}</h3>
+      <p>${g.desc}</p>
+    `;
+    g3grid.appendChild(card);
   });
 
   const grid = document.getElementById('areas-grid');
@@ -607,7 +735,39 @@ try {
     `;
     grid.appendChild(card);
   });
-} catch(e){ console.warn('Falha ao montar o painel de diagnóstico:', e); }
+
+  const metodoLista = document.getElementById('metodo-lista');
+  CONFIG.metodologia.forEach((m, i) => {
+    const item = document.createElement('div');
+    item.className = 'metodo-item';
+    item.innerHTML = `
+      <span class="metodo-num mono">0${i + 1}</span>
+      <div><h4>${m.titulo}</h4><p>${m.desc}</p></div>
+    `;
+    metodoLista.appendChild(item);
+  });
+
+  const equipeGrid = document.getElementById('equipe-grid');
+  CONFIG.equipe.forEach((p, i) => {
+    const iniciais = p.nome.split(' ').map(n => n[0]).slice(0,2).join('');
+    const card = document.createElement('div');
+    card.className = 'equipe-card reveal';
+    card.style.setProperty('--i', i);
+    card.innerHTML = `
+      <div class="equipe-avatar">${iniciais}</div>
+      <h4>${p.nome}</h4>
+      <div class="cargo">${p.cargo}</div>
+      <p class="bio">${p.bio}</p>
+      <a class="insta" href="${p.instagram}" target="_blank" rel="noopener">Instagram →</a>
+    `;
+    equipeGrid.appendChild(card);
+  });
+
+  const inicialDep = CONFIG.depoimento.nome.split(' ').map(n => n[0]).slice(0,2).join('');
+  document.getElementById('depoimento-texto').textContent = CONFIG.depoimento.texto;
+  document.getElementById('depoimento-avatar').textContent = inicialDep;
+  document.getElementById('depoimento-nome').textContent = CONFIG.depoimento.nome;
+} catch(e){ console.warn('Falha ao montar blocos dinâmicos:', e); }
 
 // ---------- reveal on scroll ----------
 try {
