@@ -16,13 +16,14 @@
   --ink-deep:#0F1E33;
   --blue:#0A3778;
   --blue-bright:#155FAE;
-  --blue-soft:#EAF1FB;
+  --blue-soft:#DCE7F7;
   --blue-deep:#082A5E;
   --blue-deep-2:#0A3778;
   --blue-light-accent:#7FC4F5;
   --emerald:#157A5D;
-  --paper:#F3F6FA;
+  --paper:#E9EFF7;
   --white:#FFFFFF;
+  --card-bg:#F8FAFD;
   --line:rgba(15,30,51,0.09);
   --line-dark:rgba(255,255,255,0.14);
   --text-muted:#57647A;
@@ -163,7 +164,7 @@ p{margin:0}
 .sobre-texto p{font-size:16px; color:var(--ink); line-height:1.75}
 .sobre-texto p + p{margin-top:16px}
 .sobre-cards{display:flex; flex-direction:column; gap:14px}
-.sobre-card{background:#fff; border:1px solid var(--line); border-radius:var(--radius-m); padding:22px; box-shadow:0 2px 10px -6px rgba(10,55,120,0.08)}
+.sobre-card{background:var(--card-bg); border:1px solid var(--line); border-radius:var(--radius-m); padding:22px; box-shadow:0 2px 10px -6px rgba(10,55,120,0.08)}
 .sobre-card .eyebrow{margin-bottom:8px}
 .sobre-card p{font-size:14.5px; color:var(--text-muted); line-height:1.6}
 
@@ -181,7 +182,7 @@ p{margin:0}
 .solucoes-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px}
 @media (max-width:960px){ .solucoes-grid{grid-template-columns:repeat(2,1fr)} }
 @media (max-width:640px){ .solucoes-grid{grid-template-columns:1fr} }
-.solucao-card{background:#fff; border:1px solid var(--line); border-radius:var(--radius-m); padding:28px 24px; box-shadow:0 2px 10px -6px rgba(10,55,120,0.08); transition:transform .25s var(--ease), box-shadow .25s var(--ease)}
+.solucao-card{background:var(--card-bg); border:1px solid var(--line); border-radius:var(--radius-m); padding:28px 24px; box-shadow:0 2px 10px -6px rgba(10,55,120,0.08); transition:transform .25s var(--ease), box-shadow .25s var(--ease)}
 .solucao-card:hover{transform:translateY(-3px); box-shadow:0 14px 30px -16px rgba(10,55,120,0.22)}
 .solucao-num{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--blue-bright); font-weight:500}
 .solucao-card h3{font-size:17.5px; margin-top:12px}
@@ -191,7 +192,7 @@ p{margin:0}
 .solucao-divider{height:1px; background:var(--line); margin:16px 0}
 
 /* ---------- resultados / transformação ---------- */
-.caso-card{background:#fff; border:1px solid var(--line); border-radius:var(--radius-l); padding:44px; box-shadow:0 8px 30px -14px rgba(10,55,120,0.12); max-width:820px}
+.caso-card{background:var(--card-bg); border:1px solid var(--line); border-radius:var(--radius-l); padding:44px; box-shadow:0 8px 30px -14px rgba(10,55,120,0.12); max-width:820px}
 .caso-tag{display:inline-flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--emerald); background:rgba(21,122,93,0.08); padding:5px 12px; border-radius:999px}
 .caso-aspas{font-family:'Sora',sans-serif; font-size:40px; color:var(--blue-soft); line-height:1; font-weight:800; margin-top:22px}
 .caso-texto{font-size:19px; color:var(--ink-deep); line-height:1.6; margin-top:4px; font-family:'Sora',sans-serif; font-weight:500}
@@ -205,7 +206,7 @@ p{margin:0}
 /* ---------- equipe ---------- */
 .equipe-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px}
 @media (max-width:860px){ .equipe-grid{grid-template-columns:1fr} }
-.equipe-card{background:#fff; border:1px solid var(--line); border-radius:var(--radius-m); padding:28px 26px; box-shadow:0 2px 10px -6px rgba(10,55,120,0.08)}
+.equipe-card{background:var(--card-bg); border:1px solid var(--line); border-radius:var(--radius-m); padding:28px 26px; box-shadow:0 2px 10px -6px rgba(10,55,120,0.08)}
 .equipe-avatar{width:56px; height:56px; border-radius:50%; background:linear-gradient(150deg,var(--blue),var(--blue-bright)); color:#fff; font-family:'Sora',sans-serif; font-weight:700; font-size:18px; display:flex; align-items:center; justify-content:center}
 .equipe-card h4{font-size:17px; margin-top:16px}
 .equipe-card .cargo{font-size:12.5px; color:var(--blue-bright); font-weight:600; margin-top:3px}
@@ -239,7 +240,6 @@ p{margin:0}
 .portal-mock-val{font-size:13px; font-weight:600; color:#fff; font-family:'JetBrains Mono',monospace}
 .portal-mock-bar{height:6px; border-radius:999px; background:rgba(255,255,255,0.1); margin-top:14px; overflow:hidden}
 .portal-mock-bar span{display:block; height:100%; width:68%; background:linear-gradient(90deg,var(--blue-light-accent),#fff); border-radius:999px}
-.portal-btns{display:flex; gap:12px; margin-top:26px; flex-wrap:wrap}
 
 /* ---------- confiança ---------- */
 .confianca-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px}
@@ -267,12 +267,12 @@ p{margin:0}
 .cta-final h2{color:#fff; font-size:32px; margin-top:14px}
 .cta-final p.desc{color:rgba(255,255,255,0.78); margin-top:14px; font-size:15.5px; max-width:420px}
 .cta-final .hero-ctas{margin-top:28px}
-.form-card{background:#fff; border-radius:18px; padding:26px}
+.form-card{background:var(--card-bg); border-radius:18px; padding:26px}
 .f-group{display:flex; flex-direction:column; gap:6px; margin-bottom:14px}
 .f-group label{font-size:12.5px; font-weight:500; color:var(--text-muted)}
 .f-group input, .f-group textarea{
   border:1.5px solid var(--line); border-radius:10px; padding:11px 13px; font-size:14px; font-family:'Inter',sans-serif;
-  color:var(--ink); background:#fff; resize:vertical; transition:border-color .2s;
+  color:var(--ink); background:var(--white); resize:vertical; transition:border-color .2s;
 }
 .f-group input:focus, .f-group textarea:focus{outline:none; border-color:var(--blue)}
 .f-row{display:grid; grid-template-columns:1fr 1fr; gap:12px}
@@ -463,9 +463,6 @@ p{margin:0}
             <li><span class="portal-check">✓</span><span><b>Indicadores</b> mostrando a evolução real, não só a foto do mês</span></li>
             <li><span class="portal-check">✓</span><span><b>Canal direto</b> com a equipe responsável pelo seu projeto</span></li>
           </ul>
-          <div class="portal-btns">
-            <a href="#" id="btn-portal-login" class="btn btn-primary">Acessar o Portal do Cliente</a>
-          </div>
         </div>
         <div class="portal-mock">
           <div class="portal-mock-head">
@@ -676,8 +673,6 @@ function linkWhatsapp(mensagem){
   if(el){ el.href = CONFIG.linkDiagnostico; el.target = '_blank'; el.rel = 'noopener'; }
 });
 try {
-  const btnPortal = document.getElementById('btn-portal-login');
-  if(btnPortal){ btnPortal.href = CONFIG.linkPortalLogin; btnPortal.target = '_blank'; btnPortal.rel = 'noopener'; }
   document.getElementById('foot-localizacao').textContent = CONFIG.localizacao;
   const footWhats = document.getElementById('foot-whatsapp');
   footWhats.href = linkWhatsapp();
